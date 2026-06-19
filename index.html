@@ -78,14 +78,43 @@
   <span style="font-size:11.5px;color:var(--text3);"><i class="ti ti-device-floppy" style="font-size:13px;vertical-align:-2px;" aria-hidden="true"></i> บันทึกค่าที่กรอกอัตโนมัติในเครื่อง (เปิดใหม่ค่าเดิมยังอยู่)</span>
 </div>
 
-<div style="margin-top:32px; padding-top:18px; border-top:0.5px solid var(--border); font-size:12.5px; color:var(--text2); line-height:1.85;">
-  <b style="color:var(--text);">หลักเกณฑ์การจ่าย</b><br>
-  • <b style="color:var(--text);">รายงานตัว 1 ครั้ง/เดือน (วันใดก็ได้)</b> — กรอกเป็น “วันที่รายงานตัว” วันเดียว ไม่ใช่ช่วงวัน<br>
-  • <b style="color:var(--text);">จ่าย 2 รอบ/เดือน</b>: รอบ 1 = ต้นเดือน (หรือวันเกิดสิทธิ) → วันรายงานตัว · รอบ 2 = วันถัดไป → สิ้นเดือน<br>
-  • <b style="color:var(--text);">ไม่มีช่องว่างก่อนรายงานตัว</b> — เดือนก่อนหน้าที่ยังไม่ได้รายงานจะทำจ่ายอัตโนมัติให้ครบ<br>
-  • ตัดด้วยวันกลับเข้าทำงาน (ถ้ามี) / สิทธิเต็ม / โควตา · งวดที่ยังไม่รายงานตัว(เดือนล่าสุด)ยังไม่จ่ายจนกว่าจะรายงาน<br>
-  • ความซ้ำซ้อน = ช่วงจ่ายจริงทับกันจริง · โควตา/ปีปฏิทิน: เลิกจ้าง ≤180 / ลาออก ≤90 (รวมหลายคำขอ: มีเลิกจ้าง→180, ลาออกล้วน→90)<br>
-  • ม.57: ค่าจ้างรายวัน = 3 เดือนสูงสุด (เพดาน 17,500/เดือน ตั้งแต่ 1 ม.ค.2569) ÷ 90 · เลิกจ้าง 60%/ลาออก 30% · ปัดเศษลง 0.05 บาททุกขั้น
+<div style="margin-top:32px; padding-top:18px; border-top:0.5px solid var(--border); font-size:12.5px; color:var(--text2); line-height:1.8;">
+  <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">คู่มือ &amp; ที่มาที่ไป (อ่านก่อนใช้งาน)</div>
+  <p style="margin:0 0 14px;">เครื่องมือนี้จำลองการวินิจฉัยจ่าย “ประโยชน์ทดแทนกรณีว่างงาน” ของสำนักงานประกันสังคม เพื่อให้เห็นภาพ <b style="color:var(--text);">ช่วงสิทธิ · เงินที่จ่าย · โควตา · และการตรวจความซ้ำซ้อน</b> เมื่อมีหลายคำขอ (รับแจ้ง) ปรับค่าทุกช่องได้สด ผลคำนวณและเส้นเวลาจะอัปเดตทันที</p>
+
+  <div style="font-weight:600;color:var(--text);margin-bottom:2px;">1) การคำนวณเงิน (มาตรา 57)</div>
+  • <b style="color:var(--text);">ค่าจ้างรายวัน</b> = ค่าจ้าง 3 เดือนที่สูงสุด (เพดานเดือนละ <b style="color:var(--text);">17,500 บาท</b> ตั้งแต่ 1 ม.ค. 2569 ; เดิม 15,000) ÷ 90<br>
+  • <b style="color:var(--text);">เงินทดแทนรายวัน</b> = ค่าจ้างรายวัน × อัตรา — <b style="color:var(--text);">ถูกเลิกจ้าง 60%</b> · <b style="color:var(--text);">ลาออก/สิ้นสุดสัญญา 30%</b> (อัตรา 60% ตามกฎกระทรวงฯ ฉบับที่ 2 พ.ศ. 2568 มีผล 28 มิ.ย. 2568)<br>
+  • <b style="color:var(--text);">ปัดเศษลงเป็นพหุคูณ 0.05 บาท</b> ทุกขั้น (เศษ 0.00–0.04→.00, 0.05–0.09→.05) เช่น 583.333→583.30, 174.99→174.95<br>
+  <span style="color:var(--text3);">ตัวอย่าง: เพดาน 17,500 → 17,500×3÷90 = 583.30/วัน → ลาออก 30% = 174.95/วัน → 90 วัน = 15,745.50 บาท</span>
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">2) วันสำคัญ (คำนวณให้อัตโนมัติ)</div>
+  • <b style="color:var(--text);">วันที่ขึ้นทะเบียน</b> กรอกเอง — และเท่ากับ “วันรายงานตัวครั้งที่ 1” เสมอ (ระบบล็อกแถวแรกให้ตรงกัน)<br>
+  • <b style="color:var(--text);">วันที่เกิดสิทธิ (auto)</b> = วันที่ 8 นับแต่วันว่างงาน (วันออกจากงาน + 7) ถ้าขึ้นทะเบียนภายใน 30 วัน · ถ้าขึ้นทะเบียนเกิน 30 วัน = วันที่ขึ้นทะเบียน<br>
+  • <b style="color:var(--text);">วันที่กลับเข้าทำงาน</b> มีหรือไม่มีก็ได้ — ถ้ามี จะตัดการจ่ายตั้งแต่วันนั้น (จ่ายถึงวันก่อนกลับเข้าทำงาน)
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">3) การรายงานตัว &amp; การจ่ายเงิน</div>
+  • <b style="color:var(--text);">รายงานตัวเดือนละ 1 ครั้ง วันใดก็ได้ภายในเดือน</b> — จึงกรอกเป็น “วันที่รายงานตัว” วันเดียว (ไม่ใช่ช่วงวัน)<br>
+  • <b style="color:var(--text);">จ่าย 2 รอบต่อเดือน</b>: รอบ 1 = ต้นเดือน (หรือวันเกิดสิทธิสำหรับเดือนแรก) → วันรายงานตัว · รอบ 2 = วันถัดจากรายงานตัว → สิ้นเดือน รวมเป็นจ่ายทั้งเดือน<br>
+  • <b style="color:var(--text);">ไม่มีช่องว่างก่อนรายงานตัว</b> — ถ้ามารายงานเดือนถัดไป เดือนก่อนหน้าที่ขาดจะ “ทำจ่ายอัตโนมัติ” ให้ครบถึงสิ้นเดือน<br>
+  • เดือนล่าสุดที่ยังไม่รายงานตัวจะยังไม่จ่าย (รอรายงานตัว) · การจ่ายถูกจำกัดด้วย วันกลับเข้าทำงาน / สิทธิเต็ม / โควตา
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">4) โควตาต่อปีปฏิทิน</div>
+  • <b style="color:var(--text);">ถูกเลิกจ้าง ≤ 180 วัน/ปี · ลาออก/สิ้นสุดสัญญา ≤ 90 วัน/ปี</b><br>
+  • รวมหลายคำขอในปีปฏิทินเดียวกัน: ถ้ามีเหตุ “เลิกจ้าง” อย่างน้อย 1 คำขอ เพดานรวม = 180 · ถ้าลาออกล้วน = 90 · วันที่เกินโควตาจะ “ตัดไม่จ่าย” (แสดงเป็นแถบสีส้มในเส้นเวลา) · นับแยกตามปีปฏิทินถ้าช่วงคร่อมปี · ช่อง “วันใช้สิทธิสะสมก่อนหน้า” ใช้ใส่วันที่เคยใช้ไปแล้วในปีนั้น
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">5) ความซ้ำซ้อน &amp; การเรียกเงินคืน</div>
+  • พิจารณา “ซ้ำซ้อน” จากการที่ <b style="color:var(--text);">ช่วงที่จ่ายจริงทับซ้อนกันจริง</b> เท่านั้น — การมีหลายคำขอในช่วงใกล้กันไม่ถือว่าซ้ำซ้อนโดยอัตโนมัติ ถ้าช่วงจ่ายไม่ทับกัน = “ไม่พบการซ้ำซ้อน” (ระบบควรปลดล็อกให้ดำเนินการต่อได้)<br>
+  • <b style="color:var(--text);">ยอดที่อาจต้องเรียกคืน</b> = จำนวนวันที่ทับซ้อน × เงินทดแทนรายวันของคำขอที่ขึ้นทะเบียนก่อน (ฐานลาภมิควรได้ ป.พ.พ. มาตรา 406)
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">6) สัญลักษณ์ในเส้นเวลา</div>
+  • <b style="color:var(--text);">แถบทึบ</b> = จ่ายจริง · <b style="color:var(--text);">เส้นประ</b> = สิทธิคงเหลือ/รอรายงานตัว · <b style="color:var(--text);">แถบจาง</b> = สิทธิเต็มตามวินิจฉัย (แสดงเต็มเสมอแม้กลับเข้าทำงานแล้ว) · <b style="color:var(--text);">แถบสีส้ม</b> = ตัดตามโควตา · <b style="color:var(--text);">แถบแดง</b> = ช่วงซ้ำซ้อน · <b style="color:var(--text);">▼</b> = วันขึ้นทะเบียน
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">7) ตัวอย่างเคสสำเร็จรูป (เลือกจาก “คลังเคส” ด้านบน)</div>
+  • <b style="color:var(--text);">ไม่พบซ้ำซ้อน</b> — 2 คำขอช่วงไม่ทับกัน (กลับเข้าทำงานตัดคำขอแรกก่อน) · <b style="color:var(--text);">รายงานข้ามเดือน→ซ้ำซ้อน</b> — คำขอแรกจ่ายต่อเนื่องไปทับคำขอที่สอง 44 วัน · <b style="color:var(--text);">จ่ายต่อเนื่องถึงสิ้นเดือน</b> · <b style="color:var(--text);">auto-fill เดือนที่ขาด</b> · <b style="color:var(--text);">โควตาเต็ม 180</b> · <b style="color:var(--text);">กลับเข้าทำงานตัดกลางเดือน</b><br>
+  <span style="color:var(--text3);">บันทึกเคสที่กรอกเองได้ด้วยปุ่ม “บันทึกเคสนี้…” แล้วกลับมาเลือกซ้ำได้ · ค่าที่กรอกล่าสุดถูกบันทึกในเครื่องอัตโนมัติ</span>
+
+  <div style="margin-top:14px;color:var(--text3);font-size:11.5px;">อ้างอิง: พ.ร.บ.ประกันสังคม พ.ศ. 2533 (ม.57 ค่าจ้างรายวัน, ม.79 สิทธิว่างงาน) · กฎกระทรวงกำหนดหลักเกณฑ์ฯ กรณีว่างงาน พ.ศ. 2547 และฉบับที่ 2 พ.ศ. 2568 · ป.พ.พ. ม.406 · เครื่องมือนี้เป็นตัวอย่างเพื่อการพูดคุย/ทดสอบ ปรับให้ตรงระเบียบจริงก่อนใช้อ้างอิง</div>
 </div>
 </div>
 
@@ -171,8 +200,8 @@
         +'<label style="grid-column:span 2;">ค่าจ้าง 3 เดือนสูงสุด (ม.57 · เพดาน 17,500)<div style="display:flex;gap:6px;"><input class="f-w1" type="number" min="0" step="500" value="'+d.w[0]+'"><input class="f-w2" type="number" min="0" step="500" value="'+d.w[1]+'"><input class="f-w3" type="number" min="0" step="500" value="'+d.w[2]+'"></div></label>'
         +fld('วันที่ลาออก/ออกจากงาน','<input class="f-out" type="date" value="'+(d.out||'')+'">')
         +fld('วันที่กลับเข้าทำงาน (ถ้ามี)','<input class="f-back" type="date" value="'+(d.back||'')+'">')
-        +fld('วันที่ขึ้นทะเบียน','<input class="f-reg" type="date" value="'+(d.reg||'')+'">')
-        +fld('วันที่เกิดสิทธิ','<input class="f-ent" type="date" value="'+(d.ent||'')+'">')
+        +fld('วันที่ขึ้นทะเบียน (= รายงานตัวครั้งที่ 1)','<input class="f-reg" type="date" value="'+(d.reg||'')+'">')
+        +fld('วันที่เกิดสิทธิ (auto)','<input class="f-ent" type="date" value="'+(d.ent||'')+'" readonly style="background:var(--surface2);color:var(--text2);">')
         +fld('สิทธิเต็ม (วัน)','<input class="f-full" type="number" min="0" step="1" value="'+(d.full||'')+'">')
       +'</div>'
       +'<div style="font-size:12px;color:var(--text2);margin:12px 0 6px;">การรายงานตัว (1 ครั้ง/เดือน — กรอกวันที่รายงานตัว วันเดียวต่อเดือน)</div>'
@@ -193,8 +222,7 @@
     var repsEl=node.querySelector('.reps');
     (d.reps||[{date:'',rep:true}]).forEach(function(p){attachRep(repsEl,p.date,p.rep);});
     node.querySelector('.f-type').addEventListener('change',function(e){var t=TYPES[e.target.value],fEl=node.querySelector('.f-full');if(t&&(!fEl.value||+fEl.value===90||+fEl.value===180))fEl.value=t.cap;recalc();});
-    node.querySelectorAll('.f-w1,.f-w2,.f-w3,.f-back,.f-ent,.f-full').forEach(function(el){el.addEventListener('input',recalc);});
-    node.querySelectorAll('.f-out,.f-reg').forEach(function(el){el.addEventListener('input',function(){autoEnt(node);recalc();});});
+    node.querySelectorAll('.f-w1,.f-w2,.f-w3,.f-out,.f-back,.f-reg,.f-full').forEach(function(el){el.addEventListener('input',recalc);});
     node.querySelector('.addp').addEventListener('click',function(){attachRep(repsEl,'',true);recalc();});
     node.querySelector('.rm').addEventListener('click',function(){if(order.length<=1)return;order=order.filter(function(x){return x!==id;});node.remove();recalc();});
     node.querySelector('.drill').addEventListener('click',function(){var sc=node.querySelector('.schedule');if(sc.style.display==='none'){sc.style.display='block';renderSchedule(node);}else sc.style.display='none';});
@@ -203,8 +231,13 @@
   function readClaim(node){
     var type=node.querySelector('.f-type').value;
     var w=[node.querySelector('.f-w1'),node.querySelector('.f-w2'),node.querySelector('.f-w3')].map(function(el){return Math.min(+el.value||0,CAP);});
-    var out=parseD(node.querySelector('.f-out').value),back=parseD(node.querySelector('.f-back').value),reg=parseD(node.querySelector('.f-reg').value);
-    var ent=parseD(node.querySelector('.f-ent').value),full=+node.querySelector('.f-full').value||0;
+    var out=parseD(node.querySelector('.f-out').value),back=parseD(node.querySelector('.f-back').value),full=+node.querySelector('.f-full').value||0;
+    var regEl=node.querySelector('.f-reg'); var reg=parseD(regEl.value);    // ขึ้นทะเบียน = กรอกเอง
+    // รายงานตัวครั้งที่ 1 = ล็อกตามวันขึ้นทะเบียน ; แถวอื่นแก้ได้
+    Array.prototype.forEach.call(node.querySelectorAll('.rep'),function(p,idx){var de=p.querySelector('.r-date');if(idx===0){de.readOnly=true;de.style.background='var(--surface2)';de.style.color='var(--text2)';if(regEl.value)de.value=regEl.value;}else{de.readOnly=false;de.style.background='';de.style.color='';}});
+    var entEl=node.querySelector('.f-ent');
+    if(out){var ed=(reg&&dayDiff(out,reg)>30)?reg:addDays(out,7);entEl.value=ymd(ed);}  // auto เกิดสิทธิ (วันที่ 8 หรือวันขึ้นทะเบียนถ้าเกิน 30 วัน)
+    var ent=parseD(entEl.value);
     var rate=(TYPES[type]||{rate:0}).rate, dailyWage=r05((w[0]+w[1]+w[2])/90), daily=r05(dailyWage*rate);
     var reportedDates=[];
     Array.prototype.forEach.call(node.querySelectorAll('.rep'),function(p){
