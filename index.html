@@ -170,7 +170,14 @@
 
 <script>
 (function(){
-  var TYPES={'เลิกจ้าง (60%)':{rate:0.60,cap:180},'ลาออก / สิ้นสุดสัญญา (30%)':{rate:0.30,cap:90}};
+  var TYPES={
+    'เลิกจ้าง (60%)':{rate:0.60,cap:180,layoff:true},
+    'ลาออก / สิ้นสุดสัญญา (30%)':{rate:0.30,cap:90,layoff:false},
+    'เลิกจ้าง · โควิด 2563–2565 (70%)':{rate:0.70,cap:200,layoff:true},
+    'ลาออก/สิ้นสุดสัญญา · โควิด 2563–2565 (45%)':{rate:0.45,cap:90,layoff:false},
+    'เลิกจ้าง · พรฎ เดิม 2547 (50%)':{rate:0.50,cap:180,layoff:true}
+  };
+  var ALLCAPS={90:1,180:1,200:1};
   var COLORS=[{f:'#85B7EB',b:'#185FA5',t:'#042C53'},{f:'#5DCAA5',b:'#0F6E56',t:'#04342C'},{f:'#AFA9EC',b:'#534AB7',t:'#26215C'},{f:'#EF9F27',b:'#BA7517',t:'#412402'}];
   var CAP=17500;
   var TM=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
@@ -184,7 +191,8 @@
   function thMonth(d){return TM[d.getMonth()]+' '+(d.getFullYear()+543);}
   function r05(n){var c=Math.round(n*100);return Math.floor(c/5)*5/100;}
   function baht(n){return '฿'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
-  function isLayoff(t){return TYPES[t]&&TYPES[t].rate===0.60;}
+  function isLayoff(t){return !!(TYPES[t]&&TYPES[t].layoff);}
+  function capOfType(t){return (TYPES[t]&&TYPES[t].cap)||90;}
   function ymd(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
   function autoEnt(node){var out=parseD(node.querySelector('.f-out').value),reg=parseD(node.querySelector('.f-reg').value),entEl=node.querySelector('.f-ent');if(out){var d=(reg&&dayDiff(out,reg)>30)?reg:addDays(out,7);entEl.value=ymd(d);}}
 
@@ -275,7 +283,7 @@
     var wrap=document.createElement('div'); wrap.innerHTML=claimHTML(id,d); var node=wrap.firstChild; claimsEl.appendChild(node);
     var repsEl=node.querySelector('.reps');
     (d.reps||[{date:'',rep:true}]).forEach(function(p){attachRep(repsEl,p.date,p.rep);});
-    node.querySelector('.f-type').addEventListener('change',function(e){var t=TYPES[e.target.value],fEl=node.querySelector('.f-full');if(t&&(!fEl.value||+fEl.value===90||+fEl.value===180))fEl.value=t.cap;recalc();});
+    node.querySelector('.f-type').addEventListener('change',function(e){var t=TYPES[e.target.value],fEl=node.querySelector('.f-full');if(t&&(!fEl.value||ALLCAPS[+fEl.value]))fEl.value=t.cap;recalc();});
     node.querySelectorAll('.f-w1,.f-w2,.f-w3,.f-out,.f-back,.f-notify,.f-reg,.f-full').forEach(function(el){el.addEventListener('input',recalc);});
     node.querySelector('.addp').addEventListener('click',function(){attachRep(repsEl,'',true);recalc();});
     node.querySelector('.rm').addEventListener('click',function(){if(order.length<=1)return;order=order.filter(function(x){return x!==id;});node.remove();recalc();});
@@ -324,7 +332,7 @@
       overpaidDays=usedDays-legitDays;
     }
     var effDays=usedDays;
-    return {node:node,type:type,layoff:isLayoff(type),rate:rate,dailyWage:dailyWage,daily:daily,out:out,back:back,notify:notify,reg:reg,ent:ent,full:full,startE:startE,reportedDates:reportedDates,reportedEnd:reportedEnd,effPaid:effPaid,effDays:effDays,usedDays:usedDays,legitEnd:legitEnd,legitDays:legitDays,overpaidDays:overpaidDays};
+    return {node:node,type:type,layoff:isLayoff(type),cap:capOfType(type),rate:rate,dailyWage:dailyWage,daily:daily,out:out,back:back,notify:notify,reg:reg,ent:ent,full:full,startE:startE,reportedDates:reportedDates,reportedEnd:reportedEnd,effPaid:effPaid,effDays:effDays,usedDays:usedDays,legitEnd:legitEnd,legitDays:legitDays,overpaidDays:overpaidDays};
   }
   function entWindow(c){var s=c.startE;if(!s||!c.full||c.full<=0)return null;return{s:s,e:addDays(s,c.full-1)};} // สิทธิเต็มตามวินิจฉัย — แสดงเต็มเสมอ (ไม่ตัดด้วยวันกลับเข้าทำงาน)
   function genSchedule(c){
@@ -383,8 +391,8 @@
   }
   function computeQuota(cs,prior){
     var runs=[];
-    cs.forEach(function(c,ci){if(!c.effPaid)return;var s=c.effPaid.s,e=c.effPaid.e,y0=s.getFullYear(),y1=e.getFullYear();for(var y=y0;y<=y1;y++){var rs=y===y0?s:new Date(y,0,1),re=y===y1?e:new Date(y,11,31);runs.push({year:y,s:rs,e:re,ci:ci,layoff:c.layoff,days:dayDiff(rs,re)+1});}});
-    var yl={};runs.forEach(function(r){if(r.layoff)yl[r.year]=true;});function capOf(y){return yl[y]?180:90;}
+    cs.forEach(function(c,ci){if(!c.effPaid)return;var s=c.effPaid.s,e=c.effPaid.e,y0=s.getFullYear(),y1=e.getFullYear();for(var y=y0;y<=y1;y++){var rs=y===y0?s:new Date(y,0,1),re=y===y1?e:new Date(y,11,31);runs.push({year:y,s:rs,e:re,ci:ci,layoff:c.layoff,cap:c.cap,days:dayDiff(rs,re)+1});}});
+    var ylcap={};runs.forEach(function(r){if(r.layoff)ylcap[r.year]=Math.max(ylcap[r.year]||0,r.cap);});function capOf(y){return ylcap[y]||90;}
     runs.sort(function(a,b){return a.s-b.s;});var ub={},ac={},ui={};var mn=runs.length?Math.min.apply(null,runs.map(function(r){return r.year;})):null;if(mn!==null&&prior>0)ub[mn]=prior;
     runs.forEach(function(r){var u=ub[r.year]||0,cap=capOf(r.year);var al=Math.max(Math.min(r.days,cap-u),0);ub[r.year]=u+al;ac[r.ci]=(ac[r.ci]||0)+al;});
     Object.keys(ub).forEach(function(y){ui[y]={used:ub[y],cap:capOf(+y)};});return{allocByClaim:ac,usedInfo:ui};
@@ -395,7 +403,7 @@
     var cs=nodes.map(readClaim); var q=computeQuota(cs,prior);
     var allocs=cs.map(function(cc,ii){return q.allocByClaim[ii]||0;});
     var totalAlloc=allocs.reduce(function(a,b){return a+b;},0);
-    var capYr=cs.some(function(cc){return cc.layoff;})?180:90;
+    var capYr=cs.reduce(function(m,cc){return cc.layoff?Math.max(m,cc.cap):m;},0)||90;
     var totDays=0,totAmt=0;
     cs.forEach(function(c,i){
       var col=COLORS[i%COLORS.length];
