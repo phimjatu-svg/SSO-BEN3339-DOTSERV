@@ -70,6 +70,15 @@
   </div>
 </div>
 
+<div style="background:var(--warn-bg); border:0.5px solid var(--warn); border-radius:var(--radius-lg); padding:12px 16px; margin-bottom:1.25rem;">
+  <div style="font-weight:600; color:var(--warn); margin-bottom:4px;"><i class="ti ti-percentage" style="font-size:15px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>อัตราตาม พรฎ เก่า/ใหม่ &amp; ช่วงโควิด (45/70) — [48|P0-3]</div>
+  <div style="font-size:12.5px; color:var(--text2); line-height:1.8;">
+    เลือก “ประเภทการว่างงาน” ได้ตามช่วงกฎที่ใช้ — ปัจจุบัน 60%/30% (กฎ 2568) · <b style="color:var(--text);">โควิด 70% (เลิกจ้าง ≤200 วัน) / 45% (ลาออก ≤90 วัน)</b> ช่วง 1 มี.ค.63–28 ก.พ.65 · พรฎ เดิม 2547 เลิกจ้าง 50%<br>
+    <b style="color:var(--warn);">ช่วงโควิดเป็นการเปิด claim ใหม่ (ไม่มีการคร่อม):</b> 1 คำขอ = อัตราเดียวตลอดช่วง ถ้าช่วงสิทธิเลยขอบกฎ ให้เปิดคำขออีกใบสำหรับอีกอัตรา · โควตารวม/ปีปฏิทินช่วงโควิดที่มีเหตุเลิกจ้าง = 200 วัน<br>
+    <span style="color:var(--text3);">หมายเหตุ: การคำนวณ “2 อัตราในคำขอเดียว” (auto-คร่อมขอบ พรฎ) ยังรอยืนยันรูปแบบ UI — ดูไฟล์ SPEC_48_P0-3</span>
+  </div>
+</div>
+
 <div id="tl" style="border:0.5px solid var(--border); border-radius:var(--radius-lg); padding:14px 16px; margin-bottom:1.25rem; overflow:hidden; background:var(--surface);"></div>
 
 <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12px; color:var(--text2); margin-bottom:1.25rem;">
@@ -96,6 +105,7 @@
   <div style="font-weight:600;color:var(--text);margin-bottom:2px;">1) การคำนวณเงิน (มาตรา 57)</div>
   • <b style="color:var(--text);">ค่าจ้างรายวัน</b> = ค่าจ้าง 3 เดือนที่สูงสุด (เพดานเดือนละ <b style="color:var(--text);">17,500 บาท</b> ตั้งแต่ 1 ม.ค. 2569 ; เดิม 15,000) ÷ 90<br>
   • <b style="color:var(--text);">เงินทดแทนรายวัน</b> = ค่าจ้างรายวัน × อัตรา — <b style="color:var(--text);">ถูกเลิกจ้าง 60%</b> · <b style="color:var(--text);">ลาออก/สิ้นสุดสัญญา 30%</b> (อัตรา 60% ตามกฎกระทรวงฯ ฉบับที่ 2 พ.ศ. 2568 มีผล 28 มิ.ย. 2568)<br>
+  • <b style="color:var(--text);">อัตราตามช่วงกฎ (เลือกที่ช่อง “ประเภท”):</b> โควิด 2563–2565 = เลิกจ้าง <b style="color:var(--text);">70% (≤200 วัน)</b> / ลาออก <b style="color:var(--text);">45% (≤90 วัน)</b> · พรฎ เดิม 2547 = เลิกจ้าง 50% / ลาออก 30% — แต่ละช่วงเปิดเป็นคำขอแยก (อัตราเดียวต่อคำขอ)<br>
   • <b style="color:var(--text);">ปัดเศษลงเป็นพหุคูณ 0.05 บาท</b> ทุกขั้น (เศษ 0.00–0.04→.00, 0.05–0.09→.05) เช่น 583.333→583.30, 174.99→174.95<br>
   <span style="color:var(--text3);">ตัวอย่าง: เพดาน 17,500 → 17,500×3÷90 = 583.30/วัน → ลาออก 30% = 174.95/วัน → 90 วัน = 15,745.50 บาท</span>
 
@@ -111,7 +121,7 @@
   • เดือนล่าสุดที่ยังไม่รายงานตัวจะยังไม่จ่าย (รอรายงานตัว) · การจ่ายถูกจำกัดด้วย วันกลับเข้าทำงาน / สิทธิเต็ม / โควตา
 
   <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">4) โควตาต่อปีปฏิทิน</div>
-  • <b style="color:var(--text);">ถูกเลิกจ้าง ≤ 180 วัน/ปี · ลาออก/สิ้นสุดสัญญา ≤ 90 วัน/ปี</b><br>
+  • <b style="color:var(--text);">ถูกเลิกจ้าง ≤ 180 วัน/ปี · ลาออก/สิ้นสุดสัญญา ≤ 90 วัน/ปี</b> (ช่วงโควิด 2563–2565 ที่มีเหตุเลิกจ้าง เพดานรวม = <b style="color:var(--text);">200 วัน</b>)<br>
   • รวมหลายคำขอในปีปฏิทินเดียวกัน: ถ้ามีเหตุ “เลิกจ้าง” อย่างน้อย 1 คำขอ เพดานรวม = 180 · ถ้าลาออกล้วน = 90 · วันที่เกินโควตาจะ “ตัดไม่จ่าย” (แสดงเป็นแถบสีส้มในเส้นเวลา) · นับแยกตามปีปฏิทินถ้าช่วงคร่อมปี · ช่อง “วันใช้สิทธิสะสมก่อนหน้า” ใช้ใส่วันที่เคยใช้ไปแล้วในปีนั้น
 
   <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">5) ความซ้ำซ้อน &amp; การเรียกเงินคืน</div>
@@ -227,6 +237,12 @@
     ]}},
     {name:'กลับเข้าทำงาน + บริษัทแจ้งล่าช้า → จ่ายเกิน/เรียกคืน 15 วัน',data:{prior:'0',claims:[
       {type:R,w:W3,out:'2025-01-01',back:'2025-02-14',notify:'2025-03-01',reg:'2025-01-01',ent:'2025-01-08',full:'90',reps:[{date:'2025-01-01',rep:true},{date:'2025-02-18',rep:true}]}
+    ]}},
+    {name:'โควิด: เลิกจ้าง 70% (200 วัน) — อ้างอิงตัวอย่าง 2',data:{prior:'0',claims:[
+      {type:'เลิกจ้าง · โควิด 2563–2565 (70%)',w:W3,out:'2020-02-01',back:'',reg:'2020-02-15',ent:'2020-02-08',full:'200',reps:[{date:'2020-02-15',rep:true},{date:'2020-08-25',rep:true}]}
+    ]}},
+    {name:'โควิด: ลาออก 45% (90 วัน) — อ้างอิงตัวอย่าง 1',data:{prior:'0',claims:[
+      {type:'ลาออก/สิ้นสุดสัญญา · โควิด 2563–2565 (45%)',w:W3,out:'2020-02-01',back:'',reg:'2020-02-15',ent:'2020-02-08',full:'90',reps:[{date:'2020-02-15',rep:true},{date:'2020-05-07',rep:true}]}
     ]}}
   ];
   function savedCases(){try{return JSON.parse(localStorage.getItem(CASES_KEY))||{};}catch(e){return {};}}
