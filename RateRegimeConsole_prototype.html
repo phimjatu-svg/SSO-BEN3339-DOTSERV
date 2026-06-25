@@ -364,7 +364,11 @@ function buildDx(){
       <button class="btn ghost" onclick="saveDxCase()"><i class="ti ti-device-floppy"></i> บันทึกเทสเคส…</button>
       <button class="btn ghost" onclick="delDxCase()"><i class="ti ti-trash"></i> ลบ</button>
     </div>
-    <div class="toolbar" style="margin-top:10px"><label style="margin:0 8px 0 0;align-self:center;font-weight:600">วันใช้สิทธิสะสมก่อนหน้า (ปีปฏิทินนี้)</label><input class="inp" id="dxprior" type="number" value="0" style="width:120px" oninput="dxRecalc()"></div>
+    <div class="toolbar" style="margin-top:10px">
+      <label style="margin:0 8px 0 0;align-self:center;font-weight:600">วันใช้สิทธิสะสมก่อนหน้า (ปีปฏิทินนี้)</label><input class="inp" id="dxprior" type="number" value="0" style="width:110px" oninput="dxRecalc()">
+      <label style="margin:0 8px 0 14px;align-self:center;font-weight:600">วันที่เคยเรียกเงินคืน (คืนสิทธิ)</label><input class="inp" id="dxrecover" type="number" value="0" style="width:110px" oninput="dxRecalc()">
+      <span style="align-self:center;font-size:11.5px;color:var(--muted)">[137] วันที่เรียกเงินคืนแล้ว = คืนสิทธิ ไม่นับเป็นวันใช้สิทธิ</span>
+    </div>
     <div id="dxClaims" style="display:flex;flex-direction:column;gap:12px;margin-top:12px"></div>
     <button class="btn ghost" onclick="addDxClaim()" style="margin-top:10px"><i class="ti ti-plus"></i> เพิ่มคำขอ (รับแจ้ง)</button>
   </div>
@@ -373,7 +377,7 @@ function buildDx(){
     <div id="dxTimeline"></div><div id="dxLegend" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--muted)"></div></div>`;
   refreshDxCases();
   const sv=dxLoadState();
-  if(sv&&sv.claims&&sv.claims.length){document.getElementById('dxprior').value=sv.prior||0;sv.claims.forEach(addDxClaim);}
+  if(sv&&sv.claims&&sv.claims.length){document.getElementById('dxprior').value=sv.prior||0;document.getElementById('dxrecover').value=sv.recover||0;sv.claims.forEach(addDxClaim);}
   else dxDefaults();
 }
 function repRowHTML(date,rep){return `<div class="rep" style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
@@ -502,7 +506,9 @@ function dxRenderTimeline(cs,dupIntervals){
   document.getElementById('dxLegend').innerHTML=[['#85B7EB','จ่ายจริง'],['transparent','สิทธิคงเหลือ/รอรายงานตัว (เส้นประ)'],['rgba(186,117,23,0.3)','ตัดตามโควตา'],['rgba(226,75,74,0.22)','ช่วงซ้ำซ้อน/เรียกคืน']].map(x=>`<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:14px;height:12px;border-radius:3px;background:${x[0]};border:1px solid var(--line)"></span>${x[1]}</span>`).join('')+'<span style="display:inline-flex;align-items:center;gap:5px">▼ ขึ้นทะเบียน</span>';}
 function dxRecalc(){
   const claimsEl=document.getElementById('dxClaims');if(!claimsEl)return;
-  const prior=+document.getElementById('dxprior').value||0;
+  const priorRaw=+document.getElementById('dxprior').value||0;
+  const recovered=+(document.getElementById('dxrecover')||{}).value||0;
+  const prior=Math.max(0,priorRaw-recovered);   // [137] วันที่เรียกเงินคืน = คืนสิทธิ (หักออกจากวันใช้สิทธิสะสม)
   const nodes=dxOrder.map(id=>claimsEl.querySelector('.claim[data-id="'+id+'"]')).filter(Boolean);
   const cs=nodes.map(readClaim);const q=computeQuota(cs,prior);
   const allocs=cs.map((cc,ii)=>q.allocByClaim[ii]||0);const totalAlloc=allocs.reduce((a,b)=>a+b,0);
@@ -525,7 +531,7 @@ function dxRecalc(){
   for(let i=0;i<allP.length;i++)for(let j=i+1;j<allP.length;j++){if(allP[i].ci===allP[j].ci)continue;const s=Math.max(allP[i].s,allP[j].s),e=Math.min(allP[i].e,allP[j].e);if(e>=s){dupI.push([s,e]);const od=Math.round((e-s)/86400000)+1;const ea=(allP[i].reg&&allP[j].reg)?(allP[i].reg<=allP[j].reg?allP[i]:allP[j]):(allP[i].s<=allP[j].s?allP[i]:allP[j]);recover+=od*ea.daily;}}
   let dt=0;if(dupI.length){dupI.sort((a,b)=>a[0]-b[0]);let c0=dupI[0][0],ce=dupI[0][1];for(let k=1;k<dupI.length;k++){if(dupI[k][0]<=ce+86400000)ce=Math.max(ce,dupI[k][1]);else{dt+=Math.round((ce-c0)/86400000)+1;c0=dupI[k][0];ce=dupI[k][1];}}dt+=Math.round((ce-c0)/86400000)+1;}
   dxRenderSummary(cs.length,dt,r05(recover),q.usedInfo,totDays,totAmt);dxRenderTimeline(cs,dupI);dxSaveState();}
-function dxSnapshot(){const claimsEl=document.getElementById('dxClaims');const claims=[];dxOrder.forEach(id=>{const node=claimsEl.querySelector('.claim[data-id="'+id+'"]');if(!node)return;const reps=Array.prototype.map.call(node.querySelectorAll('.rep'),p=>({date:p.querySelector('.r-date').value,rep:p.querySelector('.r-rep').checked}));claims.push({type:node.querySelector('.f-type').value,w:[node.querySelector('.f-w1').value,node.querySelector('.f-w2').value,node.querySelector('.f-w3').value],out:node.querySelector('.f-out').value,notify:node.querySelector('.f-notify').value,reg:node.querySelector('.f-reg').value,reps});});return {prior:document.getElementById('dxprior').value,claims};}
+function dxSnapshot(){const claimsEl=document.getElementById('dxClaims');const claims=[];dxOrder.forEach(id=>{const node=claimsEl.querySelector('.claim[data-id="'+id+'"]');if(!node)return;const reps=Array.prototype.map.call(node.querySelectorAll('.rep'),p=>({date:p.querySelector('.r-date').value,rep:p.querySelector('.r-rep').checked}));claims.push({type:node.querySelector('.f-type').value,w:[node.querySelector('.f-w1').value,node.querySelector('.f-w2').value,node.querySelector('.f-w3').value],out:node.querySelector('.f-out').value,notify:node.querySelector('.f-notify').value,reg:node.querySelector('.f-reg').value,reps});});return {prior:document.getElementById('dxprior').value,recover:(document.getElementById('dxrecover')||{}).value||'0',claims};}
 function dxSaveState(){try{localStorage.setItem(DX_KEY,JSON.stringify(dxSnapshot()));}catch(e){}}
 function dxLoadState(){try{return JSON.parse(localStorage.getItem(DX_KEY));}catch(e){return null;}}
 function clearDxClaims(){const el=document.getElementById('dxClaims');dxOrder.slice().forEach(id=>{const n=el.querySelector('.claim[data-id="'+id+'"]');if(n)n.remove();});dxOrder=[];}
@@ -538,11 +544,12 @@ const DXPRESETS=[
  {name:'นายจ้างแจ้งเข้างาน — ตัดจ่ายถึงสิ้นเดือนก่อน',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',notify:'2026-03-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-18',rep:true}]}]}},
  {name:'auto-fill เดือนที่ขาด (ข้าม ก.พ.)',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-03-10',rep:true}]}]}},
  {name:'ตัดโควตา — สะสมมาแล้ว 70 วัน',data:{prior:'70',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-07',rep:true}]}]}},
+ {name:'[137] เคยเรียกเงินคืน 50 วัน → คืนสิทธิ (ควรได้ 85)',data:{prior:'55',recover:'50',claims:[{type:'resign',w:[15000,15000,15000],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-07',rep:true}]}]}},
  {name:'คร่อมสิทธิ — เลิกจ้าง คร่อมโควิด 2563 (2 ช่วงในรับแจ้งเดียว)',data:{prior:'0',claims:[{type:'layoff',w:[15000,15000,15000],out:'2020-02-01',reg:'2020-02-15',reps:[{date:'2020-02-15',rep:true},{date:'2020-08-25',rep:true}]}]}}
 ];
 function dxSavedCases(){try{return JSON.parse(localStorage.getItem(DXCASES_KEY))||{};}catch(e){return {};}}
 function refreshDxCases(){const sel=document.getElementById('dxCase');if(!sel)return;let h='<option value="">— เลือกเทสเคสเพื่อเดโม —</option><optgroup label="ตัวอย่างสำเร็จรูป">';DXPRESETS.forEach((p,i)=>h+=`<option value="P${i}">${p.name}</option>`);h+='</optgroup>';const sv=dxSavedCases(),ks=Object.keys(sv);if(ks.length){h+='<optgroup label="เทสเคสที่บันทึกไว้">';ks.forEach(k=>h+=`<option value="S${encodeURIComponent(k)}">${esc(k)}</option>`);h+='</optgroup>';}sel.innerHTML=h;}
-function applyDxCase(data){clearDxClaims();document.getElementById('dxprior').value=data.prior||0;(data.claims||[]).forEach(addDxClaim);}
+function applyDxCase(data){clearDxClaims();document.getElementById('dxprior').value=data.prior||0;document.getElementById('dxrecover').value=data.recover||0;(data.claims||[]).forEach(addDxClaim);}
 function loadDxCase(){const v=document.getElementById('dxCase').value;if(!v)return;let d;if(v[0]==='P')d=DXPRESETS[+v.slice(1)].data;else d=dxSavedCases()[decodeURIComponent(v.slice(1))];if(d)applyDxCase(d);}
 function saveDxCase(){const name=prompt('ตั้งชื่อเทสเคส:');if(!name)return;const sv=dxSavedCases();sv[name.trim()]=dxSnapshot();localStorage.setItem(DXCASES_KEY,JSON.stringify(sv));refreshDxCases();document.getElementById('dxCase').value='S'+encodeURIComponent(name.trim());toast('บันทึกเทสเคสแล้ว ✓');}
 function delDxCase(){const sel=document.getElementById('dxCase'),v=sel.value;if(v[0]!=='S'){toast('เลือกเทสเคสที่บันทึกไว้ก่อน');return;}const k=decodeURIComponent(v.slice(1));if(!confirm('ลบเทสเคส “'+k+'” ?'))return;const sv=dxSavedCases();delete sv[k];localStorage.setItem(DXCASES_KEY,JSON.stringify(sv));refreshDxCases();toast('ลบแล้ว');}
