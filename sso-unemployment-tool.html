@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ตัวอย่างช่วงสิทธิว่างงาน — รายงานตัว/จ่าย 2 รอบ · ซ้ำซ้อน · โควตา (ม.57)</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.17.0/dist/tabler-icons.min.css">
+<style>
+  :root{
+    --bg:#faf9f5; --surface:#ffffff; --surface2:#f1efe8; --danger-bg:#fcebeb; --ok-bg:#e1f5ee; --warn-bg:#faeeda;
+    --text:#1a1a18; --text2:#5f5e5a; --text3:#8a897f; --danger:#a32d2d; --ok:#0f6e56; --warn:#854f0b;
+    --border:rgba(0,0,0,0.14); --border2:rgba(0,0,0,0.28); --radius:8px; --radius-lg:12px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1f1e1b; --surface:#2a2925; --surface2:#33322d; --danger-bg:#3a1e1e; --ok-bg:#13362c; --warn-bg:#3a2c12;
+      --text:#f1efe8; --text2:#b4b2a9; --text3:#888780; --danger:#f09595; --ok:#5dcaa5; --warn:#fac775;
+      --border:rgba(255,255,255,0.15); --border2:rgba(255,255,255,0.3);
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:'Noto Sans Thai',system-ui,sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:880px; margin:0 auto; padding:28px 20px 60px;}
+  h1{font-size:22px; font-weight:600; margin:0 0 4px;}
+  .sub{font-size:13.5px; color:var(--text2); margin:0 0 18px;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  label{display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--text2);}
+  input,select,button{font-family:inherit; font-size:14px; color:var(--text);}
+  input,select{height:36px; padding:0 10px; background:var(--surface); border:0.5px solid var(--border); border-radius:var(--radius); width:100%;}
+  input[type=checkbox]{width:auto;height:auto;}
+  input:focus,select:focus{outline:none; box-shadow:0 0 0 2px var(--border2);}
+  button{cursor:pointer; height:36px; padding:0 14px; background:var(--surface); border:0.5px solid var(--border2); border-radius:var(--radius); transition:background .15s;}
+  button:hover{background:var(--surface2);} button:active{transform:scale(0.98);}
+  .linkbtn{height:auto;padding:4px 8px;font-size:12px;border:none;background:transparent;color:var(--ok);}
+  table.sch{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;}
+  table.sch th,table.sch td{padding:6px 8px;border-bottom:0.5px solid var(--border);text-align:left;}
+  table.sch th{background:var(--surface);color:var(--text2);font-weight:500;}
+  b{font-weight:500;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>ตัวอย่างช่วงสิทธิว่างงาน — รายงานตัว/จ่าย 2 รอบ · ซ้ำซ้อน · โควตา</h1>
+<p class="sub">รายงานตัว 1 ครั้ง/เดือน (วันใดก็ได้) → จ่าย 2 รอบ: ถึงวันรายงานตัว และส่วนที่เหลือถึงสิ้นเดือน · ไม่มีช่องว่าง (เดือนก่อนหน้าทำจ่ายอัตโนมัติ) · ตรวจซ้ำซ้อน/โควตา · คำนวณ ม.57</p>
+
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;background:var(--surface2);padding:10px 12px;border-radius:var(--radius);">
+  <span style="font-size:12px;color:var(--text2);"><i class="ti ti-folder" style="font-size:14px;vertical-align:-2px;" aria-hidden="true"></i> คลังเคส:</span>
+  <select id="caseSel" style="width:auto;min-width:240px;"></select>
+  <button id="loadCase"><i class="ti ti-player-play" style="font-size:14px;vertical-align:-2px;margin-right:3px;" aria-hidden="true"></i>โหลดเคส</button>
+  <button id="saveCase"><i class="ti ti-device-floppy" style="font-size:14px;vertical-align:-2px;margin-right:3px;" aria-hidden="true"></i>บันทึกเคสนี้…</button>
+  <button id="delCase"><i class="ti ti-trash" style="font-size:14px;vertical-align:-2px;margin-right:3px;" aria-hidden="true"></i>ลบเคส</button>
+</div>
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;">
+  <label style="flex-direction:row;align-items:center;gap:8px;">วันใช้สิทธิสะสมก่อนหน้า (ปีปฏิทินนี้, ทุกเหตุรวม)
+    <input id="prior" type="number" min="0" step="1" value="0" style="width:90px;"></label>
+</div>
+
+<h2 class="sr-only">เครื่องมือเปรียบเทียบช่วงสิทธิว่างงาน รายงานตัวรายเดือน จ่าย 2 รอบ ตรวจซ้ำซ้อนและโควตา</h2>
+
+<div id="summary" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:1.25rem;"></div>
+
+<div style="background:var(--ok-bg); border:0.5px solid var(--ok); border-radius:var(--radius-lg); padding:12px 16px; margin-bottom:1.25rem;">
+  <div style="font-weight:600; color:var(--ok); margin-bottom:4px;"><i class="ti ti-lock-open" style="font-size:15px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>เงื่อนไขปลดล็อกความซ้ำซ้อน (สำหรับผู้ทดสอบ)</div>
+  <div style="font-size:12.5px; color:var(--text2); line-height:1.8;">
+    ระบบตรวจ “ซ้ำซ้อน” จาก <b style="color:var(--text);">ช่วงที่จ่ายจริง (ที่รายงานตัวแล้ว)</b> เท่านั้น <b style="color:var(--text);">ไม่ใช่</b>ช่วงสิทธิที่วินิจฉัย/คำนวณ period ไว้ล่วงหน้า<br>
+    กรณีที่ต้องปลดล็อก: คำขอแรกถูกวินิจฉัยคำนวณ period ไว้แล้ว แต่ <b style="color:var(--text);">ยังไม่ได้รายงานตัว</b>ในช่วงนั้น → ผู้ประกันตน<b style="color:var(--text);">กลับเข้าทำงาน</b> แล้ว<b style="color:var(--text);">ลาออก/ว่างงานอีกครั้ง</b> (คำขอที่ 2)<br>
+    <b style="color:var(--ok);">เกณฑ์ปลดล็อก:</b> ถ้า “ช่วงที่จ่ายจริง” ของคำขอแรกกับคำขอที่ 2 <b style="color:var(--text);">ไม่ทับซ้อนกัน</b> → ถือว่า <b style="color:var(--text);">ไม่ซ้ำซ้อน</b> ระบบต้อง <b style="color:var(--text);">ปิดรับแจ้งแรกได้ และเปิดรับแจ้งที่ 2 ได้</b> (period ที่วินิจฉัยไว้แต่ยังไม่จ่ายจะไม่นับเป็นการทับซ้อน)
+  </div>
+</div>
+
+<div id="tl" style="border:0.5px solid var(--border); border-radius:var(--radius-lg); padding:14px 16px; margin-bottom:1.25rem; overflow:hidden; background:var(--surface);"></div>
+
+<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12px; color:var(--text2); margin-bottom:1.25rem;">
+  <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:10px;border-radius:2px;background:#85B7EB;border:0.5px solid #185FA5;"></span>จ่ายจริง</span>
+  <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:10px;border-radius:2px;background:transparent;border:1px dashed #185FA5;"></span>สิทธิคงเหลือ/รอรายงานตัว</span>
+  <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:10px;border-radius:2px;background:rgba(186,117,23,0.20);border:1px solid #BA7517;"></span>ตัดตามโควตา</span>
+  <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:10px;border-radius:2px;background:#85B7EB;opacity:0.25;"></span>สิทธิเต็มตามวินิจฉัย</span>
+  <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:10px;border-radius:2px;background:rgba(226,75,74,0.30);border:0.5px solid #A32D2D;"></span>ช่วงซ้ำซ้อน</span>
+  <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:10px;border-radius:2px;background:rgba(226,75,74,0.22);border:1px solid #A32D2D;"></span>จ่ายเกิน/เรียกคืน</span>
+  <span style="display:flex;align-items:center;gap:5px;"><span style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid var(--text2);"></span>ขึ้นทะเบียน</span>
+</div>
+
+<div id="claims" style="display:flex; flex-direction:column; gap:12px;"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center;">
+  <button id="add"><i class="ti ti-plus" style="font-size:16px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>เพิ่มคำขอ (รับแจ้ง)</button>
+  <button id="reset"><i class="ti ti-refresh" style="font-size:15px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>รีเซ็ตค่าตัวอย่าง</button>
+  <span style="font-size:11.5px;color:var(--text3);"><i class="ti ti-device-floppy" style="font-size:13px;vertical-align:-2px;" aria-hidden="true"></i> บันทึกค่าที่กรอกอัตโนมัติในเครื่อง (เปิดใหม่ค่าเดิมยังอยู่)</span>
+</div>
+
+<details style="margin-top:32px; padding-top:18px; border-top:0.5px solid var(--border); font-size:12.5px; color:var(--text2); line-height:1.8;">
+  <summary style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px;cursor:pointer;">ส่วนที่ 1 · คู่มือการคำนวณ &amp; หลักเกณฑ์ (กดเพื่อดู)</summary>
+  <p style="margin:0 0 14px;">เครื่องมือนี้จำลองการวินิจฉัยจ่าย “ประโยชน์ทดแทนกรณีว่างงาน” ของสำนักงานประกันสังคม เพื่อให้เห็นภาพ <b style="color:var(--text);">ช่วงสิทธิ · เงินที่จ่าย · โควตา · และการตรวจความซ้ำซ้อน</b> เมื่อมีหลายคำขอ (รับแจ้ง) ปรับค่าทุกช่องได้สด ผลคำนวณและเส้นเวลาจะอัปเดตทันที</p>
+
+  <div style="font-weight:600;color:var(--text);margin-bottom:2px;">1) การคำนวณเงิน (มาตรา 57)</div>
+  • <b style="color:var(--text);">ค่าจ้างรายวัน</b> = ค่าจ้าง 3 เดือนที่สูงสุด (เพดานเดือนละ <b style="color:var(--text);">17,500 บาท</b> ตั้งแต่ 1 ม.ค. 2569 ; เดิม 15,000) ÷ 90<br>
+  • <b style="color:var(--text);">เงินทดแทนรายวัน</b> = ค่าจ้างรายวัน × อัตรา — <b style="color:var(--text);">ถูกเลิกจ้าง 60%</b> · <b style="color:var(--text);">ลาออก/สิ้นสุดสัญญา 30%</b> (อัตรา 60% ตามกฎกระทรวงฯ ฉบับที่ 2 พ.ศ. 2568 มีผล 28 มิ.ย. 2568)<br>
+  • <b style="color:var(--text);">อัตราตามช่วงกฎ (เลือกที่ช่อง “ประเภท”):</b> โควิด 2563–2565 = เลิกจ้าง <b style="color:var(--text);">70% (≤200 วัน)</b> / ลาออก <b style="color:var(--text);">45% (≤90 วัน)</b> · พรฎ เดิม 2547 = เลิกจ้าง 50% / ลาออก 30% — แต่ละช่วงเปิดเป็นคำขอแยก (อัตราเดียวต่อคำขอ)<br>
+  • <b style="color:var(--text);">ปัดเศษลงเป็นพหุคูณ 0.05 บาท</b> ทุกขั้น (เศษ 0.00–0.04→.00, 0.05–0.09→.05) เช่น 583.333→583.30, 174.99→174.95<br>
+  <span style="color:var(--text3);">ตัวอย่าง: เพดาน 17,500 → 17,500×3÷90 = 583.30/วัน → ลาออก 30% = 174.95/วัน → 90 วัน = 15,745.50 บาท</span>
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">2) วันสำคัญ (คำนวณให้อัตโนมัติ)</div>
+  • <b style="color:var(--text);">วันที่ขึ้นทะเบียน</b> กรอกเอง — และเท่ากับ “วันรายงานตัวครั้งที่ 1” เสมอ (ระบบล็อกแถวแรกให้ตรงกัน)<br>
+  • <b style="color:var(--text);">วันที่เกิดสิทธิ (auto)</b> = วันที่ 8 นับแต่วันว่างงาน (วันออกจากงาน + 7) ถ้าขึ้นทะเบียนภายใน 30 วัน · ถ้าขึ้นทะเบียนเกิน 30 วัน = วันที่ขึ้นทะเบียน<br>
+  • <b style="color:var(--text);">วันที่กลับเข้าทำงาน</b> มีหรือไม่มีก็ได้ — ถ้ามี จะตัดการจ่ายตั้งแต่วันนั้น (จ่ายถึงวันก่อนกลับเข้าทำงาน)
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">3) การรายงานตัว &amp; การจ่ายเงิน</div>
+  • <b style="color:var(--text);">รายงานตัวเดือนละ 1 ครั้ง วันใดก็ได้ภายในเดือน</b> — จึงกรอกเป็น “วันที่รายงานตัว” วันเดียว (ไม่ใช่ช่วงวัน)<br>
+  • <b style="color:var(--text);">จ่าย 2 รอบต่อเดือน</b>: รอบ 1 = ต้นเดือน (หรือวันเกิดสิทธิสำหรับเดือนแรก) → วันรายงานตัว · รอบ 2 = วันถัดจากรายงานตัว → สิ้นเดือน รวมเป็นจ่ายทั้งเดือน<br>
+  • <b style="color:var(--text);">ไม่มีช่องว่างก่อนรายงานตัว</b> — ถ้ามารายงานเดือนถัดไป เดือนก่อนหน้าที่ขาดจะ “ทำจ่ายอัตโนมัติ” ให้ครบถึงสิ้นเดือน<br>
+  • เดือนล่าสุดที่ยังไม่รายงานตัวจะยังไม่จ่าย (รอรายงานตัว) · การจ่ายถูกจำกัดด้วย วันกลับเข้าทำงาน / สิทธิเต็ม / โควตา
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">4) โควตาต่อปีปฏิทิน</div>
+  • <b style="color:var(--text);">ถูกเลิกจ้าง ≤ 180 วัน/ปี · ลาออก/สิ้นสุดสัญญา ≤ 90 วัน/ปี</b> (ช่วงโควิด 2563–2565 ที่มีเหตุเลิกจ้าง เพดานรวม = <b style="color:var(--text);">200 วัน</b>)<br>
+  • รวมหลายคำขอในปีปฏิทินเดียวกัน: ถ้ามีเหตุ “เลิกจ้าง” อย่างน้อย 1 คำขอ เพดานรวม = 180 · ถ้าลาออกล้วน = 90 · วันที่เกินโควตาจะ “ตัดไม่จ่าย” (แสดงเป็นแถบสีส้มในเส้นเวลา) · นับแยกตามปีปฏิทินถ้าช่วงคร่อมปี · ช่อง “วันใช้สิทธิสะสมก่อนหน้า” ใช้ใส่วันที่เคยใช้ไปแล้วในปีนั้น
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">5) ความซ้ำซ้อน &amp; การเรียกเงินคืน</div>
+  • พิจารณา “ซ้ำซ้อน” จากการที่ <b style="color:var(--text);">ช่วงที่จ่ายจริงทับซ้อนกันจริง</b> เท่านั้น — การมีหลายคำขอในช่วงใกล้กันไม่ถือว่าซ้ำซ้อนโดยอัตโนมัติ ถ้าช่วงจ่ายไม่ทับกัน = “ไม่พบการซ้ำซ้อน” (ระบบควรปลดล็อกให้ดำเนินการต่อได้)<br>
+  • <b style="color:var(--text);">ยอดที่อาจต้องเรียกคืน</b> = จำนวนวันที่ทับซ้อน × เงินทดแทนรายวันของคำขอที่ขึ้นทะเบียนก่อน (ฐานลาภมิควรได้ ป.พ.พ. มาตรา 406)
+
+  <div style="font-weight:600;color:var(--text);margin:14px 0 2px;">6) สัญลักษณ์ในเส้นเวลา</div>
+  • <b style="color:var(--text);">แถบทึบ</b> = จ่ายจริง · <b style="color:var(--text);">เส้นประ</b> = สิทธิคงเหลือ/รอรายงานตัว · <b style="color:var(--text);">แถบจาง</b> = สิทธิเต็มตามวินิจฉัย (แสดงเต็มเสมอแม้กลับเข้าทำงานแล้ว) · <b style="color:var(--text);">แถบสีส้ม</b> = ตัดตามโควตา · <b style="color:var(--text);">แถบแดง</b> = ช่วงซ้ำซ้อน · <b style="color:var(--text);">▼</b> = วันขึ้นทะเบียน
+
+  <div style="margin-top:14px;color:var(--text3);font-size:11.5px;">อ้างอิง: พ.ร.บ.ประกันสังคม พ.ศ. 2533 (ม.57 ค่าจ้างรายวัน, ม.79 สิทธิว่างงาน) · กฎกระทรวงกำหนดหลักเกณฑ์ฯ กรณีว่างงาน พ.ศ. 2547 และฉบับที่ 2 พ.ศ. 2568 · ป.พ.พ. ม.406 · เครื่องมือนี้เป็นตัวอย่างเพื่อการพูดคุย/ทดสอบ ปรับให้ตรงระเบียบจริงก่อนใช้อ้างอิง</div>
+</details>
+
+<details style="margin-top:20px; padding-top:18px; border-top:2px solid var(--border); font-size:12.5px; color:var(--text2); line-height:1.8;">
+  <summary style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;cursor:pointer;">ส่วนที่ 2 · คำอธิบายเคสตัวอย่าง (เลือกได้จาก “คลังเคส” ด้านบน) (กดเพื่อดู)</summary>
+  <p style="margin:0 0 14px;">แต่ละเคสสร้างไว้เพื่อสาธิตกฎหนึ่งอย่างชัด ๆ — กดเลือกจากคลังเคสด้านบนแล้วดูเส้นเวลา/ผลวินิจฉัยประกอบคำอธิบายนี้</p>
+
+  <div style="background:var(--surface2);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px;">
+    <div style="font-weight:600;color:var(--text);">① ค่าตั้งต้น: 2 คำขอ — ไม่พบการซ้ำซ้อน</div>
+    <div>สถานการณ์: คำขอ A (ลาออก) ออกจากงาน 1 เม.ย. แล้ว<b style="color:var(--text);">กลับเข้าทำงาน 5 พ.ค.</b> · คำขอ B (ลาออก) เกิดสิทธิ 18 พ.ค. รายงานต่อเนื่องถึง ส.ค.</div>
+    <div>ผลที่ได้: A จ่าย 8 เม.ย.–4 พ.ค. = <b style="color:var(--text);">27 วัน (฿4,723.65)</b> · ช่วงจ่ายของ A กับ B <b style="color:var(--text);">ไม่ทับกัน → ไม่พบการซ้ำซ้อน</b> · เป็นลาออกทั้งคู่ในปีเดียว โควตารวม 90 วัน B จึงถูกตัดเหลือ <b style="color:var(--text);">63 วัน</b></div>
+  </div>
+
+  <div style="background:var(--surface2);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px;">
+    <div style="font-weight:600;color:var(--text);">② รายงานข้ามเดือน → พบการซ้ำซ้อน 44 วัน</div>
+    <div>สถานการณ์: คำขอ A ไม่มีวันกลับเข้าทำงานในช่วงนี้ และรายงานตัวต่อเนื่องถึง มิ.ย. · คำขอ B เกิดสิทธิ 18 พ.ค.</div>
+    <div>ผลที่ได้: A จ่ายต่อเนื่อง 8 เม.ย.–30 มิ.ย. (<b style="color:var(--text);">84 วัน</b>) ไปทับช่วงของ B (18 พ.ค.–15 ส.ค.) → <b style="color:var(--text);">ซ้ำซ้อน 44 วัน</b> (แถบแดง) · A ได้ก่อน 84 วัน B เหลือโควตา 6 วัน → เกิด “ยอดที่อาจต้องเรียกคืน”</div>
+  </div>
+
+  <div style="background:var(--surface2);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px;">
+    <div style="font-weight:600;color:var(--text);">③ จ่ายต่อเนื่องถึงสิ้นเดือน</div>
+    <div>สถานการณ์: รายงานตัว 18 พ.ค.</div>
+    <div>ผลที่ได้: จ่ายทั้งเดือน พ.ค. — <b style="color:var(--text);">รอบ 1: 1–18 พ.ค.</b> และ <b style="color:var(--text);">รอบ 2: 19–31 พ.ค.</b> = 31 วัน (รายงานกลางเดือนก็จ่ายถึงสิ้นเดือน)</div>
+  </div>
+
+  <div style="background:var(--surface2);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px;">
+    <div style="font-weight:600;color:var(--text);">④ auto-fill เดือนที่ขาด (ไม่มีช่องว่าง)</div>
+    <div>สถานการณ์: ไม่ได้รายงาน พ.ค. แต่มารายงาน 10 มิ.ย.</div>
+    <div>ผลที่ได้: ระบบ<b style="color:var(--text);">ทำจ่าย พ.ค. ให้อัตโนมัติ</b> จ่ายต่อเนื่อง 1 พ.ค.–30 มิ.ย. (ไม่เกิดช่องว่างก่อนการรายงานตัว)</div>
+  </div>
+
+  <div style="background:var(--surface2);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px;">
+    <div style="font-weight:600;color:var(--text);">⑤ เลิกจ้าง โควตาเต็ม 180 วัน</div>
+    <div>สถานการณ์: ถูกเลิกจ้างต้นปี รายงานตัวต่อเนื่องถึงสิ้นปี</div>
+    <div>ผลที่ได้: จ่ายเต็มโควตา <b style="color:var(--text);">180 วัน = ฿62,991.00</b> (อัตรา 60%) · วันส่วนที่เกินโควตาถูกตัด</div>
+  </div>
+
+  <div style="background:var(--surface2);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px;">
+    <div style="font-weight:600;color:var(--text);">⑥ กลับเข้าทำงานตัดกลางเดือน</div>
+    <div>สถานการณ์: กลับเข้าทำงาน 20 พ.ค.</div>
+    <div>ผลที่ได้: จ่ายถึง <b style="color:var(--text);">19 พ.ค. (วันก่อนกลับเข้าทำงาน)</b> = 42 วัน · ส่วนสิทธิเต็มที่เหลือยังแสดงเป็นแถบจางไว้ให้เห็น</div>
+  </div>
+
+  <div style="color:var(--text3);font-size:11.5px;">บันทึกเคสที่กรอกเองได้ด้วยปุ่ม “บันทึกเคสนี้…” แล้วกลับมาเลือกซ้ำได้ · ค่าที่กรอกล่าสุดถูกบันทึกในเครื่องอัตโนมัติ</div>
+</details>
+
+<details style="margin-top:20px; padding-top:18px; border-top:0.5px solid var(--border); font-size:12.5px; color:var(--text2); line-height:1.8;">
+  <summary style="font-size:14px;font-weight:600;color:var(--warn);cursor:pointer;"><i class="ti ti-percentage" style="font-size:14px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>อัตราตาม พรฎ เก่า/ใหม่ &amp; ช่วงโควิด (45/70) — [48|P0-3] (กดเพื่อดู)</summary>
+  <div style="margin-top:8px;">
+    เลือก “ประเภทการว่างงาน” ได้ตามช่วงกฎที่ใช้ — ปัจจุบัน 60%/30% (กฎ 2568) · <b style="color:var(--text);">โควิด 70% (เลิกจ้าง ≤200 วัน) / 45% (ลาออก ≤90 วัน)</b> ช่วง 1 มี.ค.63–28 ก.พ.65 · พรฎ เดิม 2547 เลิกจ้าง 50%<br>
+    <b style="color:var(--warn);">ช่วงโควิดเป็นการเปิด claim ใหม่ (ไม่มีการคร่อม):</b> 1 คำขอ = อัตราเดียวตลอดช่วง ถ้าช่วงสิทธิเลยขอบกฎ ให้เปิดคำขออีกใบสำหรับอีกอัตรา · โควตารวม/ปีปฏิทินช่วงโควิดที่มีเหตุเลิกจ้าง = 200 วัน<br>
+    <span style="color:var(--text3);">หมายเหตุ: การคำนวณ “2 อัตราในคำขอเดียว” (auto-คร่อมขอบ พรฎ) ยังรอยืนยันรูปแบบ UI — ดูไฟล์ SPEC_48_P0-3</span>
+  </div>
+</details>
+</div>
+
+<script>
+(function(){
+  var TYPES={
+    'เลิกจ้าง (60%)':{rate:0.60,cap:180,layoff:true},
+    'ลาออก / สิ้นสุดสัญญา (30%)':{rate:0.30,cap:90,layoff:false},
+    'เลิกจ้าง · โควิด 2563–2565 (70%)':{rate:0.70,cap:200,layoff:true},
+    'ลาออก/สิ้นสุดสัญญา · โควิด 2563–2565 (45%)':{rate:0.45,cap:90,layoff:false},
+    'เลิกจ้าง · พรฎ เดิม 2547 (50%)':{rate:0.50,cap:180,layoff:true}
+  };
+  var ALLCAPS={90:1,180:1,200:1};
+  var COLORS=[{f:'#85B7EB',b:'#185FA5',t:'#042C53'},{f:'#5DCAA5',b:'#0F6E56',t:'#04342C'},{f:'#AFA9EC',b:'#534AB7',t:'#26215C'},{f:'#EF9F27',b:'#BA7517',t:'#412402'}];
+  var CAP=17500;
+  var TM=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  function parseD(s){if(!s)return null;var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+  function addDays(d,n){return new Date(d.getTime()+n*86400000);}
+  function dayDiff(a,b){return Math.round((b-a)/86400000);}
+  function endOfMonth(d){return new Date(d.getFullYear(),d.getMonth()+1,0);}
+  function sameMonth(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth();}
+  function thd(d){return d.getDate()+' '+TM[d.getMonth()]+' '+(d.getFullYear()+543);}
+  function thShort(d){return TM[d.getMonth()]+' '+String((d.getFullYear()+543)%100);}
+  function thMonth(d){return TM[d.getMonth()]+' '+(d.getFullYear()+543);}
+  function r05(n){var c=Math.round(n*100);return Math.floor(c/5)*5/100;}
+  function baht(n){return '฿'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function isLayoff(t){return !!(TYPES[t]&&TYPES[t].layoff);}
+  function capOfType(t){return (TYPES[t]&&TYPES[t].cap)||90;}
+  function ymd(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+  function autoEnt(node){var out=parseD(node.querySelector('.f-out').value),reg=parseD(node.querySelector('.f-reg').value),entEl=node.querySelector('.f-ent');if(out){var d=(reg&&dayDiff(out,reg)>30)?reg:addDays(out,7);entEl.value=ymd(d);}}
+
+  var order=[],seq=0; var claimsEl=document.getElementById('claims');
+  document.getElementById('prior').addEventListener('input',recalc);
+  var CACHE_KEY='unemp_cache_v1';
+  function snapshot(){var claims=[];order.forEach(function(id){var node=claimsEl.querySelector('.claim[data-id="'+id+'"]');if(!node)return;var reps=Array.prototype.map.call(node.querySelectorAll('.rep'),function(p){return {date:p.querySelector('.r-date').value,rep:p.querySelector('.r-rep').checked};});claims.push({type:node.querySelector('.f-type').value,w:[node.querySelector('.f-w1').value,node.querySelector('.f-w2').value,node.querySelector('.f-w3').value],out:node.querySelector('.f-out').value,back:node.querySelector('.f-back').value,notify:node.querySelector('.f-notify').value,reg:node.querySelector('.f-reg').value,ent:node.querySelector('.f-ent').value,full:node.querySelector('.f-full').value,reps:reps});});return {prior:document.getElementById('prior').value,claims:claims};}
+  function saveState(){try{localStorage.setItem(CACHE_KEY,JSON.stringify(snapshot()));}catch(e){}}
+  function loadState(){try{var s=localStorage.getItem(CACHE_KEY);return s?JSON.parse(s):null;}catch(e){return null;}}
+  var CASES_KEY='unemp_cases_v1';
+  var W3=['17500','17500','17500'], R='ลาออก / สิ้นสุดสัญญา (30%)', L='เลิกจ้าง (60%)';
+  var PRESETS=[
+    {name:'ค่าตั้งต้น: 2 คำขอ ไม่พบซ้ำซ้อน',data:{prior:'0',claims:[
+      {type:R,w:W3,out:'2026-04-01',back:'2026-05-05',reg:'2026-04-06',ent:'2026-04-08',full:'90',reps:[{date:'2026-04-28',rep:true},{date:'2026-05-04',rep:true}]},
+      {type:R,w:W3,out:'2026-05-11',back:'',reg:'2026-05-15',ent:'2026-05-18',full:'90',reps:[{date:'2026-05-20',rep:true},{date:'2026-06-15',rep:true},{date:'2026-07-15',rep:true},{date:'2026-08-15',rep:true}]}
+    ]}},
+    {name:'รายงานข้ามเดือน → พบซ้ำซ้อน 44 วัน',data:{prior:'0',claims:[
+      {type:R,w:W3,out:'2026-04-01',back:'2026-08-14',reg:'2026-04-06',ent:'2026-04-08',full:'90',reps:[{date:'2026-04-28',rep:true},{date:'2026-05-15',rep:true},{date:'2026-06-20',rep:true}]},
+      {type:R,w:W3,out:'2026-05-11',back:'',reg:'2026-05-15',ent:'2026-05-18',full:'90',reps:[{date:'2026-05-20',rep:true},{date:'2026-06-15',rep:true},{date:'2026-07-15',rep:true},{date:'2026-08-15',rep:true}]}
+    ]}},
+    {name:'จ่ายต่อเนื่องถึงสิ้นเดือน (รายงาน 18/05)',data:{prior:'0',claims:[
+      {type:R,w:W3,out:'2026-04-24',back:'',reg:'2026-04-26',ent:'2026-05-01',full:'90',reps:[{date:'2026-05-18',rep:true}]}
+    ]}},
+    {name:'auto-fill เดือนที่ขาด (รายงาน มิ.ย. ข้าม พ.ค.)',data:{prior:'0',claims:[
+      {type:R,w:W3,out:'2026-04-24',back:'',reg:'2026-04-26',ent:'2026-05-01',full:'90',reps:[{date:'2026-06-10',rep:true}]}
+    ]}},
+    {name:'เลิกจ้าง โควตาเต็ม 180 วัน',data:{prior:'0',claims:[
+      {type:L,w:W3,out:'2025-12-25',back:'',reg:'2026-01-01',ent:'2026-01-01',full:'180',reps:[{date:'2026-12-15',rep:true}]}
+    ]}},
+    {name:'กลับเข้าทำงานตัดกลางเดือน',data:{prior:'0',claims:[
+      {type:R,w:W3,out:'2026-04-01',back:'2026-05-20',reg:'2026-04-06',ent:'2026-04-08',full:'90',reps:[{date:'2026-04-28',rep:true},{date:'2026-05-15',rep:true}]}
+    ]}},
+    {name:'กลับเข้าทำงาน + บริษัทแจ้งล่าช้า → จ่ายเกิน/เรียกคืน 15 วัน',data:{prior:'0',claims:[
+      {type:R,w:W3,out:'2025-01-01',back:'2025-02-14',notify:'2025-03-01',reg:'2025-01-01',ent:'2025-01-08',full:'90',reps:[{date:'2025-01-01',rep:true},{date:'2025-02-18',rep:true}]}
+    ]}},
+    {name:'โควิด: เลิกจ้าง 70% (200 วัน) — อ้างอิงตัวอย่าง 2',data:{prior:'0',claims:[
+      {type:'เลิกจ้าง · โควิด 2563–2565 (70%)',w:W3,out:'2020-02-01',back:'',reg:'2020-02-15',ent:'2020-02-08',full:'200',reps:[{date:'2020-02-15',rep:true},{date:'2020-08-25',rep:true}]}
+    ]}},
+    {name:'โควิด: ลาออก 45% (90 วัน) — อ้างอิงตัวอย่าง 1',data:{prior:'0',claims:[
+      {type:'ลาออก/สิ้นสุดสัญญา · โควิด 2563–2565 (45%)',w:W3,out:'2020-02-01',back:'',reg:'2020-02-15',ent:'2020-02-08',full:'90',reps:[{date:'2020-02-15',rep:true},{date:'2020-05-07',rep:true}]}
+    ]}}
+  ];
+  function savedCases(){try{return JSON.parse(localStorage.getItem(CASES_KEY))||{};}catch(e){return {};}}
+  function setSavedCases(o){try{localStorage.setItem(CASES_KEY,JSON.stringify(o));}catch(e){}}
+  function refreshCaseSelect(){
+    var sel=document.getElementById('caseSel'),sv=savedCases();
+    var html='<option value="">— เลือกเคส —</option><optgroup label="ตัวอย่างสำเร็จรูป">';
+    PRESETS.forEach(function(p,i){html+='<option value="P'+i+'">'+p.name+'</option>';});
+    html+='</optgroup>';
+    var keys=Object.keys(sv);
+    if(keys.length){html+='<optgroup label="เคสที่บันทึกไว้">';keys.forEach(function(k){html+='<option value="S'+encodeURIComponent(k)+'">'+k+'</option>';});html+='</optgroup>';}
+    sel.innerHTML=html;
+  }
+  function clearClaims(){order.slice().forEach(function(id){var n=claimsEl.querySelector('.claim[data-id="'+id+'"]');if(n)n.remove();});order=[];}
+  function loadCase(data){clearClaims();document.getElementById('prior').value=(data.prior||0);(data.claims||[]).forEach(function(c){addClaim(c);});}
+
+  function fld(label,inner){return '<label>'+label+inner+'</label>';}
+  function repRowHTML(date,rep){
+    return '<div class="rep" style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap;">'
+      +'<span style="font-size:12px;color:var(--text2);min-width:90px;">วันที่รายงานตัว</span>'
+      +'<input class="r-date" type="date" value="'+(date||'')+'" style="width:160px;">'
+      +'<label style="flex-direction:row;align-items:center;gap:4px;font-size:12px;"><input class="r-rep" type="checkbox" '+(rep?'checked':'')+'> รายงานตัวแล้ว</label>'
+      +'<span class="r-info" style="font-size:12px;color:var(--text2);min-width:80px;"></span>'
+      +'<button class="rmp" aria-label="ลบ" style="width:30px;padding:0;margin-left:auto;"><i class="ti ti-x" style="font-size:14px;" aria-hidden="true"></i></button></div>';
+  }
+  function claimHTML(id,d){
+    var opts=Object.keys(TYPES).map(function(t){return '<option'+(t===d.type?' selected':'')+'>'+t+'</option>';}).join('');
+    return '<div class="claim" data-id="'+id+'" style="background:var(--surface2); border-radius:var(--radius-lg); padding:12px 14px;">'
+      +'<div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;"><span class="dot" style="width:12px;height:12px;border-radius:3px;"></span><span class="cname" style="font-weight:500;font-size:14px;"></span><button class="rm" aria-label="ลบคำขอ" style="margin-left:auto;width:32px;padding:0;"><i class="ti ti-trash" style="font-size:15px;" aria-hidden="true"></i></button></div>'
+      +'<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; align-items:end;">'
+        +fld('ประเภทการว่างงาน','<select class="f-type">'+opts+'</select>')
+        +'<label style="grid-column:span 2;">ค่าจ้าง 3 เดือนสูงสุด (ม.57 · เพดาน 17,500)<div style="display:flex;gap:6px;"><input class="f-w1" type="number" min="0" step="500" value="'+d.w[0]+'"><input class="f-w2" type="number" min="0" step="500" value="'+d.w[1]+'"><input class="f-w3" type="number" min="0" step="500" value="'+d.w[2]+'"></div></label>'
+        +fld('วันที่ลาออก/ออกจากงาน','<input class="f-out" type="date" value="'+(d.out||'')+'">')
+        +fld('วันที่กลับเข้าทำงานจริง (ถ้ามี)','<input class="f-back" type="date" value="'+(d.back||'')+'">')
+        +fld('วันที่นายจ้างแจ้งเข้างาน (ถ้ามี)','<input class="f-notify" type="date" value="'+(d.notify||'')+'">')
+        +fld('วันที่ขึ้นทะเบียน (= รายงานตัวครั้งที่ 1)','<input class="f-reg" type="date" value="'+(d.reg||'')+'">')
+        +fld('วันที่เกิดสิทธิ (auto)','<input class="f-ent" type="date" value="'+(d.ent||'')+'" readonly style="background:var(--surface2);color:var(--text2);">')
+        +fld('สิทธิเต็ม (วัน)','<input class="f-full" type="number" min="0" step="1" value="'+(d.full||'')+'">')
+      +'</div>'
+      +'<div style="font-size:12px;color:var(--text2);margin:12px 0 6px;">การรายงานตัว (1 ครั้ง/เดือน — กรอกวันที่รายงานตัว วันเดียวต่อเดือน)</div>'
+      +'<div class="reps"></div>'
+      +'<button class="addp linkbtn"><i class="ti ti-plus" style="font-size:14px;vertical-align:-2px;" aria-hidden="true"></i> เพิ่มการรายงานตัว</button>'
+      +'<div class="derived" style="display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:8px; font-size:12.5px; color:var(--text2);"></div>'
+      +'<button class="drill" style="margin-top:8px;font-size:12.5px;"><i class="ti ti-table" style="font-size:14px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>ดูตารางงวด (วินิจฉัยแล้ว)</button>'
+      +'<div class="schedule" style="display:none;margin-top:8px;"></div></div>';
+  }
+  function attachRep(container,date,rep){
+    var w=document.createElement('div'); w.innerHTML=repRowHTML(date,rep!==false); var row=w.firstChild; container.appendChild(row);
+    row.querySelectorAll('input').forEach(function(el){el.addEventListener('input',recalc);});
+    row.querySelector('.rmp').addEventListener('click',function(){if(container.querySelectorAll('.rep').length<=1)return;row.remove();recalc();});
+  }
+  function addClaim(d){
+    var id=++seq; order.push(id);
+    var wrap=document.createElement('div'); wrap.innerHTML=claimHTML(id,d); var node=wrap.firstChild; claimsEl.appendChild(node);
+    var repsEl=node.querySelector('.reps');
+    (d.reps||[{date:'',rep:true}]).forEach(function(p){attachRep(repsEl,p.date,p.rep);});
+    node.querySelector('.f-type').addEventListener('change',function(e){var t=TYPES[e.target.value],fEl=node.querySelector('.f-full');if(t&&(!fEl.value||ALLCAPS[+fEl.value]))fEl.value=t.cap;recalc();});
+    node.querySelectorAll('.f-w1,.f-w2,.f-w3,.f-out,.f-back,.f-notify,.f-reg,.f-full').forEach(function(el){el.addEventListener('input',recalc);});
+    node.querySelector('.addp').addEventListener('click',function(){attachRep(repsEl,'',true);recalc();});
+    node.querySelector('.rm').addEventListener('click',function(){if(order.length<=1)return;order=order.filter(function(x){return x!==id;});node.remove();recalc();});
+    node.querySelector('.drill').addEventListener('click',function(){var sc=node.querySelector('.schedule');if(sc.style.display==='none'){sc.style.display='block';renderSchedule(node);}else sc.style.display='none';});
+    recalc();
+  }
+  function readClaim(node){
+    var type=node.querySelector('.f-type').value;
+    var w=[node.querySelector('.f-w1'),node.querySelector('.f-w2'),node.querySelector('.f-w3')].map(function(el){return Math.min(+el.value||0,CAP);});
+    var out=parseD(node.querySelector('.f-out').value),back=parseD(node.querySelector('.f-back').value),notify=parseD(node.querySelector('.f-notify').value),full=+node.querySelector('.f-full').value||0;
+    var regEl=node.querySelector('.f-reg'); var reg=parseD(regEl.value);    // ขึ้นทะเบียน = กรอกเอง
+    // รายงานตัวครั้งที่ 1 = ล็อกตามวันขึ้นทะเบียน ; แถวอื่นแก้ได้
+    Array.prototype.forEach.call(node.querySelectorAll('.rep'),function(p,idx){var de=p.querySelector('.r-date');if(idx===0){de.readOnly=true;de.style.background='var(--surface2)';de.style.color='var(--text2)';if(regEl.value)de.value=regEl.value;}else{de.readOnly=false;de.style.background='';de.style.color='';}});
+    var entEl=node.querySelector('.f-ent');
+    if(out){var ed=(reg&&dayDiff(out,reg)>30)?reg:addDays(out,7);entEl.value=ymd(ed);}  // auto เกิดสิทธิ (วันที่ 8 หรือวันขึ้นทะเบียนถ้าเกิน 30 วัน)
+    var ent=parseD(entEl.value);
+    var rate=(TYPES[type]||{rate:0}).rate, dailyWage=r05((w[0]+w[1]+w[2])/90), daily=r05(dailyWage*rate);
+    var reportedDates=[];
+    Array.prototype.forEach.call(node.querySelectorAll('.rep'),function(p){
+      var d=parseD(p.querySelector('.r-date').value),rep=p.querySelector('.r-rep').checked;
+      var info=p.querySelector('.r-info');
+      if(d&&rep){reportedDates.push(d); info.textContent='('+thMonth(d)+')'; info.style.color='var(--text2)';}
+      else if(d&&!rep){info.textContent='(ยังไม่รายงานตัว)'; info.style.color='var(--warn)';}
+      else info.textContent='';
+    });
+    reportedDates.sort(function(a,b){return a-b;});
+    var reportedEnd=reportedDates.length?reportedDates[reportedDates.length-1]:null;
+    var startE=ent||(reportedDates.length?reportedDates[0]:null);
+    // ช่วงจ่ายจริง (ใช้สิทธิ): ถ้านายจ้างแจ้งล่าช้า ระบบจ่ายต่อถึงสิ้นเดือนก่อนวันแจ้ง ; ถ้าไม่มีแจ้ง ตัดที่วันกลับเข้าทำงาน
+    var payCap=null;
+    if(notify) payCap=new Date(notify.getFullYear(),notify.getMonth(),0);   // จ่ายถึงสิ้นเดือนก่อนเดือนที่นายจ้างแจ้ง
+    else if(back) payCap=addDays(back,-1);
+    var effPaid=null;
+    if(startE&&full>0&&reportedEnd){
+      var entEnd=addDays(startE,full-1), pe=endOfMonth(reportedEnd);
+      if(pe>entEnd)pe=entEnd;
+      if(payCap&&payCap<pe)pe=payCap;
+      if(pe>=startE)effPaid={s:startE,e:pe};
+    }
+    var usedDays=effPaid?dayDiff(effPaid.s,effPaid.e)+1:0;
+    // ควรได้จริง: ตัดที่วันกลับเข้าทำงานจริง ; ส่วนเกิน = ต้องเรียกคืน
+    var legitEnd=null,legitDays=usedDays,overpaidDays=0;
+    if(effPaid){
+      legitEnd=back?(addDays(back,-1)<effPaid.e?addDays(back,-1):effPaid.e):effPaid.e;
+      legitDays=legitEnd>=effPaid.s?dayDiff(effPaid.s,legitEnd)+1:0;
+      overpaidDays=usedDays-legitDays;
+    }
+    var effDays=usedDays;
+    return {node:node,type:type,layoff:isLayoff(type),cap:capOfType(type),rate:rate,dailyWage:dailyWage,daily:daily,out:out,back:back,notify:notify,reg:reg,ent:ent,full:full,startE:startE,reportedDates:reportedDates,reportedEnd:reportedEnd,effPaid:effPaid,effDays:effDays,usedDays:usedDays,legitEnd:legitEnd,legitDays:legitDays,overpaidDays:overpaidDays};
+  }
+  function entWindow(c){var s=c.startE;if(!s||!c.full||c.full<=0)return null;return{s:s,e:addDays(s,c.full-1)};} // สิทธิเต็มตามวินิจฉัย — แสดงเต็มเสมอ (ไม่ตัดด้วยวันกลับเข้าทำงาน)
+  function genSchedule(c){
+    if(!c.startE||!c.full||c.full<=0)return[];
+    var reportedEnd=c.reportedEnd?c.reportedEnd.getTime():null, reps=c.reportedDates||[];
+    var quotaCut=(c.alloc!=null && c.alloc < (c.usedDays||c.full));   // โควตาตัด (เช่น รับแจ้ง 2 เหลือโควตาจากรับแจ้ง 1)
+    var quotaEnd=quotaCut?addDays(c.startE,c.alloc-1):null;
+    var rows=[],remaining=c.full,cur=new Date(c.startE),guard=0,rptMonth=null;
+    var legitCut=(c.overpaidDays>0&&c.legitEnd)?c.legitEnd:null;   // ควรจ่ายถึงวันก่อนกลับเข้าทำงาน ; ส่วนเกิน = เรียกคืน
+    function pushPaid(s,e,status,rd){
+      if(legitCut&&legitCut.getTime()>=s.getTime()&&legitCut.getTime()<e.getTime()){
+        rows.push({month:rptMonth,rdate:rd,status:status,s:s,e:legitCut,days:dayDiff(s,legitCut)+1,show:true});
+        rows.push({month:rptMonth,rdate:null,status:'จ่ายเกิน/เรียกคืน',s:addDays(legitCut,1),e:e,days:dayDiff(addDays(legitCut,1),e)+1,show:true,over:true});
+      } else if(legitCut&&legitCut.getTime()<s.getTime()){
+        rows.push({month:rptMonth,rdate:rd,status:'จ่ายเกิน/เรียกคืน',s:s,e:e,days:dayDiff(s,e)+1,show:true,over:true});
+      } else { rows.push({month:rptMonth,rdate:rd,status:status,s:s,e:e,days:dayDiff(s,e)+1,show:true}); }
+    }
+    while(remaining>0&&guard<48){guard++;
+      var mEnd=endOfMonth(cur),byDays=addDays(cur,remaining-1),cycEnd=mEnd<byDays?mEnd:byDays,nominal=dayDiff(cur,cycEnd)+1;
+      rptMonth=new Date(cur.getFullYear(),cur.getMonth(),1);
+      if(quotaEnd && cur.getTime()>quotaEnd.getTime()){rows.push({month:rptMonth,rdate:null,status:'ตัดตามโควตา',s:cur,e:cycEnd,days:nominal,show:false,cut:true});remaining-=nominal;cur=addDays(cycEnd,1);continue;}
+      var reported=reportedEnd!==null&&cur.getTime()<=reportedEnd;
+      var payCap=c.notify?new Date(c.notify.getFullYear(),c.notify.getMonth(),0):(c.back?addDays(c.back,-1):null);
+      var payEnd=cycEnd; if(payCap&&payCap<payEnd)payEnd=payCap;
+      if(quotaEnd && quotaEnd.getTime()<payEnd.getTime())payEnd=quotaEnd;
+      if(!reported||payEnd<cur){
+        rows.push({month:rptMonth,rdate:null,status:'รอรายงานตัว',s:null,e:null,days:0,show:false});
+      } else {
+        var rd=null; reps.forEach(function(d){if(sameMonth(d,cur))rd=d;});
+        if(rd&&rd.getTime()<=payEnd.getTime()){
+          var r1e=new Date(Math.min(Math.max(rd.getTime(),cur.getTime()),payEnd.getTime()));
+          // รายงานก่อนเกิดสิทธิ (rd<cur): รอบ1 = วันเกิดสิทธิ (1 วัน) ; ส่วนที่เหลือ = ทำจ่ายอัตโนมัติ
+          var r2status=(rd.getTime()<cur.getTime())?'ทำจ่ายอัตโนมัติ':'จ่ายแล้ว (รอบ 2)';
+          pushPaid(cur,r1e,'จ่ายแล้ว (รอบ 1)',rd);
+          if(addDays(r1e,1).getTime()<=payEnd.getTime()) pushPaid(addDays(r1e,1),payEnd,r2status,null);
+        } else {
+          pushPaid(cur,payEnd,'ทำจ่ายอัตโนมัติ',null);
+        }
+      }
+      remaining-=nominal;cur=addDays(cycEnd,1);
+    }
+    return rows;
+  }
+  function renderSchedule(node){
+    var c=readClaim(node); if(node.dataset.alloc!==undefined&&node.dataset.alloc!=='')c.alloc=+node.dataset.alloc;
+    var rows=genSchedule(c),sc=node.querySelector('.schedule');
+    if(!rows.length){sc.innerHTML='<div style="font-size:12.5px;color:var(--text2);">กรอก “วันที่เกิดสิทธิ” และ “สิทธิเต็ม (วัน)” เพื่อสร้างตารางงวด</div>';return;}
+    var tot=rows.reduce(function(a,r){return a+(r.show?r.days:0);},0);
+    var body=rows.map(function(r,i){
+      var color=r.over?'var(--danger)':(r.cut?'var(--warn)':((r.status.indexOf('จ่ายแล้ว')===0||r.status.indexOf('ทำจ่าย')===0)?'var(--ok)':'var(--warn)'));
+      var range=(r.cut||r.show)?(thd(r.s)+' – '+thd(r.e)):'—';
+      var days=r.cut?('ตัด '+r.days+' วัน'):(r.show?(r.days+' วัน'):'—');
+      return '<tr><td>'+(i+1)+'</td><td>'+thMonth(r.month)+'</td><td>'+(r.rdate?thd(r.rdate):'—')+'</td><td style="color:'+color+';">'+r.status+'</td><td>'+range+'</td><td>'+days+'</td></tr>';}).join('');
+    sc.innerHTML='<table class="sch"><thead><tr><th>ลำดับ</th><th>เดือนรายงานตัว</th><th>วันที่รายงานตัว</th><th>สถานะ</th><th>ช่วงสิทธิที่จ่าย</th><th>จำนวนวัน</th></tr></thead><tbody>'+body+'</tbody></table>'
+      +'<div style="font-size:11.5px;color:var(--text2);margin-top:4px;">* รายงานตัว 1 ครั้ง/เดือน (วันใดก็ได้) · จ่าย 2 รอบ: ถึงวันรายงานตัว และส่วนที่เหลือถึงสิ้นเดือน · เดือนก่อนหน้าที่ยังไม่รายงานจะทำจ่ายอัตโนมัติ · รวมจ่ายแล้ว '+tot+' วัน จากสิทธิเต็ม '+c.full+' วัน</div>';
+  }
+  function computeQuota(cs,prior){
+    var runs=[];
+    cs.forEach(function(c,ci){if(!c.effPaid)return;var s=c.effPaid.s,e=c.effPaid.e,y0=s.getFullYear(),y1=e.getFullYear();for(var y=y0;y<=y1;y++){var rs=y===y0?s:new Date(y,0,1),re=y===y1?e:new Date(y,11,31);runs.push({year:y,s:rs,e:re,ci:ci,layoff:c.layoff,cap:c.cap,days:dayDiff(rs,re)+1});}});
+    var ylcap={};runs.forEach(function(r){if(r.layoff)ylcap[r.year]=Math.max(ylcap[r.year]||0,r.cap);});function capOf(y){return ylcap[y]||90;}
+    runs.sort(function(a,b){return a.s-b.s;});var ub={},ac={},ui={};var mn=runs.length?Math.min.apply(null,runs.map(function(r){return r.year;})):null;if(mn!==null&&prior>0)ub[mn]=prior;
+    runs.forEach(function(r){var u=ub[r.year]||0,cap=capOf(r.year);var al=Math.max(Math.min(r.days,cap-u),0);ub[r.year]=u+al;ac[r.ci]=(ac[r.ci]||0)+al;});
+    Object.keys(ub).forEach(function(y){ui[y]={used:ub[y],cap:capOf(+y)};});return{allocByClaim:ac,usedInfo:ui};
+  }
+  function recalc(){
+    var prior=+document.getElementById('prior').value||0;
+    var nodes=order.map(function(id){return claimsEl.querySelector('.claim[data-id="'+id+'"]');}).filter(Boolean);
+    var cs=nodes.map(readClaim); var q=computeQuota(cs,prior);
+    var allocs=cs.map(function(cc,ii){return q.allocByClaim[ii]||0;});
+    var totalAlloc=allocs.reduce(function(a,b){return a+b;},0);
+    var capYr=cs.reduce(function(m,cc){return cc.layoff?Math.max(m,cc.cap):m;},0)||90;
+    var totDays=0,totAmt=0;
+    cs.forEach(function(c,i){
+      var col=COLORS[i%COLORS.length];
+      c.node.querySelector('.dot').style.background=col.f; c.node.querySelector('.dot').style.border='0.5px solid '+col.b;
+      c.node.querySelector('.cname').textContent='คำขอ '+String.fromCharCode(65+i)+' (รับแจ้ง '+(i+1)+')';
+      var al=q.allocByClaim[i]||0, amount=r05(c.daily*al); c.alloc=al; c.node.dataset.alloc=al;
+      totDays+=al; totAmt=r05(totAmt+amount);
+      var entitled=Math.max(0,Math.min(c.full, capYr - prior - (totalAlloc - al)));   // สิทธิที่ได้รับ = สิทธิเต็ม จำกัดด้วยโควตาคงเหลือ (หักคำขออื่น + สะสมก่อนหน้า)
+      var qnote=entitled<c.full?' · <span style="color:var(--warn);">ตัดโควตา '+(c.full-entitled)+' วัน</span>':'';
+      var rem=entitled-al;
+      var over=(c.overpaidDays>0)?'<span style="color:var(--danger);">จ่ายเกิน/ต้องเรียกคืน: <b>'+c.overpaidDays+' วัน</b> (ควรได้จริง '+c.legitDays+' วัน)</span>':'';
+      c.node.querySelector('.derived').innerHTML='<span>ค่าจ้างรายวัน (ม.57): <b style="color:var(--text);">'+baht(c.dailyWage)+'</b></span>'
+        +'<span>รับวันละ ('+Math.round(c.rate*100)+'%): <b style="color:var(--text);">'+baht(c.daily)+'</b></span>'
+        +'<span>สิทธิที่วินิจฉัยได้ (หลังโควตา/สะสม): <b style="color:var(--text);">'+entitled+' / '+c.full+' วัน</b>'+qnote+'</span>'
+        +'<span>จ่ายจริงตอนนี้ (รายงานตัวถึง '+(c.reportedEnd?thMonth(c.reportedEnd):'-')+'): <b style="color:var(--text);">'+al+' วัน = '+baht(amount)+'</b></span>'
+        +'<span>คงเหลือรอจ่าย: <b style="color:var(--text);">'+rem+' วัน</b>'+(c.overpaidDays>0?' · หลังเรียกคืนครบ '+(rem+c.overpaidDays)+' วัน':'')+'</span>'
+        +over;
+      var sc=c.node.querySelector('.schedule'); if(sc.style.display!=='none')renderSchedule(c.node);
+    });
+    var allP=[];cs.forEach(function(c,ci){if(c.effPaid)allP.push({ci:ci,s:c.effPaid.s.getTime(),e:c.effPaid.e.getTime(),reg:c.reg,daily:c.daily});});
+    var dupI=[],recover=0;
+    for(var i=0;i<allP.length;i++)for(var j=i+1;j<allP.length;j++){if(allP[i].ci===allP[j].ci)continue;var s=Math.max(allP[i].s,allP[j].s),e=Math.min(allP[i].e,allP[j].e);if(e>=s){dupI.push([s,e]);var od=Math.round((e-s)/86400000)+1;var ea=(allP[i].reg&&allP[j].reg)?(allP[i].reg<=allP[j].reg?allP[i]:allP[j]):(allP[i].s<=allP[j].s?allP[i]:allP[j]);recover+=od*ea.daily;}}
+    var dt=0;if(dupI.length){dupI.sort(function(a,b){return a[0]-b[0];});var c0=dupI[0][0],ce=dupI[0][1];for(var k=1;k<dupI.length;k++){if(dupI[k][0]<=ce+86400000)ce=Math.max(ce,dupI[k][1]);else{dt+=Math.round((ce-c0)/86400000)+1;c0=dupI[k][0];ce=dupI[k][1];}}dt+=Math.round((ce-c0)/86400000)+1;}
+    renderSummary(cs.length,dt,r05(recover),q.usedInfo,totDays,totAmt); renderTimeline(cs,dupI); saveState();
+  }
+  function metric(label,val,mode){
+    var bg=mode==='danger'?'var(--danger-bg)':mode==='ok'?'var(--ok-bg)':mode==='warn'?'var(--warn-bg)':'var(--surface2)';
+    var fg=mode==='danger'?'var(--danger)':mode==='ok'?'var(--ok)':mode==='warn'?'var(--warn)':'var(--text)';
+    var lc=mode==='danger'?'var(--danger)':mode==='ok'?'var(--ok)':mode==='warn'?'var(--warn)':'var(--text2)';
+    return '<div style="background:'+bg+';border-radius:var(--radius);padding:0.85rem 1rem;"><div style="font-size:12px;color:'+lc+';margin-bottom:4px;">'+label+'</div><div style="font-size:20px;font-weight:500;color:'+fg+';">'+val+'</div></div>';
+  }
+  function renderSummary(n,dup,rec,usedInfo,totDays,totAmt){
+    var years=Object.keys(usedInfo).sort(),quotaCard='';
+    if(years.length){var by=years[0];years.forEach(function(y){if(usedInfo[y].used/usedInfo[y].cap>=usedInfo[by].used/usedInfo[by].cap)by=y;});var u=usedInfo[by];quotaCard=metric('โควตาปี '+(+by+543),u.used+' / '+u.cap+' วัน',u.used>=u.cap?'warn':'neutral');}else quotaCard=metric('โควตาปีปฏิทิน','—','neutral');
+    var stat=dup>0?metric('ช่วงสิทธิที่ซ้ำซ้อน',dup+' วัน','danger'):metric('สถานะความซ้ำซ้อน','ไม่พบการซ้ำซ้อน','ok');
+    var result=metric('ผลวินิจฉัย — จ่ายรวมทั้งสิ้น',(totDays||0)+' วัน = '+baht(totAmt||0),'ok');
+    document.getElementById('summary').innerHTML=metric('จำนวนคำขอ',n+' คำขอ','neutral')+stat+quotaCard+metric('ยอดที่อาจต้องเรียกคืน',baht(rec),dup>0?'danger':'ok')+result;
+  }
+  function renderTimeline(cs,dupIntervals){
+    var tl=document.getElementById('tl'),minT=Infinity,maxT=-Infinity;
+    cs.forEach(function(c){if(c.reg){minT=Math.min(minT,c.reg.getTime());}var ew=entWindow(c);if(ew){minT=Math.min(minT,ew.s.getTime());maxT=Math.max(maxT,ew.e.getTime());}if(c.effPaid){minT=Math.min(minT,c.effPaid.s.getTime());maxT=Math.max(maxT,c.effPaid.e.getTime());}});
+    if(!isFinite(minT)||!isFinite(maxT)){tl.innerHTML='<div style="font-size:13px;color:var(--text2);">กรอกวันเกิดสิทธิ/สิทธิเต็ม และวันที่รายงานตัวอย่างน้อย 1 รายการ</div>';return;}
+    var pad=(maxT-minT)*0.04||86400000*5;minT-=pad;maxT+=pad;var span=maxT-minT;function pos(t){return ((t-minT)/span*100);}
+    var grid='';var d0=new Date(minT);var gm=new Date(d0.getFullYear(),d0.getMonth(),1);if(gm.getTime()<minT)gm=new Date(gm.getFullYear(),gm.getMonth()+1,1);
+    while(gm.getTime()<=maxT){var x=pos(gm.getTime());grid+='<div style="position:absolute;left:'+x+'%;top:0;bottom:0;width:1px;background:var(--border);"></div><div style="position:absolute;left:'+x+'%;top:2px;transform:translateX(2px);font-size:10.5px;color:var(--text3);white-space:nowrap;">'+thShort(gm)+'</div>';gm=new Date(gm.getFullYear(),gm.getMonth()+1,1);}
+    var bands='';dupIntervals.forEach(function(iv){var l=pos(iv[0]),w=pos(iv[1]+86400000)-l;bands+='<div title="ช่วงซ้ำซ้อน" style="position:absolute;left:'+l+'%;width:'+w+'%;top:0;bottom:0;background:rgba(226,75,74,0.18);border-left:1px solid #A32D2D;border-right:1px solid #A32D2D;"></div>';});
+    var left='',rows='';
+    cs.forEach(function(c,i){
+      var col=COLORS[i%COLORS.length];
+      left+='<div style="height:38px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--text);"><span style="width:10px;height:10px;border-radius:2px;background:'+col.f+';border:0.5px solid '+col.b+';"></span>คำขอ '+String.fromCharCode(65+i)+'</div>';
+      var inner='';var ew=entWindow(c);
+      if(ew){var ls=pos(ew.s.getTime()),lw=pos(ew.e.getTime()+86400000)-ls;inner+='<div title="สิทธิเต็มตามวินิจฉัย '+thd(ew.s)+' – '+thd(ew.e)+'" style="position:absolute;left:'+ls+'%;width:'+lw+'%;top:9px;height:22px;background:'+col.f+';opacity:0.22;border-radius:5px;"></div>';}
+      if(ew&&c.effPaid&&ew.e.getTime()>c.effPaid.e.getTime()){var rsd=addDays(c.effPaid.e,1),ds=pos(rsd.getTime()),dw=pos(ew.e.getTime()+86400000)-ds;inner+='<div title="สิทธิคงเหลือ/รอรายงานตัว" style="position:absolute;left:'+ds+'%;width:'+dw+'%;top:9px;height:22px;background:transparent;border:1px dashed '+col.b+';border-radius:5px;"></div>';}
+      else if(ew&&!c.effPaid){var ds2=pos(ew.s.getTime()),dw2=pos(ew.e.getTime()+86400000)-ds2;inner+='<div title="รอรายงานตัว" style="position:absolute;left:'+ds2+'%;width:'+dw2+'%;top:9px;height:22px;background:transparent;border:1px dashed '+col.b+';border-radius:5px;"></div>';}
+      if(c.effPaid && c.overpaidDays>0 && c.legitEnd){
+        var ls2=pos(c.effPaid.s.getTime()),lw2=pos(c.legitEnd.getTime()+86400000)-ls2;
+        inner+='<div title="ควรได้จริง '+thd(c.effPaid.s)+' – '+thd(c.legitEnd)+' • '+c.legitDays+' วัน" style="position:absolute;left:'+ls2+'%;width:'+lw2+'%;top:9px;height:22px;background:'+col.f+';border:0.5px solid '+col.b+';border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden;"><span style="font-size:11px;font-weight:500;color:'+col.t+';white-space:nowrap;">'+c.legitDays+' วัน</span></div>';
+        var os=addDays(c.legitEnd,1),osx=pos(os.getTime()),ow=pos(c.effPaid.e.getTime()+86400000)-osx;
+        inner+='<div title="จ่ายเกิน/ต้องเรียกคืน '+thd(os)+' – '+thd(c.effPaid.e)+' • '+c.overpaidDays+' วัน" style="position:absolute;left:'+osx+'%;width:'+ow+'%;top:9px;height:22px;background:rgba(226,75,74,0.22);border:1px solid #A32D2D;border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden;"><span style="font-size:10.5px;font-weight:500;color:#791F1F;white-space:nowrap;">เรียกคืน '+c.overpaidDays+'</span></div>';
+      } else if(c.effPaid){
+        var alloc=(c.alloc!=null?c.alloc:c.effDays), cutDays=Math.max(c.effDays-alloc,0);
+        var paidEnd=alloc>0?addDays(c.effPaid.s,Math.min(alloc,c.effDays)-1):null;
+        if(paidEnd){var s2=pos(c.effPaid.s.getTime()),w2=pos(paidEnd.getTime()+86400000)-s2;inner+='<div title="จ่ายจริง '+thd(c.effPaid.s)+' – '+thd(paidEnd)+' • '+alloc+' วัน" style="position:absolute;left:'+s2+'%;width:'+w2+'%;top:9px;height:22px;background:'+col.f+';border:0.5px solid '+col.b+';border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden;"><span style="font-size:11px;font-weight:500;color:'+col.t+';white-space:nowrap;">'+alloc+' วัน</span></div>';}
+        if(cutDays>0){var cutStart=paidEnd?addDays(paidEnd,1):c.effPaid.s,cs3=pos(cutStart.getTime()),cw3=pos(c.effPaid.e.getTime()+86400000)-cs3;inner+='<div title="ตัดตามโควตา '+cutDays+' วัน (เกินโควตาปีปฏิทิน)" style="position:absolute;left:'+cs3+'%;width:'+cw3+'%;top:9px;height:22px;background:rgba(186,117,23,0.20);border:1px solid #BA7517;border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden;"><span style="font-size:10.5px;font-weight:500;color:#633806;white-space:nowrap;">ตัดโควตา '+cutDays+'</span></div>';}
+      }
+      // หมุดวันรายงานตัว
+      (c.reportedDates||[]).forEach(function(rd){var rx=pos(rd.getTime());inner+='<div title="รายงานตัว '+thd(rd)+'" style="position:absolute;left:'+rx+'%;top:9px;width:2px;height:22px;background:'+col.b+';transform:translateX(-1px);opacity:0.8;"></div>';});
+      var reg=c.reg?'<div title="ขึ้นทะเบียน '+thd(c.reg)+'" style="position:absolute;left:'+pos(c.reg.getTime())+'%;top:6px;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid '+col.b+';transform:translateX(-5px);"></div>':'';
+      rows+='<div style="position:relative;height:38px;">'+reg+inner+'</div>';
+    });
+    tl.innerHTML='<div style="display:flex;"><div style="width:72px;flex:none;padding-top:24px;">'+left+'</div><div style="position:relative;flex:1;min-height:'+(cs.length*38+24)+'px;"><div style="position:absolute;left:0;right:0;top:22px;bottom:0;">'+grid+bands+'</div><div style="position:relative;padding-top:24px;">'+rows+'</div></div></div>';
+  }
+
+  document.getElementById('add').addEventListener('click',function(){addClaim({type:'ลาออก / สิ้นสุดสัญญา (30%)',w:[17500,17500,17500],out:'',back:'',reg:'2026-06-01',ent:'2026-06-08',full:90,reps:[{date:'2026-06-20',rep:true}]});});
+  document.getElementById('reset').addEventListener('click',function(){try{localStorage.removeItem(CACHE_KEY);}catch(e){}location.reload();});
+  document.getElementById('loadCase').addEventListener('click',function(){
+    var v=document.getElementById('caseSel').value; if(!v)return;
+    if(v.charAt(0)==='P'){loadCase(PRESETS[+v.slice(1)].data);}
+    else if(v.charAt(0)==='S'){var k=decodeURIComponent(v.slice(1)),sv=savedCases();if(sv[k])loadCase(sv[k]);}
+  });
+  document.getElementById('saveCase').addEventListener('click',function(){
+    var name=prompt('ตั้งชื่อเคสที่จะบันทึก:',''); if(name===null)return; name=(name||'').trim(); if(!name){alert('กรุณาระบุชื่อเคส');return;}
+    var sv=savedCases(); sv[name]=snapshot(); setSavedCases(sv); refreshCaseSelect();
+    document.getElementById('caseSel').value='S'+encodeURIComponent(name);
+    alert('บันทึกเคส “'+name+'” แล้ว');
+  });
+  document.getElementById('delCase').addEventListener('click',function(){
+    var sel=document.getElementById('caseSel'),v=sel.value;
+    if(!v||v.charAt(0)!=='S'){alert('เลือก “เคสที่บันทึกไว้” ก่อนจึงจะลบได้ (ตัวอย่างสำเร็จรูปลบไม่ได้)');return;}
+    var k=decodeURIComponent(v.slice(1)); if(!confirm('ลบเคส “'+k+'” ?'))return;
+    var sv=savedCases(); delete sv[k]; setSavedCases(sv); refreshCaseSelect();
+  });
+  refreshCaseSelect();
+  function loadDefaults(){
+    addClaim({type:'ลาออก / สิ้นสุดสัญญา (30%)',w:[17500,17500,17500],out:'2026-04-01',back:'2026-05-05',reg:'2026-04-06',ent:'2026-04-08',full:90,reps:[{date:'2026-04-28',rep:true},{date:'2026-05-04',rep:true}]});
+    addClaim({type:'ลาออก / สิ้นสุดสัญญา (30%)',w:[17500,17500,17500],out:'2026-05-11',back:'',reg:'2026-05-15',ent:'2026-05-18',full:90,reps:[{date:'2026-05-20',rep:true},{date:'2026-06-15',rep:true},{date:'2026-07-15',rep:true},{date:'2026-08-15',rep:true}]});
+  }
+  var saved=loadState();
+  if(saved&&saved.claims&&saved.claims.length){
+    document.getElementById('prior').value=saved.prior||0;
+    saved.claims.forEach(function(c){addClaim(c);});
+  } else { loadDefaults(); }
+})();
+</script>
+</body>
+</html>

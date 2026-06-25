@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผลทดสอบ Logic — เครื่องมือว่างงาน (ม.57)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#faf9f5;--surface:#fff;--surface2:#f1efe8;--ok-bg:#e1f5ee;--danger-bg:#fcebeb;--text:#1a1a18;--text2:#5f5e5a;--text3:#8a897f;--ok:#0f6e56;--danger:#a32d2d;--border:rgba(0,0,0,.14);--radius:8px;--radius-lg:12px;}
+  @media (prefers-color-scheme:dark){:root{--bg:#1f1e1b;--surface:#2a2925;--surface2:#33322d;--ok-bg:#13362c;--danger-bg:#3a1e1e;--text:#f1efe8;--text2:#b4b2a9;--text3:#888780;--ok:#5dcaa5;--danger:#f09595;--border:rgba(255,255,255,.15);}}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Noto Sans Thai',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 60px;}
+  h1{font-size:22px;font-weight:600;margin:0 0 4px;}
+  .sub{font-size:13.5px;color:var(--text2);margin:0 0 20px;}
+  .sumbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;}
+  .card{border-radius:var(--radius);padding:.9rem 1.1rem;min-width:130px;}
+  .card .l{font-size:12px;margin-bottom:4px;}.card .v{font-size:24px;font-weight:600;}
+  .grp{margin-bottom:22px;border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+  .grp h2{font-size:15px;font-weight:600;margin:0;padding:10px 14px;background:var(--surface2);}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{padding:7px 12px;border-top:0.5px solid var(--border);text-align:left;vertical-align:top;}
+  th{color:var(--text2);font-weight:500;font-size:12px;background:var(--surface);}
+  .badge{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:20px;}
+  .pass{background:var(--ok-bg);color:var(--ok);}.fail{background:var(--danger-bg);color:var(--danger);}
+  code{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text2);}
+  .note{font-size:12px;color:var(--text3);margin-top:18px;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>ผลทดสอบ Logic — เครื่องมือวินิจฉัยว่างงาน (ม.57)</h1>
+<p class="sub">หน้านี้รัน logic การคำนวณจริงในเบราว์เซอร์ แล้วเทียบกับค่าที่คาดหวัง (Expected) เพื่อยืนยันความถูกต้อง · <a id="toollink" href="./">ไปที่เครื่องมือ ↗</a></p>
+<div id="summary" class="sumbar"></div>
+<div id="results"></div>
+<div class="note" id="env"></div>
+</div>
+
+<script>
+(function(){
+  var TYPES={'L':{rate:0.60,cap:180},'R':{rate:0.30,cap:90}};var CAP=17500;
+  function D(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+  function addDays(d,n){return new Date(d.getTime()+n*86400000);}
+  function dayDiff(a,b){return Math.round((b-a)/86400000);}
+  function endOfMonth(d){return new Date(d.getFullYear(),d.getMonth()+1,0);}
+  function sameMonth(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth();}
+  function r05(n){var c=Math.round(n*100);return Math.floor(c/5)*5/100;}
+  function isLayoff(t){return TYPES[t].rate===0.60;}
+  function ymd(d){return d?d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2):null;}
+  // เกิดสิทธิ auto: out+7 ถ้าขึ้นทะเบียนภายใน 30 วัน ; ถ้าเกิน = วันขึ้นทะเบียน
+  function autoEnt(out,reg){if(!out)return null;return (reg&&dayDiff(D(out),D(reg))>30)?reg:ymd(addDays(D(out),7));}
+  function readClaim(c){
+    var w=c.w.map(function(x){return Math.min(x||0,CAP);});var out=D(c.out),back=D(c.back),reg=D(c.reg),ent=D(c.ent),full=c.full||0;
+    var rate=TYPES[c.type].rate,dailyWage=r05((w[0]+w[1]+w[2])/90),daily=r05(dailyWage*rate);
+    var rd=(c.reps||[]).filter(function(p){return p.rep!==false&&p.date;}).map(function(p){return D(p.date);}).sort(function(a,b){return a-b;});
+    var reportedEnd=rd.length?rd[rd.length-1]:null,startE=ent||(rd.length?rd[0]:null),effPaid=null;
+    if(startE&&full>0&&reportedEnd){var entEnd=addDays(startE,full-1),pe=endOfMonth(reportedEnd);if(pe>entEnd)pe=entEnd;if(back){var b1=addDays(back,-1);if(b1<pe)pe=b1;}if(pe>=startE)effPaid={s:startE,e:pe};}
+    var effDays=effPaid?dayDiff(effPaid.s,effPaid.e)+1:0;
+    return {type:c.type,layoff:isLayoff(c.type),rate:rate,dailyWage:dailyWage,daily:daily,out:out,back:back,reg:reg,ent:ent,full:full,startE:startE,reportedDates:rd,reportedEnd:reportedEnd,effPaid:effPaid,effDays:effDays};
+  }
+  function genSchedule(c){
+    if(!c.startE||!c.full||c.full<=0)return[];var reportedEnd=c.reportedEnd?c.reportedEnd.getTime():null,reps=c.reportedDates||[];
+    var rows=[],remaining=c.full,cur=new Date(c.startE),g=0;
+    while(remaining>0&&g<48){g++;var mEnd=endOfMonth(cur),byDays=addDays(cur,remaining-1),cycEnd=mEnd<byDays?mEnd:byDays,nominal=dayDiff(cur,cycEnd)+1;var reported=reportedEnd!==null&&cur.getTime()<=reportedEnd;var payEnd=cycEnd;if(c.back){var b1=addDays(c.back,-1);if(b1<payEnd)payEnd=b1;}
+      if(!reported||payEnd<cur){rows.push({status:'รอ',s:null,e:null,days:0,show:false});}
+      else{var rdt=null;reps.forEach(function(d){if(sameMonth(d,cur))rdt=d;});
+        if(rdt&&rdt.getTime()>=cur.getTime()&&rdt.getTime()<=payEnd.getTime()){rows.push({status:'รอบ1',s:cur,e:rdt,days:dayDiff(cur,rdt)+1,show:true});if(addDays(rdt,1).getTime()<=payEnd.getTime())rows.push({status:'รอบ2',s:addDays(rdt,1),e:payEnd,days:dayDiff(addDays(rdt,1),payEnd)+1,show:true});}
+        else{rows.push({status:'auto',s:cur,e:payEnd,days:dayDiff(cur,payEnd)+1,show:true});}}
+      remaining-=nominal;cur=addDays(cycEnd,1);}
+    return rows;
+  }
+  function computeQuota(cs,prior){var runs=[];cs.forEach(function(c,ci){if(!c.effPaid)return;var s=c.effPaid.s,e=c.effPaid.e,y0=s.getFullYear(),y1=e.getFullYear();for(var y=y0;y<=y1;y++){var rs=y===y0?s:new Date(y,0,1),re=y===y1?e:new Date(y,11,31);runs.push({year:y,s:rs,e:re,ci:ci,layoff:c.layoff,days:dayDiff(rs,re)+1});}});var yl={};runs.forEach(function(r){if(r.layoff)yl[r.year]=true;});function capOf(y){return yl[y]?180:90;}runs.sort(function(a,b){return a.s-b.s;});var ub={},ac={};var mn=runs.length?Math.min.apply(null,runs.map(function(r){return r.year;})):null;if(mn!==null&&prior>0)ub[mn]=prior;runs.forEach(function(r){var u=ub[r.year]||0,cap=capOf(r.year);var al=Math.max(Math.min(r.days,cap-u),0);ub[r.year]=u+al;ac[r.ci]=(ac[r.ci]||0)+al;});return {ac:ac,ub:ub};}
+  function analyze(cl,prior){prior=prior||0;var cs=cl.map(readClaim);var q=computeQuota(cs,prior);var allP=[];cs.forEach(function(c,ci){if(c.effPaid)allP.push({ci:ci,s:c.effPaid.s.getTime(),e:c.effPaid.e.getTime()});});var dupI=[];for(var i=0;i<allP.length;i++)for(var j=i+1;j<allP.length;j++){if(allP[i].ci===allP[j].ci)continue;var s=Math.max(allP[i].s,allP[j].s),e=Math.min(allP[i].e,allP[j].e);if(e>=s)dupI.push([s,e]);}var dt=0;if(dupI.length){dupI.sort(function(a,b){return a[0]-b[0];});var c0=dupI[0][0],ce=dupI[0][1];for(var k=1;k<dupI.length;k++){if(dupI[k][0]<=ce+86400000)ce=Math.max(ce,dupI[k][1]);else{dt+=Math.round((ce-c0)/86400000)+1;c0=dupI[k][0];ce=dupI[k][1];}}dt+=Math.round((ce-c0)/86400000)+1;}return {cs:cs,q:q,dupTotal:dt};}
+
+  var groups=[],cur=null;
+  function G(name){cur={name:name,rows:[]};groups.push(cur);}
+  function A(label,got,exp){var pass=(typeof exp==='number')?Math.abs(got-exp)<1e-6:String(got)===String(exp);cur.rows.push({label:label,got:got,exp:exp,pass:pass});}
+  var W=[17500,17500,17500];
+
+  G('1) มาตรา 57 — ค่าจ้างรายวัน & อัตรา & ปัดเศษ');
+  var c57=readClaim({type:'R',w:W,full:90,reps:[]});
+  A('ค่าจ้างรายวัน เพดาน 17,500 = (17500×3)/90 ปัดลง', c57.dailyWage, 583.30);
+  A('ลาออก 30%/วัน (583.30×0.30 ปัดลง)', c57.daily, 174.95);
+  A('เลิกจ้าง 60%/วัน (583.30×0.60 ปัดลง)', readClaim({type:'L',w:W,full:180,reps:[]}).daily, 349.95);
+  A('ค่าจ้างต่ำกว่าเพดาน 12000/15000/9000 → รายวัน', readClaim({type:'R',w:[12000,15000,9000],full:90,reps:[]}).dailyWage, 400.00);
+  A('ปัดลง 0.05 : 166.6666 → 166.65', r05(166.6666), 166.65);
+  A('ปัดลง 0.05 : 174.99 → 174.95', r05(174.99), 174.95);
+  A('กัน floating-point : 174.95 × 90', r05(174.95*90), 15745.50);
+
+  G('2) วันเกิดสิทธิ auto & วันขึ้นทะเบียน = รายงานตัวครั้งที่ 1');
+  A('ออกงาน 01/04, ขึ้นทะเบียน 06/04 (≤30วัน) → เกิดสิทธิ = วันที่ 8', autoEnt('2026-04-01','2026-04-06'), '2026-04-08');
+  A('ออกงาน 17/03, ขึ้นทะเบียน 26/03 → เกิดสิทธิ', autoEnt('2026-03-17','2026-03-26'), '2026-03-24');
+  A('ขึ้นทะเบียนเกิน 30 วัน (01/03 → 15/04) → เกิดสิทธิ = วันขึ้นทะเบียน', autoEnt('2026-03-01','2026-04-15'), '2026-04-15');
+
+  var t1=analyze([
+    {type:'R',w:W,back:'2026-05-05',reg:'2026-04-06',ent:'2026-04-08',full:90,reps:[{date:'2026-04-28'},{date:'2026-05-04'}]},
+    {type:'R',w:W,reg:'2026-05-15',ent:'2026-05-18',full:90,reps:[{date:'2026-05-20'},{date:'2026-06-15'},{date:'2026-07-15'},{date:'2026-08-15'}]}
+  ]);
+  G('3) เคสตั้งต้น — 2 คำขอ ไม่พบความซ้ำซ้อน');
+  A('คำขอ A จ่ายตามเกณฑ์ (08/04–04/05, กลับเข้าทำงานตัด)', t1.cs[0].effDays, 27);
+  A('คำขอ A เป็นเงิน (27 × 174.95)', r05(t1.cs[0].daily*t1.q.ac[0]), 4723.65);
+  A('คำขอ B สิทธิเต็มจ่าย 90 → ตัดโควตาเหลือ', t1.q.ac[1], 63);
+  A('สถานะความซ้ำซ้อน (วัน)', t1.dupTotal, 0);
+  A('โควตาปี 2569 ใช้ไป (A 27 + B 63)', t1.q.ub['2026'], 90);
+  A('ผลวินิจฉัยรวม (27+63 วัน)', t1.q.ac[0]+t1.q.ac[1], 90);
+
+  G('4) จ่าย 2 รอบ/เดือน (ตารางงวด คำขอ A)');
+  var sA=genSchedule(t1.cs[0]);
+  A('เม.ย. รอบ 1 : 08/04 – 28/04', ymd(sA[0].s)+'…'+ymd(sA[0].e), '2026-04-08…2026-04-28');
+  A('เม.ย. รอบ 1 = 21 วัน', sA[0].days, 21);
+  A('เม.ย. รอบ 2 : 29/04 – 30/04 (2 วัน)', sA[1].days, 2);
+  A('พ.ค. รอบ 1 : 01/05 – 04/05 (กลับเข้าทำงานตัด)', ymd(sA[2].s)+'…'+ymd(sA[2].e), '2026-05-01…2026-05-04');
+  A('รวมตารางงวด A = จ่ายจริง 27 วัน', sA.reduce(function(a,r){return a+(r.show?r.days:0);},0), 27);
+
+  G('5) จ่ายต่อเนื่องถึงสิ้นเดือน & auto-fill (ไม่มีช่องว่าง)');
+  var t5a=analyze([{type:'R',w:W,reg:'2026-05-01',ent:'2026-05-01',full:90,reps:[{date:'2026-05-18'}]}]);
+  A('รายงาน 18/05 → จ่ายเต็มเดือน 01/05–31/05', ymd(t5a.cs[0].effPaid.s)+'…'+ymd(t5a.cs[0].effPaid.e), '2026-05-01…2026-05-31');
+  A('รายงาน 18/05 → จ่าย 31 วัน (รอบ1+รอบ2)', t5a.cs[0].effDays, 31);
+  var t5b=analyze([{type:'R',w:W,reg:'2026-05-01',ent:'2026-05-01',full:90,reps:[{date:'2026-06-10'}]}]);
+  A('รายงาน มิ.ย. ข้าม พ.ค. → จ่ายต่อเนื่อง 01/05–30/06', ymd(t5b.cs[0].effPaid.s)+'…'+ymd(t5b.cs[0].effPaid.e), '2026-05-01…2026-06-30');
+  A('พ.ค. ที่ขาด = ทำจ่ายอัตโนมัติ', genSchedule(t5b.cs[0])[0].status, 'auto');
+
+  G('6) ความซ้ำซ้อนจากการรายงานข้ามเดือน');
+  var t6=analyze([
+    {type:'R',w:W,back:'2026-08-14',reg:'2026-04-06',ent:'2026-04-08',full:90,reps:[{date:'2026-04-28'},{date:'2026-05-15'},{date:'2026-06-20'}]},
+    {type:'R',w:W,reg:'2026-05-15',ent:'2026-05-18',full:90,reps:[{date:'2026-08-15'}]}
+  ]);
+  A('คำขอ A จ่ายต่อเนื่อง 08/04–30/06', t6.cs[0].effDays, 84);
+  A('ช่วงสิทธิที่ซ้ำซ้อน (18/05–30/06)', t6.dupTotal, 44);
+  A('คำขอ A ได้ (ก่อน) 84 วัน', t6.q.ac[0], 84);
+  A('คำขอ B เหลือโควตา 90−84', t6.q.ac[1], 6);
+
+  G('7) โควตาปีปฏิทิน & สะสมก่อนหน้า');
+  var t7=analyze([
+    {type:'R',w:W,back:'2026-05-05',reg:'2026-04-06',ent:'2026-04-08',full:90,reps:[{date:'2026-04-28'},{date:'2026-05-04'}]},
+    {type:'R',w:W,reg:'2026-05-15',ent:'2026-05-18',full:90,reps:[{date:'2026-08-15'}]}
+  ],27);
+  A('สะสมก่อนหน้า 27 → คำขอ B เหลือ 36 (90−27−27)', t7.q.ac[1], 36);
+  A('คำขอ B เป็นเงิน (36 × 174.95)', r05(t7.cs[1].daily*t7.q.ac[1]), 6298.20);
+  var t7b=analyze([{type:'L',w:W,reg:'2026-01-01',ent:'2026-01-01',full:180,reps:[{date:'2026-12-15'}]}]);
+  A('เลิกจ้างเต็มปี → โควตา 180 วัน', t7b.q.ac[0], 180);
+  A('เลิกจ้าง 180 วัน เป็นเงิน (180 × 349.95)', r05(t7b.cs[0].daily*t7b.q.ac[0]), 62991.00);
+  var t7c=analyze([{type:'L',w:W,reg:'2026-12-01',ent:'2026-12-20',full:60,reps:[{date:'2026-12-25'},{date:'2027-01-20'}]}]);
+  A('ข้ามปีปฏิทิน — ปี 2569 ใช้', t7c.q.ub['2026'], 12);
+  A('ข้ามปีปฏิทิน — ปี 2570 ใช้', t7c.q.ub['2027'], 31);
+
+  G('8) วันกลับเข้าทำงาน & กรณีไม่รายงานตัว');
+  var t8=analyze([{type:'R',w:W,back:'2026-05-20',reg:'2026-04-06',ent:'2026-04-08',full:90,reps:[{date:'2026-04-28'},{date:'2026-05-15'}]}]);
+  A('กลับเข้าทำงาน 20/05 → จ่ายถึง 19/05', ymd(t8.cs[0].effPaid.e), '2026-05-19');
+  A('กลับเข้าทำงานตัดกลางเดือน → 42 วัน', t8.cs[0].effDays, 42);
+  var t8b=analyze([{type:'R',w:W,reg:'2026-04-06',ent:'2026-04-08',full:90,reps:[{date:'2026-04-28',rep:false}]}]);
+  A('ยังไม่รายงานตัวเลย → จ่าย 0 วัน', t8b.cs[0].effDays, 0);
+
+  // ---- render ----
+  var total=0,passed=0;
+  groups.forEach(function(g){g.rows.forEach(function(r){total++;if(r.pass)passed++;});});
+  var allPass=passed===total;
+  document.getElementById('summary').innerHTML=
+    '<div class="card" style="background:var(--surface2);"><div class="l" style="color:var(--text2);">เคสทดสอบ</div><div class="v">'+groups.length+' กลุ่ม</div></div>'
+    +'<div class="card" style="background:var(--surface2);"><div class="l" style="color:var(--text2);">ข้อทดสอบ</div><div class="v">'+total+'</div></div>'
+    +'<div class="card" style="background:'+(allPass?'var(--ok-bg)':'var(--danger-bg)')+';"><div class="l" style="color:'+(allPass?'var(--ok)':'var(--danger)')+';">ผ่าน</div><div class="v" style="color:'+(allPass?'var(--ok)':'var(--danger)')+';">'+passed+' / '+total+'</div></div>'
+    +'<div class="card" style="background:'+(allPass?'var(--ok-bg)':'var(--danger-bg)')+';"><div class="l" style="color:'+(allPass?'var(--ok)':'var(--danger)')+';">สถานะรวม</div><div class="v" style="color:'+(allPass?'var(--ok)':'var(--danger)')+';">'+(allPass?'ALL PASS':'FAIL')+'</div></div>';
+  var html='';
+  groups.forEach(function(g){
+    html+='<div class="grp"><h2>'+g.name+'</h2><table><thead><tr><th style="width:46%;">ข้อทดสอบ</th><th style="width:24%;">คาดหวัง</th><th style="width:22%;">ได้จริง</th><th style="width:8%;">ผล</th></tr></thead><tbody>';
+    g.rows.forEach(function(r){
+      html+='<tr><td>'+r.label+'</td><td><code>'+r.exp+'</code></td><td><code>'+r.got+'</code></td><td><span class="badge '+(r.pass?'pass':'fail')+'">'+(r.pass?'PASS':'FAIL')+'</span></td></tr>';
+    });
+    html+='</tbody></table></div>';
+  });
+  document.getElementById('results').innerHTML=html;
+  document.getElementById('env').innerHTML='รันทดสอบเมื่อ: '+new Date().toLocaleString('th-TH')+' · logic เวอร์ชันเดียวกับเครื่องมือ (มาตรา 57 · เพดาน 17,500 · เลิกจ้าง 60%/ลาออก 30% · ปัดลง 0.05 · รายงานตัว 1 ครั้ง/เดือน จ่าย 2 รอบ · โควตาปีปฏิทิน)';
+})();
+</script>
+</body>
+</html>

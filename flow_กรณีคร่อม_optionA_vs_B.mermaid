@@ -1,0 +1,8 @@
+flowchart TD
+  S[รับแจ้ง: คำนวณช่วงสิทธิ<br/>เกิดสิทธิ → ครบสิทธิ] --> X{คร่อมขอบ regime?}
+  X -- ไม่คร่อม --> Z[รับแจ้งเดียว อัตราเดียว]
+  X -- คร่อม --> OA[Option A<br/>1 record + subPeriods array<br/>งวดอ้าง sub-period]
+  X -- คร่อม --> OB[Option B Close & Reopen<br/>ระบบเสนอ ปิด #1 ที่ขอบ + เปิด #2<br/>จนท.ยืนยัน = 2 record link กัน]
+  OA --> EA[1 เลขรับแจ้ง<br/>ภาพรวมเดียว แต่ logic ซับซ้อน<br/>เสี่ยง reconcile ระบบจ่าย]
+  OB --> EB[2 เลขรับแจ้งต่อเนื่อง<br/>map 1:1 กับการจ่าย/การปฏิบัติจริง<br/>แนะนำ + Consolidated View]
+  EB --> R[[คำแนะนำ BA: เลือก Option B]]

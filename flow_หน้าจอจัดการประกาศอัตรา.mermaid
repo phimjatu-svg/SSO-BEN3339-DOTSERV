@@ -1,0 +1,12 @@
+flowchart TD
+  A[Rule Admin สร้าง/แก้ ประกาศ Draft] --> B{ระบบ Validate<br/>ทับซ้อน / ช่องว่าง / ค่าถูกต้อง}
+  B -- ไม่ผ่าน --> A
+  B -- ผ่าน --> C[เสนออนุมัติ]
+  C --> D[Approver review + Simulation]
+  D -- ไม่อนุมัติ --> A
+  D -- อนุมัติ --> E{effectiveFrom}
+  E -- อดีต/ปัจจุบัน --> F[Active ทันที<br/>+ ออกรายงานเคสกระทบ ถ้าย้อนหลัง]
+  E -- อนาคต --> G[ตั้งเวลา Active อัตโนมัติเมื่อถึงวัน]
+  F --> H[(Regime Table<br/>single source of truth)]
+  G --> H
+  H --> I[ระบบวินิจฉัย / ตรวจคร่อม<br/>อ่านจากตารางนี้]

@@ -1,0 +1,41 @@
+%%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Tahoma, sans-serif','fontSize':'14px'}}}%%
+flowchart TD
+    A([รับแจ้ง / ขอใช้สิทธิ กรณีว่างงาน]) --> B{ตรวจสอบ<br/>ความซ้ำซ้อน}
+
+    B -->|ไม่ซ้ำซ้อน| C[วินิจฉัยและจ่ายสิทธิตามปกติ<br/>โอนผ่านธนาคาร]
+    C --> Z1([จบ: จ่ายตามปกติ])
+
+    B -->|พบความซ้ำซ้อน| D[/แจ้งเตือนความซ้ำซ้อน Alert/]
+    D --> E{ตรวจสอบสถานะการจ่าย<br/>ของคำขอเดิม}
+
+    E -->|จ่ายยังไม่ครบ| F[ทำจ่ายให้ครบก่อน]
+    E -->|จ่ายเกิน| G[ทำเรื่องขอเรียกเงินคืน<br/>คำขอเดิมติดสถานะ W]
+
+    F --> M[[รับแจ้งใหม่ และวินิจฉัย<br/>วินิจฉัยได้แม้คำขอเดิมติด W]]
+    G --> M
+
+    M --> N{วินิจฉัยผ่าน<br/>หรือไม่?}
+    N -->|ไม่ผ่าน| ZR([จบ: ยุติคำขอ])
+
+    N -->|ผ่าน| P{คำขอเดิมติด<br/>เรียกเงินคืน W?}
+
+    P -->|ไม่ติด W| Q[จ่ายเงินตามปกติ<br/>โอนผ่านธนาคาร]
+    Q --> Z1
+
+    P -->|ติด W| R[เปลี่ยนวิธีรับเงินเป็น รับ ณ สำนักงาน<br/>จากปกติโอนผ่านธนาคาร]
+    R --> S[ผู้ประกันตนคืนเงินส่วนเกิน<br/>และรับเงินสิทธิใหม่ ณ สำนักงาน]
+    S --> Z2([จบ: รับเงิน ณ สำนักงาน])
+
+    classDef startEnd fill:#2e7d32,stroke:#1b5e20,color:#fff;
+    classDef ending fill:#495057,stroke:#343a40,color:#fff;
+    classDef decision fill:#fff3cd,stroke:#e0a800,color:#000;
+    classDef alert fill:#f8d7da,stroke:#c82333,color:#000;
+    classDef action fill:#cfe2ff,stroke:#0d6efd,color:#000;
+    classDef result fill:#d1e7dd,stroke:#198754,color:#000;
+
+    class A startEnd;
+    class Z1,Z2,ZR ending;
+    class B,E,N,P decision;
+    class D alert;
+    class C,F,G,Q,R action;
+    class M,S result;

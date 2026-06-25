@@ -1,0 +1,266 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1990" height="1131" viewBox="0 0 1990 1131">
+<rect x="0.0" y="0.0" width="1990.0" height="1131.0" rx="0" fill="#EEF1F5" stroke="none" stroke-width="1"/>
+<text x="60.0" y="46.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="24" fill="#1F3864" font-weight="700" text-anchor="start">Rate Regime Console — Wireframe แนวตั้ง 2 Tabs (BEN 33/39 · 48|P0-3)</text>
+<g transform="translate(60,106)">
+<rect x="0" y="0" width="900" height="965" rx="16" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="1.5"/>
+<rect x="0.0" y="0.0" width="900.0" height="44.0" rx="16" fill="#1F3864" stroke="none" stroke-width="1"/>
+<rect x="0.0" y="22.0" width="900.0" height="22.0" rx="0" fill="#1F3864" stroke="none" stroke-width="1"/>
+<text x="20.0" y="28.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="13" fill="#FFFFFF" font-weight="700" text-anchor="start">สำนักงานประกันสังคม · BEN 33/39</text>
+<circle cx="874" cy="22" r="11" fill="#3C5A8A"/>
+<rect x="0.0" y="44.0" width="900.0" height="42.0" rx="0" fill="#F7F9FC" stroke="none" stroke-width="1"/>
+<text x="225.0" y="70.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="13" fill="#2E5C8A" font-weight="700" text-anchor="middle">Tab 1 · List + Form</text>
+<rect x="130.0" y="82.0" width="190.0" height="3.0" rx="2" fill="#2E5C8A" stroke="none" stroke-width="1"/>
+<text x="675.0" y="70.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="13" fill="#98A1B2" font-weight="600" text-anchor="middle">Tab 2 · Simulation + History</text>
+<line x1="0.0" y1="86.0" x2="900.0" y2="86.0" stroke="#D0D5DD" stroke-width="1"/>
+<rect x="24.0" y="106.0" width="171.8" height="24.0" rx="12" fill="#E8F0F8" stroke="none" stroke-width="1"/>
+<text x="109.9" y="122.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#1F3864" font-weight="700" text-anchor="middle">1 · List / Timeline</text>
+<text x="24.0" y="154.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="15" fill="#344054" font-weight="700" text-anchor="start">จัดการประกาศอัตรา — Rate Regime Console</text>
+<rect x="24.0" y="170.0" width="230.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="34.0" y="190.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">ค้นหาประกาศ...</text>
+<rect x="266.0" y="170.0" width="140.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="276.0" y="190.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">สถานะ: ทั้งหมด</text>
+<path d="M 388 182 l 5 5 l 5 -5" stroke="#98A1B2" stroke-width="1.5" fill="none"/>
+<rect x="726.0" y="169.0" width="150.0" height="32.0" rx="8" fill="#2E5C8A" stroke="none" stroke-width="1"/>
+<text x="801.0" y="190.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#FFFFFF" font-weight="600" text-anchor="middle">+ สร้างประกาศ</text>
+<text x="24.0" y="216.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#344054" font-weight="700" text-anchor="start">ไทม์ไลน์ประกาศ (ตรวจช่องว่าง / ทับซ้อน)</text>
+<rect x="24.0" y="228.0" width="852.0" height="26.0" rx="6" fill="#F2F4F7" stroke="#D0D5DD" stroke-width="1"/>
+<rect x="24.0" y="228.0" width="272.6" height="26" rx="4" fill="#2E5C8A" opacity="0.85"/>
+<text x="160.3" y="245.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#FFFFFF" font-weight="600" text-anchor="middle">2547</text>
+<rect x="296.6" y="228.0" width="119.3" height="26" rx="4" fill="#F59E0B" opacity="0.85"/>
+<text x="356.3" y="245.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#FFFFFF" font-weight="600" text-anchor="middle">โควิด</text>
+<rect x="415.9" y="228.0" width="42.6" height="26" rx="4" fill="#E5484D" opacity="0.35"/>
+<text x="437.2" y="225.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#E5484D" font-weight="700" text-anchor="middle">⚠ ช่องว่าง</text>
+<rect x="458.5" y="228.0" width="255.6" height="26" rx="4" fill="#2E5C8A" opacity="0.85"/>
+<text x="586.3" y="245.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#FFFFFF" font-weight="600" text-anchor="middle">ฉบับ2 68</text>
+<rect x="714.1" y="228.0" width="161.9" height="26" rx="4" fill="#12B76A" opacity="0.85"/>
+<text x="795.1" y="245.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#FFFFFF" font-weight="600" text-anchor="middle">เพดาน 69</text>
+<text x="24.0" y="268.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#98A1B2" font-weight="normal" text-anchor="middle">2547</text>
+<text x="194.4" y="268.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#98A1B2" font-weight="normal" text-anchor="middle">2558</text>
+<text x="364.8" y="268.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#98A1B2" font-weight="normal" text-anchor="middle">2563</text>
+<text x="535.2" y="268.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#98A1B2" font-weight="normal" text-anchor="middle">2565</text>
+<text x="705.6" y="268.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#98A1B2" font-weight="normal" text-anchor="middle">2568</text>
+<text x="876.0" y="268.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="9" fill="#98A1B2" font-weight="normal" text-anchor="middle">2569</text>
+<rect x="24.0" y="284.0" width="852.0" height="28.0" rx="6" fill="#E8EDF3" stroke="none" stroke-width="1"/>
+<text x="32.0" y="302.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">ชื่อประกาศ</text>
+<text x="287.6" y="302.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">วันมีผล</text>
+<text x="398.4" y="302.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">วันสิ้นสุด</text>
+<text x="509.1" y="302.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">เลิกจ้าง</text>
+<text x="602.8" y="302.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">ลาออก</text>
+<text x="688.0" y="302.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">เพดาน</text>
+<text x="781.8" y="302.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">สถานะ</text>
+<line x1="24.0" y1="312.0" x2="876.0" y2="312.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="32.0" y="332.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">กฎกระทรวง 2547</text>
+<text x="287.6" y="332.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">22 ม.ค.47</text>
+<text x="398.4" y="332.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">28 ก.พ.63</text>
+<text x="509.1" y="332.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">50%</text>
+<text x="602.8" y="332.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">30%</text>
+<text x="688.0" y="332.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">15,000</text>
+<rect x="777.8" y="320.0" width="49.0" height="20.0" rx="10" fill="#12B76A" stroke="none" stroke-width="1"/>
+<text x="802.3" y="334.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">Active</text>
+<line x1="24.0" y1="343.0" x2="876.0" y2="343.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="32.0" y="363.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">โควิด 2563</text>
+<text x="287.6" y="363.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">1 มี.ค.63</text>
+<text x="398.4" y="363.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">28 ก.พ.65</text>
+<text x="509.1" y="363.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">70%</text>
+<text x="602.8" y="363.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">45%</text>
+<text x="688.0" y="363.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">15,000</text>
+<rect x="777.8" y="351.0" width="49.0" height="20.0" rx="10" fill="#12B76A" stroke="none" stroke-width="1"/>
+<text x="802.3" y="365.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">Active</text>
+<line x1="24.0" y1="374.0" x2="876.0" y2="374.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="32.0" y="394.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">ฉบับที่ 2 พ.ศ.2568</text>
+<text x="287.6" y="394.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">28 มิ.ย.68</text>
+<text x="398.4" y="394.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">–</text>
+<text x="509.1" y="394.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">60%</text>
+<text x="602.8" y="394.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">30%</text>
+<text x="688.0" y="394.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">15,000</text>
+<rect x="777.8" y="382.0" width="49.0" height="20.0" rx="10" fill="#12B76A" stroke="none" stroke-width="1"/>
+<text x="802.3" y="396.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">Active</text>
+<line x1="24.0" y1="405.0" x2="876.0" y2="405.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="32.0" y="425.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">ปรับเพดาน 2569</text>
+<text x="287.6" y="425.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">1 ม.ค.69</text>
+<text x="398.4" y="425.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">–</text>
+<text x="509.1" y="425.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">60%</text>
+<text x="602.8" y="425.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">30%</text>
+<text x="688.0" y="425.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">17,500</text>
+<rect x="777.8" y="413.0" width="68.5" height="20.0" rx="10" fill="#F59E0B" stroke="none" stroke-width="1"/>
+<text x="812.0" y="427.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">รออนุมัติ</text>
+<line x1="24.0" y1="436.0" x2="876.0" y2="436.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="32.0" y="456.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">(ร่าง) ทบทวนอัตรา</text>
+<text x="287.6" y="456.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">—</text>
+<text x="398.4" y="456.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">—</text>
+<text x="509.1" y="456.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">—</text>
+<text x="602.8" y="456.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">—</text>
+<text x="688.0" y="456.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">—</text>
+<rect x="777.8" y="444.0" width="42.5" height="20.0" rx="10" fill="#98A1B2" stroke="none" stroke-width="1"/>
+<text x="799.0" y="458.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">Draft</text>
+<line x1="24.0" y1="467.0" x2="876.0" y2="467.0" stroke="#D0D5DD" stroke-width="1"/>
+<rect x="24.0" y="497.0" width="81.6" height="24.0" rx="12" fill="#E8F0F8" stroke="none" stroke-width="1"/>
+<text x="64.8" y="513.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#1F3864" font-weight="700" text-anchor="middle">2 · Form</text>
+<text x="24.0" y="545.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="15" fill="#344054" font-weight="700" text-anchor="start">ประกาศอัตรา — สร้าง / แก้ไข</text>
+<text x="24.0" y="559.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">ชื่อประกาศ</text>
+<rect x="24.0" y="565.0" width="414.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="33.0" y="585.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">กฎกระทรวง ฉบับที่ ___ พ.ศ. ____</text>
+<text x="462.0" y="559.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">อัตราเลิกจ้าง (%)</text>
+<rect x="462.0" y="565.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="471.0" y="585.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">70</text>
+<text x="675.0" y="559.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">เพดานวัน เลิกจ้าง</text>
+<rect x="675.0" y="565.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="684.0" y="585.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">200</text>
+<text x="24.0" y="615.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">อ้างอิงกฎหมาย / เลขที่</text>
+<rect x="24.0" y="621.0" width="414.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="33.0" y="641.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">ราชกิจจาฯ เล่ม ___ ตอน ___</text>
+<text x="462.0" y="615.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">อัตราลาออก (%)</text>
+<rect x="462.0" y="621.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="471.0" y="641.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">45</text>
+<text x="675.0" y="615.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">เพดานวัน ลาออก</text>
+<rect x="675.0" y="621.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="684.0" y="641.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">90</text>
+<text x="24.0" y="671.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">ลิงก์ราชกิจจาฯ</text>
+<rect x="24.0" y="677.0" width="414.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="33.0" y="697.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">https://...</text>
+<text x="462.0" y="671.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">เพดานค่าจ้าง/เดือน</text>
+<rect x="462.0" y="677.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="471.0" y="697.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">15,000</text>
+<text x="675.0" y="671.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">กฎปัดเศษ</text>
+<rect x="675.0" y="677.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="684.0" y="697.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">ปัดลง 0.05</text>
+<text x="24.0" y="727.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">วันที่มีผล</text>
+<rect x="24.0" y="733.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="33.0" y="753.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">01/03/2563</text>
+<text x="237.0" y="727.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">วันที่สิ้นสุด</text>
+<rect x="237.0" y="733.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="246.0" y="753.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">28/02/2565</text>
+<text x="462.0" y="727.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">โควตา/ปี เลิกจ้างปน</text>
+<rect x="462.0" y="733.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="471.0" y="753.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">200</text>
+<text x="675.0" y="727.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">โควตา/ปี ลาออกล้วน</text>
+<rect x="675.0" y="733.0" width="201.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="684.0" y="753.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">90</text>
+<text x="24.0" y="789.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">เหตุผล / หมายเหตุ</text>
+<rect x="24.0" y="795.0" width="852.0" height="52.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<rect x="24.0" y="861.0" width="852.0" height="28.0" rx="6" fill="#FFF6E6" stroke="#F59E0B" stroke-width="1"/>
+<text x="34.0" y="880.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#9A6700" font-weight="normal" text-anchor="start">⚠ ช่วงวันมีผลต้องไม่ทับซ้อนและไม่มีช่องว่างกับประกาศอื่น (ระบบตรวจอัตโนมัติ)</text>
+<text x="24.0" y="923.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="600" text-anchor="start">สถานะ:</text>
+<rect x="74.0" y="909.0" width="42.5" height="20.0" rx="10" fill="#98A1B2" stroke="none" stroke-width="1"/>
+<text x="95.2" y="923.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">Draft</text>
+<text x="134.0" y="923.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="normal" text-anchor="start">v3 · maker ≠ checker</text>
+<rect x="726.0" y="905.0" width="150.0" height="32.0" rx="8" fill="#2E5C8A" stroke="none" stroke-width="1"/>
+<text x="801.0" y="926.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#FFFFFF" font-weight="600" text-anchor="middle">เสนออนุมัติ</text>
+<rect x="586.0" y="905.0" width="128.0" height="32.0" rx="8" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="1"/>
+<text x="650.0" y="926.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#344054" font-weight="600" text-anchor="middle">บันทึกร่าง</text>
+</g>
+<g transform="translate(1030,106)">
+<rect x="0" y="0" width="900" height="866" rx="16" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="1.5"/>
+<rect x="0.0" y="0.0" width="900.0" height="44.0" rx="16" fill="#1F3864" stroke="none" stroke-width="1"/>
+<rect x="0.0" y="22.0" width="900.0" height="22.0" rx="0" fill="#1F3864" stroke="none" stroke-width="1"/>
+<text x="20.0" y="28.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="13" fill="#FFFFFF" font-weight="700" text-anchor="start">สำนักงานประกันสังคม · BEN 33/39</text>
+<circle cx="874" cy="22" r="11" fill="#3C5A8A"/>
+<rect x="0.0" y="44.0" width="900.0" height="42.0" rx="0" fill="#F7F9FC" stroke="none" stroke-width="1"/>
+<text x="225.0" y="70.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="13" fill="#98A1B2" font-weight="600" text-anchor="middle">Tab 1 · List + Form</text>
+<text x="675.0" y="70.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="13" fill="#2E5C8A" font-weight="700" text-anchor="middle">Tab 2 · Simulation + History</text>
+<rect x="580.0" y="82.0" width="190.0" height="3.0" rx="2" fill="#2E5C8A" stroke="none" stroke-width="1"/>
+<line x1="0.0" y1="86.0" x2="900.0" y2="86.0" stroke="#D0D5DD" stroke-width="1"/>
+<rect x="24.0" y="106.0" width="130.8" height="24.0" rx="12" fill="#E8F0F8" stroke="none" stroke-width="1"/>
+<text x="89.4" y="122.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#1F3864" font-weight="700" text-anchor="middle">3 · Simulation</text>
+<text x="24.0" y="154.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="15" fill="#344054" font-weight="700" text-anchor="start">จำลองผลการวินิจฉัย (ก่อนอนุมัติ)</text>
+<rect x="24.0" y="166.0" width="852.0" height="28.0" rx="6" fill="#FFF6E6" stroke="#F59E0B" stroke-width="1"/>
+<text x="34.0" y="185.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#9A6700" font-weight="600" text-anchor="start">ทดสอบ regime ที่ยังไม่ active — ไม่กระทบข้อมูลจริง (sandbox)</text>
+<text x="24.0" y="208.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">วันออกจากงาน</text>
+<rect x="24.0" y="214.0" width="164.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="33.0" y="234.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">08/02/2565</text>
+<text x="200.0" y="208.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">สาเหตุ</text>
+<rect x="200.0" y="214.0" width="164.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="209.0" y="234.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">เลิกจ้าง</text>
+<text x="376.0" y="208.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">ค่าจ้างรายวัน</text>
+<rect x="376.0" y="214.0" width="164.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="385.0" y="234.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">500</text>
+<text x="552.0" y="208.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">ใช้สิทธิแล้ว/ปี</text>
+<rect x="552.0" y="214.0" width="164.0" height="30.0" rx="6" fill="#FBFCFD" stroke="#D0D5DD" stroke-width="1"/>
+<text x="561.0" y="234.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#98A1B2" font-weight="normal" text-anchor="start">0</text>
+<rect x="726.0" y="214.0" width="150.0" height="32.0" rx="8" fill="#12B76A" stroke="none" stroke-width="1"/>
+<text x="801.0" y="235.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#FFFFFF" font-weight="600" text-anchor="middle">จำลองผล</text>
+<rect x="24.0" y="266.0" width="852.0" height="28.0" rx="6" fill="#E8F0F8" stroke="#2E5C8A" stroke-width="1"/>
+<text x="34.0" y="285.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#1F3864" font-weight="600" text-anchor="start">ตรวจพบการคร่อม regime: ใช่ — ขอบ 28 ก.พ.65 → เสนอ ปิดรับแจ้ง #1 / เปิดรับแจ้ง #2 (จนท.ยืนยัน)</text>
+<rect x="24.0" y="308.0" width="418.0" height="104.0" rx="10" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="1"/>
+<rect x="24.0" y="308.0" width="418.0" height="28.0" rx="0" fill="#F59E0B" stroke="none" stroke-width="1"/>
+<rect x="24.0" y="322.0" width="418.0" height="14.0" rx="0" fill="#F59E0B" stroke="none" stroke-width="1"/>
+<text x="36.0" y="327.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#FFFFFF" font-weight="700" text-anchor="start">รับแจ้ง #1 (ปิดที่ขอบ)</text>
+<text x="36.0" y="358.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#344054" font-weight="600" text-anchor="start">8 – 28 ก.พ. 2565</text>
+<text x="36.0" y="380.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="normal" text-anchor="start">โควิด · เลิกจ้าง 70%</text>
+<text x="36.0" y="401.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#344054" font-weight="normal" text-anchor="start">21 วัน</text>
+<text x="430.0" y="401.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="14" fill="#1F3864" font-weight="700" text-anchor="end">฿ 7,350</text>
+<rect x="458.0" y="308.0" width="418.0" height="104.0" rx="10" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="1"/>
+<rect x="458.0" y="308.0" width="418.0" height="28.0" rx="0" fill="#2E5C8A" stroke="none" stroke-width="1"/>
+<rect x="458.0" y="322.0" width="418.0" height="14.0" rx="0" fill="#2E5C8A" stroke="none" stroke-width="1"/>
+<text x="470.0" y="327.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#FFFFFF" font-weight="700" text-anchor="start">รับแจ้ง #2 (เปิดต่อเนื่อง)</text>
+<text x="470.0" y="358.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#344054" font-weight="600" text-anchor="start">1 มี.ค. – 6 ส.ค. 2565</text>
+<text x="470.0" y="380.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="normal" text-anchor="start">กฎ 2547 · เลิกจ้าง 50%</text>
+<text x="470.0" y="401.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#344054" font-weight="normal" text-anchor="start">159 วัน</text>
+<text x="864.0" y="401.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="14" fill="#1F3864" font-weight="700" text-anchor="end">฿ 39,750</text>
+<rect x="24.0" y="424.0" width="852.0" height="38.0" rx="8" fill="#F2F4F7" stroke="#D0D5DD" stroke-width="1"/>
+<text x="36.0" y="448.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#344054" font-weight="700" text-anchor="start">รวมสิทธิ: 180 วัน (cap กฎ 2547 คุมส่วนที่เหลือ)</text>
+<text x="864.0" y="448.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="14" fill="#1F3864" font-weight="700" text-anchor="end">รวมเงิน: ฿ 47,100.00</text>
+<text x="24.0" y="476.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#98A1B2" font-weight="normal" text-anchor="start">หมายเหตุ: #2 ไม่มี waiting ใหม่ · นับวัน/โควตาต่อจาก #1 · คู่ #1↔#2 ไม่ถือเป็นความซ้ำซ้อน</text>
+<rect x="24.0" y="514.0" width="188.2" height="24.0" rx="12" fill="#E8F0F8" stroke="none" stroke-width="1"/>
+<text x="118.1" y="530.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#1F3864" font-weight="700" text-anchor="middle">4 · History / Version</text>
+<text x="24.0" y="562.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="15" fill="#344054" font-weight="700" text-anchor="start">ประวัติเวอร์ชันประกาศ</text>
+<text x="24.0" y="582.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="normal" text-anchor="start">effective-dated · เก็บทุกเวอร์ชันเพื่อ reproduce การวินิจฉัยในอดีต</text>
+<rect x="24.0" y="598.0" width="460.1" height="28.0" rx="6" fill="#E8EDF3" stroke="none" stroke-width="1"/>
+<text x="32.0" y="616.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">เวอร์ชัน</text>
+<text x="170.0" y="616.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">ผู้แก้ไข</text>
+<text x="285.0" y="616.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">วันที่</text>
+<text x="390.9" y="616.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">สถานะ</text>
+<rect x="24.0" y="626.0" width="460.1" height="32.0" rx="0" fill="#E8F0F8" stroke="none" stroke-width="1"/>
+<line x1="24.0" y1="626.0" x2="484.1" y2="626.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="32.0" y="647.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="700" text-anchor="start">v4 (ปัจจุบัน)</text>
+<text x="170.0" y="647.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">น.ส.เอ</text>
+<text x="285.0" y="647.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">12/06/69</text>
+<rect x="386.9" y="633.0" width="49.0" height="20.0" rx="10" fill="#12B76A" stroke="none" stroke-width="1"/>
+<text x="411.4" y="647.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">Active</text>
+<line x1="24.0" y1="658.0" x2="484.1" y2="658.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="32.0" y="679.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">v3</text>
+<text x="170.0" y="679.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">นายบี</text>
+<text x="285.0" y="679.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">02/01/69</text>
+<rect x="386.9" y="665.0" width="55.5" height="20.0" rx="10" fill="#98A1B2" stroke="none" stroke-width="1"/>
+<text x="414.6" y="679.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">ใช้แล้ว</text>
+<line x1="24.0" y1="690.0" x2="484.1" y2="690.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="32.0" y="711.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">v2</text>
+<text x="170.0" y="711.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">นายบี</text>
+<text x="285.0" y="711.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">28/06/68</text>
+<rect x="386.9" y="697.0" width="55.5" height="20.0" rx="10" fill="#98A1B2" stroke="none" stroke-width="1"/>
+<text x="414.6" y="711.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">ใช้แล้ว</text>
+<line x1="24.0" y1="722.0" x2="484.1" y2="722.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="32.0" y="743.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">v1</text>
+<text x="170.0" y="743.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">น.ส.ซี</text>
+<text x="285.0" y="743.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#344054" font-weight="normal" text-anchor="start">22/01/47</text>
+<rect x="386.9" y="729.0" width="55.5" height="20.0" rx="10" fill="#98A1B2" stroke="none" stroke-width="1"/>
+<text x="414.6" y="743.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">ใช้แล้ว</text>
+<line x1="24.0" y1="754.0" x2="484.1" y2="754.0" stroke="#D0D5DD" stroke-width="1"/>
+<text x="506.1" y="592.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#344054" font-weight="700" text-anchor="start">เปรียบเทียบ v2 → v3</text>
+<rect x="506.1" y="602.0" width="369.9" height="150.0" rx="10" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="1"/>
+<text x="518.1" y="626.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">อัตราเลิกจ้าง</text>
+<rect x="518.1" y="633.0" width="163.0" height="24.0" rx="6" fill="#FDECEC" stroke="#E5484D" stroke-width="1"/>
+<text x="526.1" y="650.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#E5484D" font-weight="normal" text-anchor="start">50%</text>
+<path d="M 686.04 645 l 12 0 m -4 -3 l 4 3 l -4 3" stroke="#98A1B2" stroke-width="1.5" fill="none"/>
+<rect x="703.0" y="633.0" width="163.0" height="24.0" rx="6" fill="#E9F8EF" stroke="#12B76A" stroke-width="1"/>
+<text x="711.0" y="650.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#067647" font-weight="normal" text-anchor="start">60%</text>
+<text x="518.1" y="670.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">เพดานค่าจ้าง</text>
+<rect x="518.1" y="677.0" width="163.0" height="24.0" rx="6" fill="#FDECEC" stroke="#E5484D" stroke-width="1"/>
+<text x="526.1" y="694.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#E5484D" font-weight="normal" text-anchor="start">15,000</text>
+<path d="M 686.04 689 l 12 0 m -4 -3 l 4 3 l -4 3" stroke="#98A1B2" stroke-width="1.5" fill="none"/>
+<rect x="703.0" y="677.0" width="163.0" height="24.0" rx="6" fill="#E9F8EF" stroke="#12B76A" stroke-width="1"/>
+<text x="711.0" y="694.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#067647" font-weight="normal" text-anchor="start">17,500</text>
+<text x="518.1" y="714.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#98A1B2" font-weight="600" text-anchor="start">เพดานวันเลิกจ้าง</text>
+<rect x="518.1" y="721.0" width="163.0" height="24.0" rx="6" fill="#FDECEC" stroke="#E5484D" stroke-width="1"/>
+<text x="526.1" y="738.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#E5484D" font-weight="normal" text-anchor="start">180</text>
+<path d="M 686.04 733 l 12 0 m -4 -3 l 4 3 l -4 3" stroke="#98A1B2" stroke-width="1.5" fill="none"/>
+<rect x="703.0" y="721.0" width="163.0" height="24.0" rx="6" fill="#E9F8EF" stroke="#12B76A" stroke-width="1"/>
+<text x="711.0" y="738.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#067647" font-weight="normal" text-anchor="start">180</text>
+<rect x="506.1" y="768.0" width="120.0" height="32.0" rx="8" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="1"/>
+<text x="566.1" y="789.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#344054" font-weight="600" text-anchor="middle">ดูฉบับนี้</text>
+<rect x="636.1" y="768.0" width="239.9" height="32.0" rx="8" fill="#2E5C8A" stroke="none" stroke-width="1"/>
+<text x="756.0" y="789.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="12" fill="#FFFFFF" font-weight="600" text-anchor="middle">ย้อนกลับเวอร์ชันนี้</text>
+<rect x="24.0" y="812.0" width="852.0" height="28.0" rx="6" fill="#F0F4FF" stroke="#2E5C8A" stroke-width="1"/>
+<text x="34.0" y="831.0" font-family="Tahoma, 'Noto Sans Thai', 'Sarabun', sans-serif" font-size="11" fill="#1F3864" font-weight="normal" text-anchor="start">🔒 เวอร์ชันที่ถูกใช้วินิจฉัยแล้วเป็น immutable — ต้องออกประกาศฉบับแก้ไขใหม่</text>
+</g>
+</svg>

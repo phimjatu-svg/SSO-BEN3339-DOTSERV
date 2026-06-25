@@ -315,28 +315,6 @@ function dThm(d){return DTM[d.getMonth()]+' '+(d.getFullYear()+543);}
 function bahtTH(n){return '฿'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function applicableRegime(d){if(!d)return reg('R2547');const be=(d.getFullYear()+543)*10000+(d.getMonth()+1)*100+d.getDate();const c=S.regimes.filter(r=>!r.master&&r.status==='มีผลแล้ว'&&r.from<=be&&be<=(r.to||99999999));if(c.length){c.sort((a,b)=>b.from-a.from);return c[0];}return reg('R2547');}
 function dxResolve(typeVal,ent,out){const layoff=typeVal==='layoff';const RG=applicableRegime(ent||out);return {layoff,RG,rate:(layoff?RG.layoff:RG.resign)/100,cap:(layoff?RG.layoffCap:RG.resignCap)||90,ceiling:RG.ceiling||17500};}
-function beToDate(be){return new Date(Math.floor(be/10000)-543,(Math.floor(be/100)%100)-1,be%100);}
-function renderStraddleClaim(c){
-  const el=c.node.querySelector('.straddle');if(!el)return;el.innerHTML='';
-  const startE=c.startE;if(!startE||!c.dailyWage)return;
-  const cand=[];S.regimes.forEach(r=>{if(r.master||r.status!=='มีผลแล้ว')return;cand.push(beToDate(r.from));if(r.to)cand.push(dAdd(beToDate(r.to),1));});
-  let B=null;cand.forEach(d=>{if(d.getTime()>startE.getTime()&&(!B||d<B))B=d;});
-  if(!B)return;
-  const R1=applicableRegime(startE),R2=applicableRegime(B);if(R1.id===R2.id)return;
-  const total=(c.layoff?R2.layoffCap:R2.resignCap)||90;
-  const seg1=dDiff(startE,B);if(seg1<=0||seg1>=total)return;
-  const seg2=total-seg1;
-  const rate1=c.layoff?R1.layoff:R1.resign,rate2=c.layoff?R2.layoff:R2.resign;
-  const d1=r05(c.dailyWage*rate1/100),d2=r05(c.dailyWage*rate2/100),a1=r05(d1*seg1),a2=r05(d2*seg2);
-  const e1=dAdd(B,-1),e2=dAdd(B,seg2-1);
-  el.innerHTML=`<div class="banner" style="margin-bottom:8px"><i class="ti ti-arrows-split"></i> ตรวจพบการคร่อม regime: ใช่ — ขอบ ${dThd(B)} → เสนอ ปิดรับแจ้ง #1 / เปิดรับแจ้ง #2 (จนท.ยืนยัน)</div>
-   <div class="cards2" style="margin-top:0">
-    <div class="rcard"><div class="hd" style="background:var(--amber)">รับแจ้ง #1 (ปิดที่ขอบ)</div><div class="bd"><div style="font-weight:600">${dThd(startE)} – ${dThd(e1)}</div><div class="sub">${esc(R1.name)}${R1.master?' (master)':''} · ${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate1}%</div><div class="row"><span>${seg1} วัน</span><span class="amt">${bahtTH(a1)}</span></div></div></div>
-    <div class="rcard"><div class="hd" style="background:var(--accent)">รับแจ้ง #2 (เปิดต่อเนื่อง)</div><div class="bd"><div style="font-weight:600">${dThd(B)} – ${dThd(e2)}</div><div class="sub">${esc(R2.name)}${R2.master?' (master)':''} · ${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate2}%</div><div class="row"><span>${seg2} วัน</span><span class="amt">${bahtTH(a2)}</span></div></div></div>
-   </div>
-   <div class="total" style="margin-top:8px"><span>รวมสิทธิ ${total} วัน (cap ${esc(R2.name)} คุมส่วนที่เหลือ)</span><span class="money">รวม ${bahtTH(r05(a1+a2))}</span></div>
-   <div class="note">หมายเหตุ: #2 ไม่มี waiting ใหม่ · นับวัน/โควตาต่อจาก #1 · คู่ #1↔#2 ไม่ถือเป็นความซ้ำซ้อน</div>`;
-}
 function renderT2(){ if(!document.getElementById('dxClaims'))buildDx(); else dxRecalc(); }
 function buildDx(){
   document.getElementById('t2').innerHTML=`
@@ -372,7 +350,7 @@ function claimHTML(id,d){
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="dot" style="width:12px;height:12px;border-radius:3px"></span><span class="cname" style="font-weight:700"></span><button class="btn ghost rm" style="margin-left:auto;width:34px;padding:0;height:30px"><i class="ti ti-trash"></i></button></div>
     <div class="grid2">
       <label>ประเภทการว่างงาน<select class="inp f-type"><option value="resign"${d.type==='resign'?' selected':''}>ลาออก / สิ้นสุดสัญญา</option><option value="layoff"${d.type==='layoff'?' selected':''}>เลิกจ้าง</option></select></label>
-      <label style="grid-column:span 2">ค่าจ้าง 3 เดือนสูงสุด<div style="display:flex;gap:6px"><input class="inp f-w1" type="number" value="${d.w?d.w[0]:17500}"><input class="inp f-w2" type="number" value="${d.w?d.w[1]:17500}"><input class="inp f-w3" type="number" value="${d.w?d.w[2]:17500}"></div></label>
+      <label style="grid-column:span 2">ค่าจ้าง 3 เดือนสูงสุด (ม.57 · เพดานจากประกาศ <b class="f-ceil">—</b>)<div style="display:flex;gap:6px"><input class="inp f-w1" type="number" value="${d.w?d.w[0]:17500}"><input class="inp f-w2" type="number" value="${d.w?d.w[1]:17500}"><input class="inp f-w3" type="number" value="${d.w?d.w[2]:17500}"></div></label>
       <label>วันที่ลาออก/ออกจากงาน<input class="inp f-out" type="date" value="${d.out||''}"></label>
       <label>วันที่กลับเข้าทำงานจริง (ถ้ามี)<input class="inp f-back" type="date" value="${d.back||''}"></label>
       <label>วันที่นายจ้างแจ้งเข้างาน (ถ้ามี)<input class="inp f-notify" type="date" value="${d.notify||''}"></label>
@@ -384,7 +362,6 @@ function claimHTML(id,d){
     <div class="reps"></div>
     <button class="btn ghost addp" style="margin-top:2px"><i class="ti ti-plus"></i> เพิ่มการรายงานตัว</button>
     <div class="derived" style="display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;font-size:12.5px;color:var(--muted)"></div>
-    <div class="straddle" style="margin-top:10px"></div>
     <button class="btn ghost drill" style="margin-top:10px"><i class="ti ti-table"></i> ดูตารางงวด (วินิจฉัยแล้ว)</button>
     <div class="schedule" style="display:none;margin-top:8px"></div></div>`;}
 function attachRep(container,date,rep){const w=document.createElement('div');w.innerHTML=repRowHTML(date,rep);const row=w.firstChild;container.appendChild(row);
@@ -407,8 +384,9 @@ function readClaim(node){
   node.querySelectorAll('.rep').forEach((p,idx)=>{const de=p.querySelector('.r-date');if(idx===0){de.readOnly=true;de.style.background='var(--soft)';de.style.color='var(--muted)';if(regEl.value)de.value=regEl.value;}else{de.readOnly=false;de.style.background='';de.style.color='';}});
   const entEl=node.querySelector('.f-ent');let ent=null;if(out){const ed=(regd&&dDiff(out,regd)>30)?regd:dAdd(out,7);entEl.value=dYmd(ed);ent=ed;}
   const R=dxResolve(typeVal,ent,out);
+  const fc=node.querySelector('.f-ceil');if(fc)fc.textContent=R.ceiling.toLocaleString();
   const fullEl=node.querySelector('.f-full');fullEl.value=R.cap;const full=R.cap;
-  const w=[node.querySelector('.f-w1'),node.querySelector('.f-w2'),node.querySelector('.f-w3')].map(el=>Math.min(+el.value||0,R.ceiling));
+  const w=[node.querySelector('.f-w1'),node.querySelector('.f-w2'),node.querySelector('.f-w3')].map(el=>{el.max=R.ceiling;if((+el.value||0)>R.ceiling)el.value=R.ceiling;return Math.min(+el.value||0,R.ceiling);});
   const dailyWage=r05((w[0]+w[1]+w[2])/90),daily=r05(dailyWage*R.rate);
   const reported=[];node.querySelectorAll('.rep').forEach(p=>{const d=dP(p.querySelector('.r-date').value),rep=p.querySelector('.r-rep').checked,info=p.querySelector('.r-info');if(d&&rep){reported.push(d);info.textContent='('+dThm(d)+')';info.style.color='var(--muted)';}else if(d&&!rep){info.textContent='(ยังไม่รายงานตัว)';info.style.color='var(--amber)';}else info.textContent='';});
   reported.sort((a,b)=>a-b);const reportedEnd=reported.length?reported[reported.length-1]:null;
@@ -503,7 +481,6 @@ function dxRecalc(){
     const rem=entitled-al;
     const over=c.overpaidDays>0?`<span style="color:var(--red)">จ่ายเกิน/เรียกคืน <b>${c.overpaidDays} วัน</b> (ควรได้จริง ${c.legitDays})</span>`:'';
     c.node.querySelector('.derived').innerHTML=`<span>ใช้ประกาศ: <b style="color:var(--text)">${esc(c.RG.name)}</b>${c.RG.master?' (master)':''}</span><span>ค่าจ้างรายวัน: <b style="color:var(--text)">${bahtTH(c.dailyWage)}</b></span><span>รับวันละ (${Math.round(c.rate*100)}%): <b style="color:var(--text)">${bahtTH(c.daily)}</b></span><span>สิทธิที่วินิจฉัยได้: <b style="color:var(--text)">${entitled} / ${c.full} วัน</b>${qnote}</span><span>จ่ายจริง (ถึง ${c.reportedEnd?dThm(c.reportedEnd):'-'}): <b style="color:var(--text)">${al} วัน = ${bahtTH(amount)}</b></span><span>คงเหลือ: <b style="color:var(--text)">${rem} วัน</b></span>${over}`;
-    renderStraddleClaim(c);
     const sc=c.node.querySelector('.schedule');if(sc.style.display!=='none')dxRenderSchedule(c.node);});
   const allP=[];cs.forEach((c,ci)=>{if(c.effPaid)allP.push({ci,s:c.effPaid.s.getTime(),e:c.effPaid.e.getTime(),reg:c.reg,daily:c.daily});});
   const dupI=[];let recover=0;
