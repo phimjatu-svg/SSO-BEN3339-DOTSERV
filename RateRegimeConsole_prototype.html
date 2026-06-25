@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>จัดการประกาศอัตรา (Rate Regime Console) — BEN 33/39</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont/dist/tabler-icons.min.css">
+<style>
+:root{--navy:#172a78;--navy2:#1e2f86;--gold:#FFC53D;--accent:#2E5C8A;--blue:#2563EB;--line:#E2E6EC;
+--muted:#6B7480;--text:#2B3440;--soft:#F4F6F9;--hd:#EDF1F7;--green:#16A34A;--amber:#F59E0B;--red:#E5484D;
+--lblue:#E8F0F8;--page:#F1F4F8;--field:#FBFCFD;}
+*{box-sizing:border-box;}
+html,body{margin:0;overflow-x:hidden;}
+body{font-family:'Sarabun',Tahoma,sans-serif;background:var(--page);color:var(--text);font-size:13.5px;}
+.app{display:flex;min-height:100vh;}
+.side{width:248px;flex-shrink:0;background:linear-gradient(180deg,var(--navy),var(--navy2));color:#cdd6f5;}
+.side .logo{display:flex;gap:10px;align-items:center;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08);}
+.side .logo .mk{width:38px;height:38px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:700;}
+.side .logo b{color:#fff;font-size:13px;line-height:1.2;}.side .logo span{font-size:10px;color:#9fb0e6;}
+.grp{padding:12px 18px 4px;font-size:12px;color:#9fb0e6;display:flex;align-items:center;gap:8px;font-weight:600;}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 18px;color:#c7d0ee;font-size:13px;text-decoration:none;cursor:pointer;border-left:3px solid transparent;}
+.nav a:hover{background:rgba(255,255,255,.05);}
+.nav a.active{color:var(--gold);background:rgba(255,255,255,.07);border-left-color:var(--gold);font-weight:600;}
+.nav a i{font-size:17px;width:18px;text-align:center;}
+.nav .sub a{padding-left:42px;font-size:12.5px;color:#aebbe8;}
+.nav .sub a::before{content:"•";margin-right:6px;color:#6f80c0;}
+.ver{padding:14px 18px;font-size:10px;color:#7b8bc6;}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:14px 24px;background:#fff;border-bottom:1px solid var(--line);}
+.topbar .crumb{font-size:12px;color:var(--muted);}
+.topbar h1{margin:2px 0 0;font-size:17px;font-weight:700;color:var(--navy);}
+.topbar h1 i{color:var(--amber);font-size:18px;vertical-align:-2px;}
+.topbar .user{text-align:right;font-size:12px;line-height:1.45;display:flex;gap:10px;align-items:flex-start;}
+.topbar .user b{color:var(--navy);}.topbar .user .org{color:var(--green);font-weight:600;}.topbar .user .role{color:var(--muted);}
+.iconbtn{width:30px;height:30px;border-radius:50%;background:#EAF1FF;color:var(--blue);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;}
+.content{padding:16px 24px 36px;flex:1;}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;align-items:center;}
+.tabgrp{font-size:10.5px;color:var(--muted);font-weight:700;padding:0 8px;text-transform:uppercase;letter-spacing:.3px;}
+.tabgrp.alt{color:var(--green);}
+.tabsep{width:1px;align-self:stretch;background:var(--line);margin:6px 4px;}
+.tab{padding:11px 16px;font-size:13.5px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;display:flex;align-items:center;gap:6px;}
+.tab:hover{color:var(--accent);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab .pill{background:var(--amber);color:#fff;border-radius:10px;font-size:10.5px;padding:1px 7px;font-weight:700;}
+.panel{display:none;flex-direction:column;gap:16px;}
+.panel.active{display:flex;}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+.card h2{margin:0 0 12px;font-size:15px;font-weight:700;}
+.sub{color:var(--muted);font-weight:400;font-size:12px;}
+.toolbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:12px;}
+.inp{height:34px;border:1px solid var(--line);border-radius:7px;background:var(--field);padding:0 11px;font-family:inherit;font-size:13px;color:var(--text);width:100%;}
+.search{flex:1;min-width:170px;}.sel{min-width:160px;}.spacer{flex:1;}
+.btn{height:34px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-weight:600;font-size:13px;padding:0 16px;cursor:pointer;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn.ghost{background:#fff;color:var(--text);border:1px solid var(--line);}.btn.green{background:var(--green);}.btn.amber{background:var(--amber);}.btn.red{background:var(--red);}
+.tl-label{font-weight:700;font-size:13px;margin:2px 0 8px;}
+.timeline{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);}
+.seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;}
+.seg.master{background:repeating-linear-gradient(45deg,#2b3f8f,#2b3f8f 6px,#3b4f9f 6px,#3b4f9f 12px);color:#fff;font-size:10px;}
+.masterbar{display:flex;align-items:center;gap:8px;margin-top:7px;font-size:11.5px;color:var(--navy);}
+.ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px;}
+table{width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{text-align:left;padding:9px 8px;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+thead th{background:var(--hd);font-weight:700;}
+tbody tr{border-top:1px solid var(--line);}
+tbody tr.click{cursor:pointer;}tbody tr.click:hover{background:var(--soft);}
+.lnk{color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.badge{display:inline-block;padding:2px 9px;border-radius:11px;color:#fff;font-size:11px;font-weight:600;white-space:nowrap;}
+.b-green{background:var(--green);}.b-amber{background:var(--amber);}.b-gray{background:var(--muted);}.b-blue{background:var(--blue);}.b-red{background:var(--red);}.b-navy{background:var(--navy);}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px 22px;}
+label{display:block;font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:4px;}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+.hint{background:#FFF6E6;border:1px solid var(--amber);color:#8A5A00;border-radius:7px;padding:9px 12px;font-size:12.5px;margin-top:14px;}
+.err{background:#FDECEC;border:1px solid var(--red);color:#9b1c1c;border-radius:7px;padding:9px 12px;font-size:12.5px;margin-top:10px;}
+.formfoot{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px;}
+.banner{background:var(--lblue);border:1px solid var(--accent);color:var(--navy);border-radius:7px;padding:9px 12px;font-size:12.5px;font-weight:600;}
+.banner.warn{background:#FFF6E6;border-color:var(--amber);color:#8A5A00;}
+.cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px;}
+.rcard{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.rcard .hd{padding:8px 12px;color:#fff;font-weight:700;font-size:13px;}.rcard .bd{padding:12px;}
+.rcard .row{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;}.rcard .amt{font-size:16px;font-weight:700;color:var(--navy);}
+.total{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-top:14px;font-weight:700;}
+.total .money{color:var(--navy);font-size:16px;}
+.note{color:var(--muted);font-size:11.5px;margin-top:10px;}
+.histwrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;}
+.diff{border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+.diffrow{margin-bottom:12px;}.diffrow .lbl{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:5px;}
+.pair{display:flex;align-items:center;gap:8px;}
+.old{background:#FDECEC;border:1px solid var(--red);color:#A12;border-radius:6px;padding:4px 10px;font-size:12.5px;flex:1;}
+.new{background:#E9F8EF;border:1px solid var(--green);color:#067647;border-radius:6px;padding:4px 10px;font-size:12.5px;flex:1;}
+.lock{background:#F0F4FF;border:1px solid var(--accent);color:var(--navy);border-radius:7px;padding:9px 12px;font-size:12.5px;margin-top:14px;}
+.appr2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:12.5px;}
+.kv span:first-child{color:var(--muted);}
+.stepper{display:flex;align-items:flex-start;margin-top:8px;}
+.step{flex:1;text-align:center;position:relative;}
+.step .dot{width:28px;height:28px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;position:relative;z-index:2;}
+.step .dot.done{background:var(--green);}.step .dot.curr{background:var(--accent);}.step .dot.todo{background:#fff;border:2px solid var(--line);color:var(--muted);}.step .dot.bad{background:var(--red);}
+.step .lbl{font-size:11.5px;margin-top:6px;font-weight:600;}.step .meta{font-size:10.5px;color:var(--muted);}
+.step:not(:first-child)::before{content:"";position:absolute;top:14px;left:-50%;width:100%;height:2px;background:var(--line);z-index:1;}
+.step.fill:not(:first-child)::before{background:var(--green);}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.chip{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:6px 11px;font-size:12px;}
+.chip b{font-size:14px;}
+.modal-ov{position:fixed;inset:0;background:rgba(20,30,60,.45);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto;}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:640px;padding:20px 22px;}
+.modal h3{margin:0 0 4px;font-size:16px;color:var(--navy);}
+.modal .x{float:right;cursor:pointer;color:var(--muted);font-size:20px;border:none;background:none;}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;z-index:80;opacity:0;transition:opacity .25s;pointer-events:none;}
+.toast.show{opacity:1;}
+@media(max-width:820px){.side{width:60px;}.side .logo b,.side .logo span,.grp,.nav a span,.nav .sub{display:none;}.nav a{justify-content:center;padding:11px 0;}.nav a i{width:auto;}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="logo"><div class="mk">SSO</div><div><b>สำนักงานประกันสังคม</b><br><span>Social Security Office</span></div></div>
+    <div class="grp"><i class="ti ti-users"></i><span>มาตรา 33 และมาตรา 39</span></div>
+    <nav class="nav">
+      <a><i class="ti ti-file-text"></i><span>ขอรับประโยชน์ทดแทน</span></a>
+      <a><i class="ti ti-checkbox"></i><span>อนุมัติสิทธิ</span></a>
+      <a><i class="ti ti-clipboard-check"></i><span>วินิจฉัยประโยชน์ทดแทน</span></a>
+      <a><i class="ti ti-edit"></i><span>เปลี่ยนแปลงวินิจฉัย</span></a>
+      <a><i class="ti ti-tag"></i><span>การขึ้นทะเบียนว่างงาน</span></a>
+      <a><i class="ti ti-building-bank"></i><span>คำสั่งจ่าย/คืน</span></a>
+      <a><i class="ti ti-arrows-exchange"></i><span>งานโอนเรื่อง</span></a>
+      <a><i class="ti ti-search"></i><span>สืบค้นคำขอรับประโยชน์ฯ</span></a>
+      <a><i class="ti ti-report"></i><span>รายงาน</span></a>
+      <div class="grp"><i class="ti ti-database"></i><span>จัดการข้อมูล</span></div>
+      <div class="sub">
+        <a><span>การจัดการ Batch</span></a>
+        <a><span>แก้ไขข้อมูลโดยเจ้าหน้าที่</span></a>
+        <a class="active"><i class="ti ti-adjustments"></i><span>จัดการประกาศอัตรา</span></a>
+      </div>
+    </nav>
+    <div class="ver">version 1.0.0.55 · prototype</div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div><div class="crumb">จัดการข้อมูล / จัดการประกาศอัตรา</div>
+        <h1><i class="ti ti-info-circle"></i> จัดการประกาศอัตรา (Rate Regime Console)</h1></div>
+      <div class="user"><div><b>นัทนิธิ คมสกุล</b><br><span class="org">1000 - สำนักงานประกันสังคม</span><br><span class="role">นักวิชาการคอมพิวเตอร์ ระดับปฏิบัติการ</span></div>
+        <button class="iconbtn"><i class="ti ti-bell"></i></button><button class="iconbtn"><i class="ti ti-chevron-down"></i></button></div>
+    </div>
+    <div class="content">
+      <div class="tabs">
+        <span class="tabgrp">จัดการประกาศ (ภายใน)</span>
+        <button class="tab active" data-t="t1"><i class="ti ti-list"></i> ทะเบียน / ฟอร์ม</button>
+        <button class="tab" data-t="t3"><i class="ti ti-checks"></i> อนุมัติประกาศ <span class="pill" id="qpill">0</span></button>
+        <button class="tab" data-t="t4"><i class="ti ti-clipboard-list"></i> สถานะการทำรายการ</button>
+        <span class="tabsep"></span>
+        <span class="tabgrp alt">ใช้ข้อมูลผู้ประกันตนจริง</span>
+        <button class="tab" data-t="t2"><i class="ti ti-stethoscope"></i> วินิจฉัยสิทธิว่างงาน</button>
+      </div>
+      <section id="t1" class="panel active"></section>
+      <section id="t2" class="panel"></section>
+      <section id="t3" class="panel"></section>
+      <section id="t4" class="panel"></section>
+    </div>
+  </div>
+</div>
+<div id="modalRoot"></div>
+<div class="toast" id="toast"></div>
+<script>
+const LS='rrc_state_v2';
+const TH=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const STATUSES=['ร่าง','รออนุมัติ','ตรวจสอบ','มีผลแล้ว','ตีกลับ','ยกเลิก'];
+const BCLASS={'ร่าง':'b-gray','รออนุมัติ':'b-amber','ตรวจสอบ':'b-blue','มีผลแล้ว':'b-green','ตีกลับ':'b-red','ยกเลิก':'b-gray'};
+function fmt(n){return !n?'—':(n%100)+' '+TH[Math.floor(n/100)%100-1]+String(Math.floor(n/10000)).slice(-2);}
+function parseTh(s){if(!s||!s.includes('/'))return 0;const p=s.split('/');let y=+p[2];if(y<100)y+=2500;return y*10000+(+p[1])*100+(+p[0]);}
+function r05(n){return Math.floor(Math.round(n*100)/5)*5/100;}
+function money(n){return '฿ '+n.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+let S=load();
+function seed(){return {seqT:15, regimes:[
+  {id:'R2547',name:'กฎกระทรวง 2547',master:true,from:25470122,to:0,layoff:50,layoffCap:180,resign:30,resignCap:90,ceiling:15000,status:'มีผลแล้ว',ver:1},
+  {id:'RC63',name:'โควิด 2563',from:25630301,to:25650228,layoff:70,layoffCap:200,resign:45,resignCap:90,ceiling:15000,status:'มีผลแล้ว',ver:1},
+  {id:'R2568',name:'ฉบับที่ 2 พ.ศ.2568',from:25680628,to:0,layoff:60,layoffCap:180,resign:30,resignCap:90,ceiling:15000,status:'มีผลแล้ว',ver:1},
+  {id:'R2569',name:'ปรับเพดาน 2569',from:25690101,to:0,layoff:60,layoffCap:180,resign:30,resignCap:90,ceiling:17500,status:'รออนุมัติ',ver:1},
+  {id:'RDR',name:'(ร่าง) ทบทวนอัตรา',from:0,to:0,layoff:0,layoffCap:0,resign:0,resignCap:0,ceiling:0,status:'ร่าง',ver:1}
+], txns:[
+  {id:'TX-69-014',type:'create',regimeId:'R2569',maker:'น.ส.เอ',date:'20/06/69',status:'รออนุมัติ',reason:'ปรับเพดานตามประกาศ 2569',diff:[['เพดานค่าจ้าง','15,000','17,500']]},
+  {id:'TX-69-013',type:'edit',regimeId:'R2568',maker:'นายบี',date:'18/06/69',status:'ตีกลับ',reason:'แก้อัตราเลิกจ้าง',diff:[['อัตราเลิกจ้าง','60%','62%']],comment:'อัตราไม่ตรงประกาศ'},
+  {id:'TX-68-010',type:'create',regimeId:'R2568',maker:'นายบี',date:'25/06/68',status:'มีผลแล้ว',reason:'บังคับใช้ฉบับที่ 2',approver:'หัวหน้ากลุ่มงาน'},
+  {id:'TX-63-002',type:'create',regimeId:'RC63',maker:'น.ส.ซี',date:'20/03/63',status:'มีผลแล้ว',reason:'อัตราโควิด',approver:'หัวหน้ากลุ่มงาน'}
+]};}
+function load(){try{const x=JSON.parse(localStorage.getItem(LS));return x&&x.regimes?x:seed();}catch(e){return seed();}}
+function save(){localStorage.setItem(LS,JSON.stringify(S));}
+function reg(id){return S.regimes.find(r=>r.id===id);}
+function newTxId(){S.seqT++;return 'TX-69-0'+S.seqT;}
+function today(){return '25/06/69';}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function overlap(from,to,exceptId){const t=to||99999999;return S.regimes.some(r=>{
+  if(r.id===exceptId||r.master||r.status!=='มีผลแล้ว')return false;
+  const rto=r.to||99999999;
+  if(from<=rto&&r.from<=t){if(rto===99999999&&from>r.from)return false;return true;}
+  return false;});}
+
+// ---------- TAB 1: list + form ----------
+let _q1='',_f1='ทั้งหมด';
+function rowsT1(){
+  const rows=S.regimes.filter(r=>(_f1==='ทั้งหมด'||r.status===_f1)&&(!_q1||r.name.includes(_q1)));
+  return rows.map(r=>`<tr class="click"><td><span class="lnk" onclick="openDetail('${r.id}')">${esc(r.name)}</span> ${r.master?'<span class="badge b-navy">MASTER</span>':''}</td>
+    <td>${fmt(r.from)}</td><td>${r.master?'— (ค่าตั้งต้น)':fmt(r.to)}</td><td>${r.layoff?r.layoff+'%':'—'}</td><td>${r.resign?r.resign+'%':'—'}</td><td>${r.ceiling?r.ceiling.toLocaleString():'—'}</td>
+    <td><span class="badge ${BCLASS[r.status]}">${r.status}</span></td></tr>`).join('')||`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:18px;">ไม่พบประกาศตามเงื่อนไข</td></tr>`;
+}
+function filterT1(){const b=document.getElementById('t1body');if(b)b.innerHTML=rowsT1();}
+function renderT1(){
+  const segs=[['2547',32,'#2E5C8A',''],['โควิด 63–65',14,'#F59E0B',''],['ตั้งต้น',5,'','master'],['ฉบับ 2 / 68',30,'#2E5C8A',''],['เพดาน 69',19,'#16A34A','']];
+  document.getElementById('t1').innerHTML=`
+  <div class="card">
+    <h2>จัดการประกาศอัตรา <span class="sub">— List / Timeline (single source of truth)</span></h2>
+    <div class="toolbar">
+      <input class="inp search" id="q" placeholder="ค้นหาประกาศ..." value="${esc(_q1)}" oninput="_q1=this.value;filterT1()">
+      <select class="inp sel" id="flt" onchange="_f1=this.value;filterT1()">
+        ${['ทั้งหมด',...STATUSES].map(s=>`<option value="${s}" ${s===_f1?'selected':''}>${s==='ทั้งหมด'?'สถานะ: ทั้งหมด':s}</option>`).join('')}
+      </select>
+      <div class="spacer"></div>
+      <button class="btn" onclick="openForm('create')"><i class="ti ti-plus"></i> สร้างประกาศ</button>
+    </div>
+    <div class="tl-label">ไทม์ไลน์ประกาศ <span class="sub">(ช่วงว่าง = ใช้ค่าตั้งต้น กฎ 2547 · ตรวจเฉพาะการทับซ้อน)</span></div>
+    <div class="timeline">${segs.map(s=>s[3]==='master'?`<div class="seg master" style="flex:${s[1]}" title="ไม่มีประกาศ → ใช้ค่าตั้งต้น 2547">↘ ตั้งต้น</div>`:`<div class="seg" style="flex:${s[1]};background:${s[2]}">${s[0]}</div>`).join('')}</div>
+    <div class="masterbar"><span class="badge b-navy">ค่าตั้งต้น (Master)</span> กฎกระทรวง 2547 — ใช้อัตโนมัติทุกช่วงที่ไม่มีประกาศอื่นครอบคลุม</div>
+    <div class="ticks"><span>2547</span><span>2558</span><span>2563</span><span>2565</span><span>2568</span><span>2569</span></div>
+    <table style="margin-top:14px;"><colgroup><col style="width:26%"><col style="width:12%"><col style="width:13%"><col style="width:10%"><col style="width:9%"><col style="width:13%"><col style="width:17%"></colgroup>
+      <thead><tr><th>ชื่อประกาศ</th><th>วันมีผล</th><th>วันสิ้นสุด</th><th>เลิกจ้าง</th><th>ลาออก</th><th>เพดานค่าจ้าง</th><th>สถานะ</th></tr></thead>
+      <tbody id="t1body">${rowsT1()}</tbody></table>
+    <div class="note">คลิกชื่อประกาศเพื่อดูรายละเอียด / ขอแก้ไข / ขอลบ → ส่งเข้าอนุมัติ</div>
+  </div>`;
+}
+
+function openForm(mode,id){
+  const r=id?reg(id):{name:'',from:0,to:0,layoff:'',layoffCap:'',resign:'',resignCap:'',ceiling:'',ref:'',link:'',reason:''};
+  const t=mode==='create'?'สร้างประกาศใหม่':'ขอแก้ไขประกาศ';
+  modal(`<h3>${t}</h3><div class="sub" style="margin-bottom:10px;">กรอกข้อมูล แล้วกด “เสนออนุมัติ” เพื่อส่งเข้าคิวอนุมัติ (maker ≠ checker)</div>
+  <div id="ferr"></div>
+  <div class="grid2">
+    <div>
+      <div style="margin-bottom:10px;"><label>ชื่อประกาศ</label><input class="inp" id="fname" value="${esc(r.name)}"></div>
+      <div class="fgrid"><div><label>วันที่มีผล (วว/ดด/ปปปป พ.ศ.)</label><input class="inp" id="ffrom" value="${r.from?(''+(r.from%100)).padStart(2,'0')+'/'+(''+Math.floor(r.from/100)%100).padStart(2,'0')+'/'+Math.floor(r.from/10000):''}" placeholder="01/01/2569"></div>
+      <div><label>วันที่สิ้นสุด (ถ้ามี)</label><input class="inp" id="fto" value="${r.to?(''+(r.to%100)).padStart(2,'0')+'/'+(''+Math.floor(r.to/100)%100).padStart(2,'0')+'/'+Math.floor(r.to/10000):''}" placeholder="—"></div></div>
+    </div>
+    <div>
+      <div class="fgrid" style="margin-bottom:10px;"><div><label>อัตราเลิกจ้าง (%)</label><input class="inp" id="flo" value="${r.layoff}"></div><div><label>เพดานวัน เลิกจ้าง</label><input class="inp" id="floc" value="${r.layoffCap}"></div></div>
+      <div class="fgrid" style="margin-bottom:10px;"><div><label>อัตราลาออก (%)</label><input class="inp" id="fre" value="${r.resign}"></div><div><label>เพดานวัน ลาออก</label><input class="inp" id="frec" value="${r.resignCap}"></div></div>
+      <div><label>เพดานค่าจ้าง/เดือน</label><input class="inp" id="fcei" value="${r.ceiling}"></div>
+    </div>
+  </div>
+  <div style="margin-top:10px;"><label>เหตุผล / หมายเหตุ</label><textarea class="inp" id="freason" rows="2" style="height:auto;padding:8px 11px;"></textarea></div>
+  <div class="hint">⚠ ห้ามช่วงวันมีผลทับซ้อนกับประกาศที่มีผลแล้ว · ช่วงว่างใช้ค่าตั้งต้น 2547 อัตโนมัติ</div>
+  <div class="formfoot"><button class="btn ghost" onclick="closeModal()">ยกเลิก</button><div class="spacer"></div>
+    <button class="btn ghost" onclick="submitForm('${mode}','${id||''}','ร่าง')">บันทึกร่าง</button>
+    <button class="btn" onclick="submitForm('${mode}','${id||''}','รออนุมัติ')">เสนออนุมัติ</button></div>`);
+}
+function submitForm(mode,id,target){
+  const g=x=>document.getElementById(x).value.trim();
+  const from=parseTh(g('ffrom')),to=parseTh(g('fto'));
+  const name=g('fname');
+  const errs=[];
+  if(!name)errs.push('กรุณากรอกชื่อประกาศ');
+  if(!from)errs.push('กรุณากรอกวันที่มีผล');
+  if(to&&to<from)errs.push('วันสิ้นสุดต้องไม่ก่อนวันมีผล');
+  if(from&&overlap(from,to,id))errs.push('ช่วงวันมีผลทับซ้อนกับประกาศที่มีผลแล้ว');
+  if(errs.length){document.getElementById('ferr').innerHTML='<div class="err">'+errs.join(' · ')+'</div>';return;}
+  const data={name,from,to,layoff:+g('flo')||0,layoffCap:+g('floc')||0,resign:+g('fre')||0,resignCap:+g('frec')||0,ceiling:+(g('fcei').replace(/,/g,''))||0,reason:g('freason')};
+  if(mode==='create'){
+    const rid='R'+Date.now().toString().slice(-6);
+    S.regimes.push({id:rid,...data,status:target,ver:1});
+    if(target==='รออนุมัติ')S.txns.unshift({id:newTxId(),type:'create',regimeId:rid,maker:'นัทนิธิ คมสกุล',date:today(),status:'รออนุมัติ',reason:data.reason||'สร้างประกาศใหม่',diff:[['ประกาศใหม่','—',data.name]]});
+  }else{ // edit request
+    const r=reg(id);const before=`${r.ceiling.toLocaleString()} · ${r.layoff}%/${r.resign}%`;const after=`${data.ceiling.toLocaleString()} · ${data.layoff}%/${data.resign}%`;
+    S.txns.unshift({id:newTxId(),type:'edit',regimeId:id,payload:data,maker:'นัทนิธิ คมสกุล',date:today(),status:target,reason:data.reason||'ขอแก้ไขประกาศ',diff:[['เพดาน·อัตรา',before,after]]});
+  }
+  save();closeModal();renderAll();
+  toast(target==='รออนุมัติ'?'ส่งเสนออนุมัติแล้ว ✓':'บันทึกร่างแล้ว ✓');
+  if(target==='รออนุมัติ')switchTab('t3');
+}
+function openDetail(id){
+  const r=reg(id);
+  modal(`<h3>${esc(r.name)} ${r.master?'<span class="badge b-navy">MASTER</span>':''}</h3>
+  <div class="sub" style="margin-bottom:10px;">รหัส ${r.id} · เวอร์ชัน v${r.ver} · <span class="badge ${BCLASS[r.status]}">${r.status}</span></div>
+  <div class="kv"><span>วันที่มีผล</span><span>${fmt(r.from)}</span></div>
+  <div class="kv"><span>วันที่สิ้นสุด</span><span>${r.master?'— (ค่าตั้งต้น ไม่มีสิ้นสุด)':fmt(r.to)}</span></div>
+  <div class="kv"><span>อัตราเลิกจ้าง / เพดานวัน</span><span>${r.layoff}% / ${r.layoffCap} วัน</span></div>
+  <div class="kv"><span>อัตราลาออก / เพดานวัน</span><span>${r.resign}% / ${r.resignCap} วัน</span></div>
+  <div class="kv"><span>เพดานค่าจ้าง/เดือน</span><span>${r.ceiling.toLocaleString()} บาท</span></div>
+  <div class="kv"><span>โควตา/ปี (เลิกจ้างปน · ลาออกล้วน)</span><span>${r.layoffCap} · ${r.resignCap}</span></div>
+  ${r.master?'<div class="lock" style="margin-top:12px;"><i class="ti ti-lock"></i> เป็นค่าตั้งต้น (Master) — ลบไม่ได้ ต้องกำหนด master ใหม่ก่อน</div>':''}
+  <div class="formfoot"><button class="btn ghost" onclick="closeModal()">ปิด</button><div class="spacer"></div>
+    <button class="btn amber" onclick="closeModal();openForm('edit','${r.id}')"><i class="ti ti-edit"></i> ขอแก้ไข</button>
+    <button class="btn red" ${r.master?'disabled':''} onclick="reqDelete('${r.id}')"><i class="ti ti-trash"></i> ขอลบ</button></div>`);
+}
+function reqDelete(id){
+  const r=reg(id);
+  S.txns.unshift({id:newTxId(),type:'delete',regimeId:id,maker:'นัทนิธิ คมสกุล',date:today(),status:'รออนุมัติ',reason:'ขอลบประกาศ '+r.name,diff:[['ลบประกาศ',r.name,'—']]});
+  save();closeModal();renderAll();toast('ส่งคำขอลบเข้าอนุมัติแล้ว ✓');switchTab('t3');
+}
+
+// ---------- TAB 2: วินิจฉัยสิทธิว่างงาน (หลายรับแจ้ง · ซ้ำซ้อน · Timeline) ----------
+const DTM=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const DXCOLORS=[{f:'#85B7EB',b:'#185FA5',t:'#042C53'},{f:'#5DCAA5',b:'#0F6E56',t:'#04342C'},{f:'#AFA9EC',b:'#534AB7',t:'#26215C'},{f:'#EF9F27',b:'#BA7517',t:'#412402'}];
+const DX_KEY='rrc_dx_v1', DXCASES_KEY='rrc_dxcases_v1';
+let dxOrder=[],dxSeq=0;
+function dP(s){if(!s)return null;const p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+function dAdd(d,n){return new Date(d.getTime()+n*86400000);}
+function dDiff(a,b){return Math.round((b-a)/86400000);}
+function dEom(d){return new Date(d.getFullYear(),d.getMonth()+1,0);}
+function dSame(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth();}
+function dYmd(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+function dThd(d){return d.getDate()+' '+DTM[d.getMonth()]+' '+(d.getFullYear()+543);}
+function dThs(d){return DTM[d.getMonth()]+' '+String((d.getFullYear()+543)%100);}
+function dThm(d){return DTM[d.getMonth()]+' '+(d.getFullYear()+543);}
+function bahtTH(n){return '฿'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function applicableRegime(d){if(!d)return reg('R2547');const be=(d.getFullYear()+543)*10000+(d.getMonth()+1)*100+d.getDate();const c=S.regimes.filter(r=>!r.master&&r.status==='มีผลแล้ว'&&r.from<=be&&be<=(r.to||99999999));if(c.length){c.sort((a,b)=>b.from-a.from);return c[0];}return reg('R2547');}
+function dxResolve(typeVal,ent,out){const layoff=typeVal==='layoff';const RG=applicableRegime(ent||out);return {layoff,RG,rate:(layoff?RG.layoff:RG.resign)/100,cap:(layoff?RG.layoffCap:RG.resignCap)||90,ceiling:RG.ceiling||17500};}
+function beToDate(be){return new Date(Math.floor(be/10000)-543,(Math.floor(be/100)%100)-1,be%100);}
+function renderStraddleClaim(c){
+  const el=c.node.querySelector('.straddle');if(!el)return;el.innerHTML='';
+  const startE=c.startE;if(!startE||!c.dailyWage)return;
+  const cand=[];S.regimes.forEach(r=>{if(r.master||r.status!=='มีผลแล้ว')return;cand.push(beToDate(r.from));if(r.to)cand.push(dAdd(beToDate(r.to),1));});
+  let B=null;cand.forEach(d=>{if(d.getTime()>startE.getTime()&&(!B||d<B))B=d;});
+  if(!B)return;
+  const R1=applicableRegime(startE),R2=applicableRegime(B);if(R1.id===R2.id)return;
+  const total=(c.layoff?R2.layoffCap:R2.resignCap)||90;
+  const seg1=dDiff(startE,B);if(seg1<=0||seg1>=total)return;
+  const seg2=total-seg1;
+  const rate1=c.layoff?R1.layoff:R1.resign,rate2=c.layoff?R2.layoff:R2.resign;
+  const d1=r05(c.dailyWage*rate1/100),d2=r05(c.dailyWage*rate2/100),a1=r05(d1*seg1),a2=r05(d2*seg2);
+  const e1=dAdd(B,-1),e2=dAdd(B,seg2-1);
+  el.innerHTML=`<div class="banner" style="margin-bottom:8px"><i class="ti ti-arrows-split"></i> ตรวจพบการคร่อม regime: ใช่ — ขอบ ${dThd(B)} → เสนอ ปิดรับแจ้ง #1 / เปิดรับแจ้ง #2 (จนท.ยืนยัน)</div>
+   <div class="cards2" style="margin-top:0">
+    <div class="rcard"><div class="hd" style="background:var(--amber)">รับแจ้ง #1 (ปิดที่ขอบ)</div><div class="bd"><div style="font-weight:600">${dThd(startE)} – ${dThd(e1)}</div><div class="sub">${esc(R1.name)}${R1.master?' (master)':''} · ${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate1}%</div><div class="row"><span>${seg1} วัน</span><span class="amt">${bahtTH(a1)}</span></div></div></div>
+    <div class="rcard"><div class="hd" style="background:var(--accent)">รับแจ้ง #2 (เปิดต่อเนื่อง)</div><div class="bd"><div style="font-weight:600">${dThd(B)} – ${dThd(e2)}</div><div class="sub">${esc(R2.name)}${R2.master?' (master)':''} · ${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate2}%</div><div class="row"><span>${seg2} วัน</span><span class="amt">${bahtTH(a2)}</span></div></div></div>
+   </div>
+   <div class="total" style="margin-top:8px"><span>รวมสิทธิ ${total} วัน (cap ${esc(R2.name)} คุมส่วนที่เหลือ)</span><span class="money">รวม ${bahtTH(r05(a1+a2))}</span></div>
+   <div class="note">หมายเหตุ: #2 ไม่มี waiting ใหม่ · นับวัน/โควตาต่อจาก #1 · คู่ #1↔#2 ไม่ถือเป็นความซ้ำซ้อน</div>`;
+}
+function renderT2(){ if(!document.getElementById('dxClaims'))buildDx(); else dxRecalc(); }
+function buildDx(){
+  document.getElementById('t2').innerHTML=`
+  <div class="card">
+    <h2>วินิจฉัยสิทธิว่างงาน <span class="sub">— หลายรับแจ้ง · ตรวจซ้ำซ้อน · โควตา · อัตรา/เพดานดึงจากประกาศ</span></h2>
+    <div class="toolbar" style="background:var(--soft);padding:10px 12px;border-radius:8px">
+      <i class="ti ti-folder" style="align-self:center;color:var(--accent)"></i>
+      <span style="align-self:center;font-size:12px;color:var(--muted);font-weight:600">คลังเทสเคส (เดโม):</span>
+      <select class="inp" id="dxCase" style="min-width:300px;flex:1" onchange="loadDxCase()"></select>
+      <button class="btn ghost" onclick="saveDxCase()"><i class="ti ti-device-floppy"></i> บันทึกเทสเคส…</button>
+      <button class="btn ghost" onclick="delDxCase()"><i class="ti ti-trash"></i> ลบ</button>
+    </div>
+    <div class="toolbar" style="margin-top:10px"><label style="margin:0 8px 0 0;align-self:center;font-weight:600">วันใช้สิทธิสะสมก่อนหน้า (ปีปฏิทินนี้)</label><input class="inp" id="dxprior" type="number" value="0" style="width:120px" oninput="dxRecalc()"></div>
+    <div id="dxClaims" style="display:flex;flex-direction:column;gap:12px;margin-top:12px"></div>
+    <button class="btn ghost" onclick="addDxClaim()" style="margin-top:10px"><i class="ti ti-plus"></i> เพิ่มคำขอ (รับแจ้ง)</button>
+  </div>
+  <div class="card"><h2>สรุปผลวินิจฉัย</h2><div id="dxSummary" class="cards2" style="margin-top:0"></div></div>
+  <div class="card"><h2>Timeline ช่วงสิทธิ <span class="sub">— เทียบหลายรับแจ้ง · ไฮไลต์ช่วงซ้ำซ้อน</span></h2>
+    <div id="dxTimeline"></div><div id="dxLegend" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--muted)"></div></div>`;
+  refreshDxCases();
+  const sv=dxLoadState();
+  if(sv&&sv.claims&&sv.claims.length){document.getElementById('dxprior').value=sv.prior||0;sv.claims.forEach(addDxClaim);}
+  else dxDefaults();
+}
+function repRowHTML(date,rep){return `<div class="rep" style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
+  <span style="font-size:12px;color:var(--muted);min-width:96px">วันที่รายงานตัว</span>
+  <input class="inp r-date" type="date" value="${date||''}" style="width:170px">
+  <label style="display:flex;flex-direction:row;align-items:center;gap:5px;font-size:12px;margin:0"><input class="r-rep" type="checkbox" ${rep!==false?'checked':''} style="width:auto;height:auto"> รายงานตัวแล้ว</label>
+  <span class="r-info" style="font-size:12px;color:var(--muted)"></span>
+  <button class="btn ghost rmp" style="margin-left:auto;width:34px;padding:0;height:30px"><i class="ti ti-x"></i></button></div>`;}
+function claimHTML(id,d){
+  return `<div class="claim" data-id="${id}" style="background:var(--soft);border-radius:12px;padding:14px 16px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="dot" style="width:12px;height:12px;border-radius:3px"></span><span class="cname" style="font-weight:700"></span><button class="btn ghost rm" style="margin-left:auto;width:34px;padding:0;height:30px"><i class="ti ti-trash"></i></button></div>
+    <div class="grid2">
+      <label>ประเภทการว่างงาน<select class="inp f-type"><option value="resign"${d.type==='resign'?' selected':''}>ลาออก / สิ้นสุดสัญญา</option><option value="layoff"${d.type==='layoff'?' selected':''}>เลิกจ้าง</option></select></label>
+      <label style="grid-column:span 2">ค่าจ้าง 3 เดือนสูงสุด (ม.57 · เพดานจากประกาศ <b class="f-ceil">—</b>)<div style="display:flex;gap:6px"><input class="inp f-w1" type="number" value="${d.w?d.w[0]:17500}"><input class="inp f-w2" type="number" value="${d.w?d.w[1]:17500}"><input class="inp f-w3" type="number" value="${d.w?d.w[2]:17500}"></div></label>
+      <label>วันที่ลาออก/ออกจากงาน<input class="inp f-out" type="date" value="${d.out||''}"></label>
+      <label>วันที่กลับเข้าทำงานจริง (ถ้ามี)<input class="inp f-back" type="date" value="${d.back||''}"></label>
+      <label>วันที่นายจ้างแจ้งเข้างาน (ถ้ามี)<input class="inp f-notify" type="date" value="${d.notify||''}"></label>
+      <label>วันที่ขึ้นทะเบียน (= รายงานตัวครั้งที่ 1)<input class="inp f-reg" type="date" value="${d.reg||''}"></label>
+      <label>วันที่เกิดสิทธิ (auto)<input class="inp f-ent" type="date" readonly style="background:var(--soft);color:var(--muted)"></label>
+      <label>สิทธิเต็ม (วัน) <span class="sub">— ล็อกตามประกาศ</span><input class="inp f-full" type="number" readonly style="background:var(--soft);color:var(--muted)"></label>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin:12px 0 6px">การรายงานตัว (1 ครั้ง/เดือน — กรอกวันที่รายงานตัว วันเดียวต่อเดือน)</div>
+    <div class="reps"></div>
+    <button class="btn ghost addp" style="margin-top:2px"><i class="ti ti-plus"></i> เพิ่มการรายงานตัว</button>
+    <div class="derived" style="display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;font-size:12.5px;color:var(--muted)"></div>
+    <div class="straddle" style="margin-top:10px"></div>
+    <button class="btn ghost drill" style="margin-top:10px"><i class="ti ti-table"></i> ดูตารางงวด (วินิจฉัยแล้ว)</button>
+    <div class="schedule" style="display:none;margin-top:8px"></div></div>`;}
+function attachRep(container,date,rep){const w=document.createElement('div');w.innerHTML=repRowHTML(date,rep);const row=w.firstChild;container.appendChild(row);
+  row.querySelectorAll('input').forEach(el=>el.addEventListener('input',dxRecalc));
+  row.querySelector('.rmp').addEventListener('click',()=>{if(container.querySelectorAll('.rep').length<=1)return;row.remove();dxRecalc();});}
+function addDxClaim(d){d=d||{type:'resign',w:[17500,17500,17500],out:'',back:'',notify:'',reg:'',reps:[{date:'',rep:true}]};
+  const id=++dxSeq;dxOrder.push(id);const claimsEl=document.getElementById('dxClaims');
+  const wrap=document.createElement('div');wrap.innerHTML=claimHTML(id,d);const node=wrap.firstChild;claimsEl.appendChild(node);
+  const repsEl=node.querySelector('.reps');(d.reps||[{date:'',rep:true}]).forEach(p=>attachRep(repsEl,p.date,p.rep));
+  node.querySelector('.f-type').addEventListener('change',dxRecalc);
+  node.querySelectorAll('.f-w1,.f-w2,.f-w3,.f-out,.f-back,.f-notify,.f-reg').forEach(el=>el.addEventListener('input',dxRecalc));
+  node.querySelector('.addp').addEventListener('click',()=>{attachRep(repsEl,'',true);dxRecalc();});
+  node.querySelector('.rm').addEventListener('click',()=>{if(dxOrder.length<=1)return;dxOrder=dxOrder.filter(x=>x!==id);node.remove();dxRecalc();});
+  node.querySelector('.drill').addEventListener('click',()=>{const sc=node.querySelector('.schedule');if(sc.style.display==='none'){sc.style.display='block';dxRenderSchedule(node);}else sc.style.display='none';});
+  dxRecalc();}
+function readClaim(node){
+  const typeVal=node.querySelector('.f-type').value;
+  const out=dP(node.querySelector('.f-out').value),back=dP(node.querySelector('.f-back').value),notify=dP(node.querySelector('.f-notify').value);
+  const regEl=node.querySelector('.f-reg'),regd=dP(regEl.value);
+  node.querySelectorAll('.rep').forEach((p,idx)=>{const de=p.querySelector('.r-date');if(idx===0){de.readOnly=true;de.style.background='var(--soft)';de.style.color='var(--muted)';if(regEl.value)de.value=regEl.value;}else{de.readOnly=false;de.style.background='';de.style.color='';}});
+  const entEl=node.querySelector('.f-ent');let ent=null;if(out){const ed=(regd&&dDiff(out,regd)>30)?regd:dAdd(out,7);entEl.value=dYmd(ed);ent=ed;}
+  const R=dxResolve(typeVal,ent,out);
+  const fc=node.querySelector('.f-ceil');if(fc)fc.textContent=R.ceiling.toLocaleString();
+  const fullEl=node.querySelector('.f-full');fullEl.value=R.cap;const full=R.cap;
+  const w=[node.querySelector('.f-w1'),node.querySelector('.f-w2'),node.querySelector('.f-w3')].map(el=>{el.max=R.ceiling;if((+el.value||0)>R.ceiling)el.value=R.ceiling;return Math.min(+el.value||0,R.ceiling);});
+  const dailyWage=r05((w[0]+w[1]+w[2])/90),daily=r05(dailyWage*R.rate);
+  const reported=[];node.querySelectorAll('.rep').forEach(p=>{const d=dP(p.querySelector('.r-date').value),rep=p.querySelector('.r-rep').checked,info=p.querySelector('.r-info');if(d&&rep){reported.push(d);info.textContent='('+dThm(d)+')';info.style.color='var(--muted)';}else if(d&&!rep){info.textContent='(ยังไม่รายงานตัว)';info.style.color='var(--amber)';}else info.textContent='';});
+  reported.sort((a,b)=>a-b);const reportedEnd=reported.length?reported[reported.length-1]:null;
+  const startE=ent||(reported.length?reported[0]:null);
+  let payCap=null;if(notify)payCap=new Date(notify.getFullYear(),notify.getMonth(),0);else if(back)payCap=dAdd(back,-1);
+  let effPaid=null;if(startE&&full>0&&reportedEnd){let entEnd=dAdd(startE,full-1),pe=dEom(reportedEnd);if(pe>entEnd)pe=entEnd;if(payCap&&payCap<pe)pe=payCap;if(pe>=startE)effPaid={s:startE,e:pe};}
+  const usedDays=effPaid?dDiff(effPaid.s,effPaid.e)+1:0;
+  let legitEnd=null,legitDays=usedDays,overpaidDays=0;
+  if(effPaid){legitEnd=back?(dAdd(back,-1)<effPaid.e?dAdd(back,-1):effPaid.e):effPaid.e;legitDays=legitEnd>=effPaid.s?dDiff(effPaid.s,legitEnd)+1:0;overpaidDays=usedDays-legitDays;}
+  return {node,typeVal,layoff:R.layoff,cap:R.cap,rate:R.rate,RG:R.RG,dailyWage,daily,out,back,notify,reg:regd,ent,full,startE,reportedDates:reported,reportedEnd,effPaid,effDays:usedDays,usedDays,legitEnd,legitDays,overpaidDays};
+}
+function entWindow(c){const s=c.startE;if(!s||!c.full||c.full<=0)return null;return{s,e:dAdd(s,c.full-1)};}
+function genSchedule(c){
+  if(!c.startE||!c.full||c.full<=0)return[];
+  const reportedEnd=c.reportedEnd?c.reportedEnd.getTime():null,reps=c.reportedDates||[];
+  const quotaCut=(c.alloc!=null&&c.alloc<(c.usedDays||c.full));const quotaEnd=quotaCut?dAdd(c.startE,c.alloc-1):null;
+  const rows=[];let remaining=c.full,cur=new Date(c.startE),guard=0,rptMonth=null;
+  const legitCut=(c.overpaidDays>0&&c.legitEnd)?c.legitEnd:null;
+  function pushPaid(s,e,status,rd){
+    if(legitCut&&legitCut.getTime()>=s.getTime()&&legitCut.getTime()<e.getTime()){rows.push({month:rptMonth,rdate:rd,status,s,e:legitCut,days:dDiff(s,legitCut)+1,show:true});rows.push({month:rptMonth,rdate:null,status:'จ่ายเกิน/เรียกคืน',s:dAdd(legitCut,1),e,days:dDiff(dAdd(legitCut,1),e)+1,show:true,over:true});}
+    else if(legitCut&&legitCut.getTime()<s.getTime()){rows.push({month:rptMonth,rdate:rd,status:'จ่ายเกิน/เรียกคืน',s,e,days:dDiff(s,e)+1,show:true,over:true});}
+    else{rows.push({month:rptMonth,rdate:rd,status,s,e,days:dDiff(s,e)+1,show:true});}}
+  while(remaining>0&&guard<48){guard++;
+    const mEnd=dEom(cur),byDays=dAdd(cur,remaining-1),cycEnd=mEnd<byDays?mEnd:byDays,nominal=dDiff(cur,cycEnd)+1;
+    rptMonth=new Date(cur.getFullYear(),cur.getMonth(),1);
+    if(quotaEnd&&cur.getTime()>quotaEnd.getTime()){rows.push({month:rptMonth,rdate:null,status:'ตัดตามโควตา',s:cur,e:cycEnd,days:nominal,show:false,cut:true});remaining-=nominal;cur=dAdd(cycEnd,1);continue;}
+    const rep=reportedEnd!==null&&cur.getTime()<=reportedEnd;
+    let payCap=c.notify?new Date(c.notify.getFullYear(),c.notify.getMonth(),0):(c.back?dAdd(c.back,-1):null);
+    let payEnd=cycEnd;if(payCap&&payCap<payEnd)payEnd=payCap;if(quotaEnd&&quotaEnd.getTime()<payEnd.getTime())payEnd=quotaEnd;
+    if(!rep||payEnd<cur){rows.push({month:rptMonth,rdate:null,status:'รอรายงานตัว',s:null,e:null,days:0,show:false});}
+    else{let rd=null;reps.forEach(d=>{if(dSame(d,cur))rd=d;});
+      if(rd&&rd.getTime()<=payEnd.getTime()){const r1e=new Date(Math.min(Math.max(rd.getTime(),cur.getTime()),payEnd.getTime()));const r2status=(rd.getTime()<cur.getTime())?'ทำจ่ายอัตโนมัติ':'จ่ายแล้ว (รอบ 2)';pushPaid(cur,r1e,'จ่ายแล้ว (รอบ 1)',rd);if(dAdd(r1e,1).getTime()<=payEnd.getTime())pushPaid(dAdd(r1e,1),payEnd,r2status,null);}
+      else{pushPaid(cur,payEnd,'ทำจ่ายอัตโนมัติ',null);}}
+    remaining-=nominal;cur=dAdd(cycEnd,1);}
+  return rows;}
+function dxRenderSchedule(node){
+  const c=readClaim(node);if(node.dataset.alloc!==undefined&&node.dataset.alloc!=='')c.alloc=+node.dataset.alloc;
+  const rows=genSchedule(c),sc=node.querySelector('.schedule');
+  if(!rows.length){sc.innerHTML='<div style="font-size:12.5px;color:var(--muted)">กรอกวันออกจากงาน วันขึ้นทะเบียน และวันรายงานตัว เพื่อสร้างตารางงวด</div>';return;}
+  const tot=rows.reduce((a,r)=>a+(r.show?r.days:0),0);
+  const body=rows.map((r,i)=>{const color=r.over?'var(--red)':(r.cut?'var(--amber)':((r.status.indexOf('จ่ายแล้ว')===0||r.status.indexOf('ทำจ่าย')===0)?'var(--green)':'var(--amber)'));const range=(r.cut||r.show)?(dThd(r.s)+' – '+dThd(r.e)):'—';const days=r.cut?('ตัด '+r.days+' วัน'):(r.show?(r.days+' วัน'):'—');return `<tr><td>${i+1}</td><td>${dThm(r.month)}</td><td>${r.rdate?dThd(r.rdate):'—'}</td><td style="color:${color}">${r.status}</td><td>${range}</td><td>${days}</td></tr>`;}).join('');
+  sc.innerHTML=`<table><colgroup><col style="width:8%"><col style="width:18%"><col style="width:18%"><col style="width:20%"><col style="width:24%"><col style="width:12%"></colgroup><thead><tr><th>ลำดับ</th><th>เดือนรายงานตัว</th><th>วันที่รายงานตัว</th><th>สถานะ</th><th>ช่วงสิทธิที่จ่าย</th><th>จำนวนวัน</th></tr></thead><tbody>${body}</tbody></table><div class="note">* รวมจ่ายแล้ว ${tot} วัน จากสิทธิเต็ม ${c.full} วัน</div>`;}
+function computeQuota(cs,prior){
+  const runs=[];cs.forEach((c,ci)=>{if(!c.effPaid)return;const s=c.effPaid.s,e=c.effPaid.e,y0=s.getFullYear(),y1=e.getFullYear();for(let y=y0;y<=y1;y++){const rs=y===y0?s:new Date(y,0,1),re=y===y1?e:new Date(y,11,31);runs.push({year:y,s:rs,e:re,ci,layoff:c.layoff,cap:c.cap,days:dDiff(rs,re)+1});}});
+  const ylcap={};runs.forEach(r=>{if(r.layoff)ylcap[r.year]=Math.max(ylcap[r.year]||0,r.cap);});const capOf=y=>ylcap[y]||90;
+  runs.sort((a,b)=>a.s-b.s);const ub={},ac={},ui={};const mn=runs.length?Math.min.apply(null,runs.map(r=>r.year)):null;if(mn!==null&&prior>0)ub[mn]=prior;
+  runs.forEach(r=>{const u=ub[r.year]||0,cap=capOf(r.year);const al=Math.max(Math.min(r.days,cap-u),0);ub[r.year]=u+al;ac[r.ci]=(ac[r.ci]||0)+al;});
+  Object.keys(ub).forEach(y=>{ui[y]={used:ub[y],cap:capOf(+y)};});return{allocByClaim:ac,usedInfo:ui};}
+function dxMetric(label,val,mode){const m={danger:['#FDECEC','var(--red)'],ok:['#E9F8EF','var(--green)'],warn:['#FFF6E6','var(--amber)'],neutral:['var(--soft)','var(--text)']}[mode||'neutral'];return `<div style="background:${m[0]};border-radius:8px;padding:12px 14px"><div style="font-size:12px;color:var(--muted);margin-bottom:4px">${label}</div><div style="font-size:18px;font-weight:700;color:${m[1]}">${val}</div></div>`;}
+function dxRenderSummary(n,dup,rec,usedInfo,totDays,totAmt){
+  const years=Object.keys(usedInfo).sort();let quotaCard;
+  if(years.length){let by=years[0];years.forEach(y=>{if(usedInfo[y].used/usedInfo[y].cap>=usedInfo[by].used/usedInfo[by].cap)by=y;});const u=usedInfo[by];quotaCard=dxMetric('โควตาปี '+(+by+543),u.used+' / '+u.cap+' วัน',u.used>=u.cap?'warn':'neutral');}else quotaCard=dxMetric('โควตาปีปฏิทิน','—','neutral');
+  const stat=dup>0?dxMetric('ช่วงสิทธิที่ซ้ำซ้อน',dup+' วัน','danger'):dxMetric('สถานะความซ้ำซ้อน','ไม่พบการซ้ำซ้อน','ok');
+  document.getElementById('dxSummary').innerHTML=dxMetric('จำนวนคำขอ',n+' คำขอ','neutral')+stat+quotaCard+dxMetric('ยอดที่อาจต้องเรียกคืน',bahtTH(rec),dup>0?'danger':'ok')+dxMetric('ผลวินิจฉัย — จ่ายรวม',(totDays||0)+' วัน = '+bahtTH(totAmt||0),'ok');}
+function dxRenderTimeline(cs,dupIntervals){
+  const tl=document.getElementById('dxTimeline');let minT=Infinity,maxT=-Infinity;
+  cs.forEach(c=>{if(c.reg)minT=Math.min(minT,c.reg.getTime());const ew=entWindow(c);if(ew){minT=Math.min(minT,ew.s.getTime());maxT=Math.max(maxT,ew.e.getTime());}if(c.effPaid){minT=Math.min(minT,c.effPaid.s.getTime());maxT=Math.max(maxT,c.effPaid.e.getTime());}});
+  if(!isFinite(minT)||!isFinite(maxT)){tl.innerHTML='<div style="font-size:13px;color:var(--muted)">กรอกวันออกจากงาน/รายงานตัว เพื่อแสดง Timeline</div>';document.getElementById('dxLegend').innerHTML='';return;}
+  const pad=(maxT-minT)*0.04||86400000*5;minT-=pad;maxT+=pad;const span=maxT-minT;const pos=t=>((t-minT)/span*100);
+  let grid='';let gm=new Date(new Date(minT).getFullYear(),new Date(minT).getMonth(),1);if(gm.getTime()<minT)gm=new Date(gm.getFullYear(),gm.getMonth()+1,1);
+  while(gm.getTime()<=maxT){const x=pos(gm.getTime());grid+=`<div style="position:absolute;left:${x}%;top:0;bottom:0;width:1px;background:var(--line)"></div><div style="position:absolute;left:${x}%;top:2px;transform:translateX(2px);font-size:10.5px;color:var(--muted);white-space:nowrap">${dThs(gm)}</div>`;gm=new Date(gm.getFullYear(),gm.getMonth()+1,1);}
+  let bands='';dupIntervals.forEach(iv=>{const l=pos(iv[0]),wd=pos(iv[1]+86400000)-l;bands+=`<div title="ช่วงซ้ำซ้อน" style="position:absolute;left:${l}%;width:${wd}%;top:0;bottom:0;background:rgba(226,75,74,0.18);border-left:1px solid #A32D2D;border-right:1px solid #A32D2D"></div>`;});
+  let left='',rows='';
+  cs.forEach((c,i)=>{const col=DXCOLORS[i%DXCOLORS.length];
+    left+=`<div style="height:38px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text)"><span style="width:10px;height:10px;border-radius:2px;background:${col.f};border:1px solid ${col.b}"></span>คำขอ ${String.fromCharCode(65+i)}</div>`;
+    let inner='';const ew=entWindow(c);
+    if(ew){const ls=pos(ew.s.getTime()),lw=pos(ew.e.getTime()+86400000)-ls;inner+=`<div title="สิทธิเต็มตามวินิจฉัย" style="position:absolute;left:${ls}%;width:${lw}%;top:9px;height:22px;background:${col.f};opacity:0.22;border-radius:5px"></div>`;}
+    if(ew&&c.effPaid&&ew.e.getTime()>c.effPaid.e.getTime()){const rsd=dAdd(c.effPaid.e,1),ds=pos(rsd.getTime()),dw=pos(ew.e.getTime()+86400000)-ds;inner+=`<div title="สิทธิคงเหลือ/รอรายงานตัว" style="position:absolute;left:${ds}%;width:${dw}%;top:9px;height:22px;background:transparent;border:1px dashed ${col.b};border-radius:5px"></div>`;}
+    else if(ew&&!c.effPaid){const ds2=pos(ew.s.getTime()),dw2=pos(ew.e.getTime()+86400000)-ds2;inner+=`<div title="รอรายงานตัว" style="position:absolute;left:${ds2}%;width:${dw2}%;top:9px;height:22px;background:transparent;border:1px dashed ${col.b};border-radius:5px"></div>`;}
+    if(c.effPaid&&c.overpaidDays>0&&c.legitEnd){const ls2=pos(c.effPaid.s.getTime()),lw2=pos(c.legitEnd.getTime()+86400000)-ls2;inner+=`<div title="ควรได้จริง ${c.legitDays} วัน" style="position:absolute;left:${ls2}%;width:${lw2}%;top:9px;height:22px;background:${col.f};border:0.5px solid ${col.b};border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden"><span style="font-size:11px;font-weight:600;color:${col.t};white-space:nowrap">${c.legitDays} วัน</span></div>`;const os=dAdd(c.legitEnd,1),osx=pos(os.getTime()),ow=pos(c.effPaid.e.getTime()+86400000)-osx;inner+=`<div title="จ่ายเกิน/เรียกคืน ${c.overpaidDays} วัน" style="position:absolute;left:${osx}%;width:${ow}%;top:9px;height:22px;background:rgba(226,75,74,0.22);border:1px solid #A32D2D;border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden"><span style="font-size:10.5px;font-weight:600;color:#791F1F;white-space:nowrap">เรียกคืน ${c.overpaidDays}</span></div>`;}
+    else if(c.effPaid){const alloc=(c.alloc!=null?c.alloc:c.effDays),cutDays=Math.max(c.effDays-alloc,0);const paidEnd=alloc>0?dAdd(c.effPaid.s,Math.min(alloc,c.effDays)-1):null;if(paidEnd){const s2=pos(c.effPaid.s.getTime()),w2=pos(paidEnd.getTime()+86400000)-s2;inner+=`<div title="จ่ายจริง ${alloc} วัน" style="position:absolute;left:${s2}%;width:${w2}%;top:9px;height:22px;background:${col.f};border:0.5px solid ${col.b};border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden"><span style="font-size:11px;font-weight:600;color:${col.t};white-space:nowrap">${alloc} วัน</span></div>`;}if(cutDays>0){const cutStart=paidEnd?dAdd(paidEnd,1):c.effPaid.s,cs3=pos(cutStart.getTime()),cw3=pos(c.effPaid.e.getTime()+86400000)-cs3;inner+=`<div title="ตัดตามโควตา ${cutDays} วัน" style="position:absolute;left:${cs3}%;width:${cw3}%;top:9px;height:22px;background:rgba(186,117,23,0.20);border:1px solid #BA7517;border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden"><span style="font-size:10.5px;font-weight:600;color:#633806;white-space:nowrap">ตัดโควตา ${cutDays}</span></div>`;}}
+    (c.reportedDates||[]).forEach(rd=>{const rx=pos(rd.getTime());inner+=`<div title="รายงานตัว ${dThd(rd)}" style="position:absolute;left:${rx}%;top:9px;width:2px;height:22px;background:${col.b};transform:translateX(-1px);opacity:0.8"></div>`;});
+    const regm=c.reg?`<div title="ขึ้นทะเบียน ${dThd(c.reg)}" style="position:absolute;left:${pos(c.reg.getTime())}%;top:6px;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid ${col.b};transform:translateX(-5px)"></div>`:'';
+    rows+=`<div style="position:relative;height:38px">${regm}${inner}</div>`;});
+  tl.innerHTML=`<div style="display:flex"><div style="width:78px;flex:none;padding-top:24px">${left}</div><div style="position:relative;flex:1;min-height:${cs.length*38+24}px;overflow-x:auto"><div style="position:absolute;left:0;right:0;top:22px;bottom:0">${grid}${bands}</div><div style="position:relative;padding-top:24px">${rows}</div></div></div>`;
+  document.getElementById('dxLegend').innerHTML=[['#85B7EB','จ่ายจริง'],['transparent','สิทธิคงเหลือ/รอรายงานตัว (เส้นประ)'],['rgba(186,117,23,0.3)','ตัดตามโควตา'],['rgba(226,75,74,0.22)','ช่วงซ้ำซ้อน/เรียกคืน']].map(x=>`<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:14px;height:12px;border-radius:3px;background:${x[0]};border:1px solid var(--line)"></span>${x[1]}</span>`).join('')+'<span style="display:inline-flex;align-items:center;gap:5px">▼ ขึ้นทะเบียน</span>';}
+function dxRecalc(){
+  const claimsEl=document.getElementById('dxClaims');if(!claimsEl)return;
+  const prior=+document.getElementById('dxprior').value||0;
+  const nodes=dxOrder.map(id=>claimsEl.querySelector('.claim[data-id="'+id+'"]')).filter(Boolean);
+  const cs=nodes.map(readClaim);const q=computeQuota(cs,prior);
+  const allocs=cs.map((cc,ii)=>q.allocByClaim[ii]||0);const totalAlloc=allocs.reduce((a,b)=>a+b,0);
+  const capYr=cs.reduce((m,cc)=>cc.layoff?Math.max(m,cc.cap):m,0)||90;
+  let totDays=0,totAmt=0;
+  cs.forEach((c,i)=>{const col=DXCOLORS[i%DXCOLORS.length];
+    c.node.querySelector('.dot').style.background=col.f;c.node.querySelector('.dot').style.border='1px solid '+col.b;
+    c.node.querySelector('.cname').textContent='คำขอ '+String.fromCharCode(65+i)+' (รับแจ้ง '+(i+1)+')';
+    const al=q.allocByClaim[i]||0,amount=r05(c.daily*al);c.alloc=al;c.node.dataset.alloc=al;
+    totDays+=al;totAmt=r05(totAmt+amount);
+    const entitled=Math.max(0,Math.min(c.full,capYr-prior-(totalAlloc-al)));
+    const qnote=entitled<c.full?` · <span style="color:var(--amber)">ตัดโควตา ${c.full-entitled} วัน</span>`:'';
+    const rem=entitled-al;
+    const over=c.overpaidDays>0?`<span style="color:var(--red)">จ่ายเกิน/เรียกคืน <b>${c.overpaidDays} วัน</b> (ควรได้จริง ${c.legitDays})</span>`:'';
+    c.node.querySelector('.derived').innerHTML=`<span>ใช้ประกาศ: <b style="color:var(--text)">${esc(c.RG.name)}</b>${c.RG.master?' (master)':''}</span><span>ค่าจ้างรายวัน: <b style="color:var(--text)">${bahtTH(c.dailyWage)}</b></span><span>รับวันละ (${Math.round(c.rate*100)}%): <b style="color:var(--text)">${bahtTH(c.daily)}</b></span><span>สิทธิที่วินิจฉัยได้: <b style="color:var(--text)">${entitled} / ${c.full} วัน</b>${qnote}</span><span>จ่ายจริง (ถึง ${c.reportedEnd?dThm(c.reportedEnd):'-'}): <b style="color:var(--text)">${al} วัน = ${bahtTH(amount)}</b></span><span>คงเหลือ: <b style="color:var(--text)">${rem} วัน</b></span>${over}`;
+    renderStraddleClaim(c);
+    const sc=c.node.querySelector('.schedule');if(sc.style.display!=='none')dxRenderSchedule(c.node);});
+  const allP=[];cs.forEach((c,ci)=>{if(c.effPaid)allP.push({ci,s:c.effPaid.s.getTime(),e:c.effPaid.e.getTime(),reg:c.reg,daily:c.daily});});
+  const dupI=[];let recover=0;
+  for(let i=0;i<allP.length;i++)for(let j=i+1;j<allP.length;j++){if(allP[i].ci===allP[j].ci)continue;const s=Math.max(allP[i].s,allP[j].s),e=Math.min(allP[i].e,allP[j].e);if(e>=s){dupI.push([s,e]);const od=Math.round((e-s)/86400000)+1;const ea=(allP[i].reg&&allP[j].reg)?(allP[i].reg<=allP[j].reg?allP[i]:allP[j]):(allP[i].s<=allP[j].s?allP[i]:allP[j]);recover+=od*ea.daily;}}
+  let dt=0;if(dupI.length){dupI.sort((a,b)=>a[0]-b[0]);let c0=dupI[0][0],ce=dupI[0][1];for(let k=1;k<dupI.length;k++){if(dupI[k][0]<=ce+86400000)ce=Math.max(ce,dupI[k][1]);else{dt+=Math.round((ce-c0)/86400000)+1;c0=dupI[k][0];ce=dupI[k][1];}}dt+=Math.round((ce-c0)/86400000)+1;}
+  dxRenderSummary(cs.length,dt,r05(recover),q.usedInfo,totDays,totAmt);dxRenderTimeline(cs,dupI);dxSaveState();}
+function dxSnapshot(){const claimsEl=document.getElementById('dxClaims');const claims=[];dxOrder.forEach(id=>{const node=claimsEl.querySelector('.claim[data-id="'+id+'"]');if(!node)return;const reps=Array.prototype.map.call(node.querySelectorAll('.rep'),p=>({date:p.querySelector('.r-date').value,rep:p.querySelector('.r-rep').checked}));claims.push({type:node.querySelector('.f-type').value,w:[node.querySelector('.f-w1').value,node.querySelector('.f-w2').value,node.querySelector('.f-w3').value],out:node.querySelector('.f-out').value,back:node.querySelector('.f-back').value,notify:node.querySelector('.f-notify').value,reg:node.querySelector('.f-reg').value,reps});});return {prior:document.getElementById('dxprior').value,claims};}
+function dxSaveState(){try{localStorage.setItem(DX_KEY,JSON.stringify(dxSnapshot()));}catch(e){}}
+function dxLoadState(){try{return JSON.parse(localStorage.getItem(DX_KEY));}catch(e){return null;}}
+function clearDxClaims(){const el=document.getElementById('dxClaims');dxOrder.slice().forEach(id=>{const n=el.querySelector('.claim[data-id="'+id+'"]');if(n)n.remove();});dxOrder=[];}
+function dxDefaults(){addDxClaim({type:'resign',w:[17500,17500,17500],out:'2026-04-01',reg:'2026-04-06',reps:[{date:'2026-04-28',rep:true},{date:'2026-05-04',rep:true}]});addDxClaim({type:'resign',w:[17500,17500,17500],out:'2026-05-11',reg:'2026-05-15',reps:[{date:'2026-05-20',rep:true},{date:'2026-06-15',rep:true}]});}
+const DXPRESETS=[
+ {name:'2 รับแจ้ง — ไม่พบซ้ำซ้อน (ต่อเนื่อง)',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-04-01',back:'2026-05-05',reg:'2026-04-06',reps:[{date:'2026-04-28',rep:true},{date:'2026-05-04',rep:true}]},{type:'resign',w:[17500,17500,17500],out:'2026-05-11',reg:'2026-05-15',reps:[{date:'2026-05-20',rep:true},{date:'2026-06-15',rep:true}]}]}},
+ {name:'2 รับแจ้ง — พบซ้ำซ้อน (ทับช่วง)',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-04-01',reg:'2026-04-06',reps:[{date:'2026-04-28',rep:true},{date:'2026-05-15',rep:true},{date:'2026-06-20',rep:true}]},{type:'resign',w:[17500,17500,17500],out:'2026-05-11',reg:'2026-05-15',reps:[{date:'2026-05-20',rep:true},{date:'2026-06-15',rep:true},{date:'2026-07-15',rep:true}]}]}},
+ {name:'1 รับแจ้ง — ลาออก จ่ายต่อเนื่อง',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-07',rep:true}]}]}},
+ {name:'1 รับแจ้ง — เลิกจ้าง (180 วัน)',data:{prior:'0',claims:[{type:'layoff',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-12-15',rep:true}]}]}},
+ {name:'กลับเข้าทำงาน — ตัดจ่ายกลางเดือน',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',back:'2026-02-20',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-15',rep:true}]}]}},
+ {name:'นายจ้างแจ้งล่าช้า — จ่ายเกิน/เรียกคืน',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',back:'2026-02-14',notify:'2026-03-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-18',rep:true}]}]}},
+ {name:'auto-fill เดือนที่ขาด (ข้าม ก.พ.)',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-03-10',rep:true}]}]}},
+ {name:'ตัดโควตา — สะสมมาแล้ว 70 วัน',data:{prior:'70',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-07',rep:true}]}]}},
+ {name:'คร่อมสิทธิ — เลิกจ้าง โควิด 2563 (2 รับแจ้ง #1ปิด/#2เปิด)',data:{prior:'0',claims:[{type:'layoff',w:[15000,15000,15000],out:'2020-02-01',back:'2020-03-01',reg:'2020-02-15',reps:[{date:'2020-02-15',rep:true}]},{type:'layoff',w:[15000,15000,15000],out:'2020-02-22',reg:'2020-03-01',reps:[{date:'2020-03-01',rep:true},{date:'2020-08-25',rep:true}]}]}}
+];
+function dxSavedCases(){try{return JSON.parse(localStorage.getItem(DXCASES_KEY))||{};}catch(e){return {};}}
+function refreshDxCases(){const sel=document.getElementById('dxCase');if(!sel)return;let h='<option value="">— เลือกเทสเคสเพื่อเดโม —</option><optgroup label="ตัวอย่างสำเร็จรูป">';DXPRESETS.forEach((p,i)=>h+=`<option value="P${i}">${p.name}</option>`);h+='</optgroup>';const sv=dxSavedCases(),ks=Object.keys(sv);if(ks.length){h+='<optgroup label="เทสเคสที่บันทึกไว้">';ks.forEach(k=>h+=`<option value="S${encodeURIComponent(k)}">${esc(k)}</option>`);h+='</optgroup>';}sel.innerHTML=h;}
+function applyDxCase(data){clearDxClaims();document.getElementById('dxprior').value=data.prior||0;(data.claims||[]).forEach(addDxClaim);}
+function loadDxCase(){const v=document.getElementById('dxCase').value;if(!v)return;let d;if(v[0]==='P')d=DXPRESETS[+v.slice(1)].data;else d=dxSavedCases()[decodeURIComponent(v.slice(1))];if(d)applyDxCase(d);}
+function saveDxCase(){const name=prompt('ตั้งชื่อเทสเคส:');if(!name)return;const sv=dxSavedCases();sv[name.trim()]=dxSnapshot();localStorage.setItem(DXCASES_KEY,JSON.stringify(sv));refreshDxCases();document.getElementById('dxCase').value='S'+encodeURIComponent(name.trim());toast('บันทึกเทสเคสแล้ว ✓');}
+function delDxCase(){const sel=document.getElementById('dxCase'),v=sel.value;if(v[0]!=='S'){toast('เลือกเทสเคสที่บันทึกไว้ก่อน');return;}const k=decodeURIComponent(v.slice(1));if(!confirm('ลบเทสเคส “'+k+'” ?'))return;const sv=dxSavedCases();delete sv[k];localStorage.setItem(DXCASES_KEY,JSON.stringify(sv));refreshDxCases();toast('ลบแล้ว');}
+
+// ---------- TAB 3: approval ----------
+let currentLevel='ปฏิบัติการ';
+function setLevel(v){currentLevel=v;renderT3();}
+function canApprove(){return currentLevel==='ชำนาญการ';}
+function renderT3(){
+  const queue=S.txns.filter(t=>t.status==='รออนุมัติ'||t.status==='ตรวจสอบ');
+  document.getElementById('qpill').textContent=queue.length;
+  const sel=window._selTx&&queue.find(t=>t.id===window._selTx)?window._selTx:(queue[0]?queue[0].id:null);
+  window._selTx=sel;
+  document.getElementById('t3').innerHTML=`
+  <div class="card">
+    <h2>อนุมัติประกาศอัตรา <span class="sub">— ผู้อนุมัติต้องเป็นระดับชำนาญการ · maker ≠ checker</span></h2>
+    <div class="toolbar" style="margin-bottom:10px"><span style="align-self:center;font-size:12px;color:var(--muted)">จำลองสิทธิผู้ใช้ (เดโม):</span><select class="inp" style="width:auto;min-width:240px" onchange="setLevel(this.value)"><option value="ปฏิบัติการ"${currentLevel==='ปฏิบัติการ'?' selected':''}>นักวิชาการคอมพิวเตอร์ ระดับปฏิบัติการ (ผู้เสนอ)</option><option value="ชำนาญการ"${currentLevel==='ชำนาญการ'?' selected':''}>หัวหน้ากลุ่มงาน ระดับชำนาญการ (ผู้อนุมัติ)</option></select></div>
+    ${canApprove()?`<div class="banner" style="margin-bottom:12px;"><i class="ti ti-clock"></i> คิวรออนุมัติ ${queue.length} รายการ — เลือกคำขอเพื่อตรวจสอบ</div>`:`<div class="hint" style="margin-bottom:12px"><i class="ti ti-lock"></i> สงวนสิทธิ์การอนุมัติเฉพาะ <b>ระดับชำนาญการ</b> — ผู้ใช้ปัจจุบัน (ระดับปฏิบัติการ) เป็น “ผู้เสนอ” ไม่มีสิทธิอนุมัติ (สลับสิทธิด้านบนเพื่อเดโม)</div>`}
+    <table><colgroup><col style="width:15%"><col style="width:15%"><col style="width:28%"><col style="width:15%"><col style="width:13%"><col style="width:14%"></colgroup>
+      <thead><tr><th>เลขคำขอ</th><th>ประเภท</th><th>ประกาศ</th><th>ผู้เสนอ</th><th>วันที่</th><th>สถานะ</th></tr></thead>
+      <tbody>${queue.map(t=>`<tr class="click ${t.id===sel?'':''}" style="${t.id===sel?'background:var(--lblue)':''}" onclick="window._selTx='${t.id}';renderT3()">
+        <td><span class="lnk">${t.id}</span></td><td>${({create:'สร้างใหม่',edit:'แก้ไข',delete:'ลบ'})[t.type]}</td><td>${esc(reg(t.regimeId)?reg(t.regimeId).name:'-')}</td><td>${t.maker}</td><td>${t.date}</td><td><span class="badge ${BCLASS[t.status]}">${t.status}</span></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:16px;">ไม่มีคำขอรออนุมัติ</td></tr>'}</tbody></table>
+  </div>
+  ${sel?detailApproval(S.txns.find(t=>t.id===sel)):''}`;
+}
+function detailApproval(t){
+  const r=reg(t.regimeId)||{};
+  return `<div class="card">
+    <h2>ตรวจสอบคำขอ <span class="sub">— ${t.id} · ${({create:'สร้างใหม่',edit:'แก้ไข',delete:'ลบ'})[t.type]} · ${esc(r.name||'')}</span></h2>
+    <div class="appr2">
+      <div>
+        <div style="font-weight:600;margin-bottom:6px;">รายละเอียด</div>
+        <div class="kv"><span>ประกาศ</span><span>${esc(r.name||'-')}</span></div>
+        <div class="kv"><span>ผู้เสนอ / วันที่</span><span>${t.maker} · ${t.date}</span></div>
+        <div class="kv"><span>เหตุผล</span><span>${esc(t.reason||'-')}</span></div>
+        <div style="font-weight:600;margin:12px 0 6px;">การเปลี่ยนแปลง (diff)</div>
+        ${(t.diff||[]).map(d=>`<div class="diffrow"><div class="lbl">${d[0]}</div><div class="pair"><span class="old">${d[1]}</span><span style="color:var(--muted)">→</span><span class="new">${d[2]}</span></div></div>`).join('')}
+      </div>
+      <div>
+        <div class="banner" style="margin-bottom:10px;"><i class="ti ti-check"></i> ผ่าน Validation: ไม่ทับซ้อน · ช่วงว่างใช้ค่าตั้งต้น 2547 · ผ่าน Simulation</div>
+        <label>ความเห็นผู้อนุมัติ</label><textarea class="inp" id="appcom" rows="2" style="height:auto;padding:8px 11px;"></textarea>
+        <div class="formfoot">
+          <button class="btn green" onclick="approve('${t.id}')" ${canApprove()?'':'disabled title="ต้องเป็นระดับชำนาญการ"'}><i class="ti ti-check"></i> อนุมัติ</button>
+          <button class="btn amber" onclick="reject('${t.id}')" ${canApprove()?'':'disabled title="ต้องเป็นระดับชำนาญการ"'}><i class="ti ti-arrow-back-up"></i> ตีกลับ</button>
+          <button class="btn ghost" onclick="cancelTx('${t.id}')">ยกเลิกคำขอ</button>
+        </div>
+        ${canApprove()?'<div class="note">อนุมัติแล้ว: create→ประกาศมีผล · edit→อัปเดต+bump · delete→ยกเลิก · ผู้อนุมัติ: หัวหน้ากลุ่มงาน (ชำนาญการ)</div>':'<div class="note" style="color:var(--red)"><i class="ti ti-lock"></i> ปุ่มอนุมัติ/ตีกลับถูกล็อก — ต้องเป็นระดับชำนาญการ</div>'}
+      </div>
+    </div>
+  </div>`;
+}
+function approve(id){
+  if(!canApprove()){toast('สงวนสิทธิ์อนุมัติเฉพาะระดับชำนาญการ');return;}
+  const t=S.txns.find(x=>x.id===id);const r=reg(t.regimeId);const c=document.getElementById('appcom');
+  t.status='มีผลแล้ว';t.approver='หัวหน้ากลุ่มงาน (ชำนาญการ)';t.comment=c?c.value:'';
+  if(r){ if(t.type==='create')r.status='มีผลแล้ว';
+    else if(t.type==='edit'){Object.assign(r,t.payload||{});r.status='มีผลแล้ว';r.ver++;}
+    else if(t.type==='delete')r.status='ยกเลิก'; }
+  window._selTx=null;save();renderAll();toast('อนุมัติแล้ว — ประกาศมีผล ✓');
+}
+function reject(id){if(!canApprove()){toast('สงวนสิทธิ์เฉพาะระดับชำนาญการ');return;}const t=S.txns.find(x=>x.id===id);const c=document.getElementById('appcom');t.status='ตีกลับ';t.comment=(c&&c.value)||'ตีกลับให้แก้ไข';const r=reg(t.regimeId);if(r&&t.type==='create')r.status='ตีกลับ';window._selTx=null;save();renderAll();toast('ตีกลับคำขอแล้ว');}
+function cancelTx(id){const t=S.txns.find(x=>x.id===id);t.status='ยกเลิก';const r=reg(t.regimeId);if(r&&t.type==='create')r.status='ยกเลิก';window._selTx=null;save();renderAll();toast('ยกเลิกคำขอแล้ว');}
+
+// ---------- TAB 4: status ----------
+function renderT4(){
+  const f=document.getElementById('sflt')?document.getElementById('sflt').value:'ทั้งหมด';
+  const list=S.txns.filter(t=>f==='ทั้งหมด'||t.status===f);
+  const cnt=s=>S.txns.filter(t=>t.status===s).length;
+  const sel=window._selSt&&S.txns.find(t=>t.id===window._selSt)?window._selSt:(list[0]?list[0].id:null);
+  window._selSt=sel;
+  document.getElementById('t4').innerHTML=`
+  <div class="card">
+    <h2>เลือกรายการแก้ไขสถานะ <span class="sub">— ติดตามสถานะการทำรายการ (workflow maker–checker)</span></h2>
+    <div class="chips">${STATUSES.map(s=>`<div class="chip"><span class="badge ${BCLASS[s]}">${s}</span> <b>${cnt(s)}</b></div>`).join('')}</div>
+    <div class="toolbar">
+      <label style="margin:0 6px 0 0;align-self:center;">สถานะทำรายการ</label>
+      <select class="inp sel" id="sflt" onchange="renderT4()">${['ทั้งหมด',...STATUSES].map(s=>`<option value="${s}" ${s===f?'selected':''}>${s}</option>`).join('')}</select>
+      <div class="spacer"></div><button class="btn ghost" onclick="resetData()"><i class="ti ti-refresh"></i> รีเซ็ตข้อมูลตัวอย่าง</button>
+    </div>
+    <table><colgroup><col style="width:15%"><col style="width:14%"><col style="width:26%"><col style="width:14%"><col style="width:12%"><col style="width:19%"></colgroup>
+      <thead><tr><th>เลขรายการ</th><th>ประเภท</th><th>ประกาศ</th><th>ผู้ทำ</th><th>วันที่</th><th>สถานะ</th></tr></thead>
+      <tbody>${list.map(t=>`<tr class="click" style="${t.id===sel?'background:var(--lblue)':''}" onclick="window._selSt='${t.id}';renderT4()">
+        <td><span class="lnk">${t.id}</span></td><td>${({create:'สร้างใหม่',edit:'แก้ไข',delete:'ลบ'})[t.type]}</td><td>${esc(reg(t.regimeId)?reg(t.regimeId).name:'-')}</td><td>${t.maker}</td><td>${t.date}</td><td><span class="badge ${BCLASS[t.status]}">${t.status}</span></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:16px;">ไม่มีรายการ</td></tr>'}</tbody></table>
+  </div>
+  ${sel?stepperCard(S.txns.find(t=>t.id===sel)):''}`;
+}
+function stepperCard(t){
+  const order={'ร่าง':0,'รออนุมัติ':1,'ตรวจสอบ':2,'มีผลแล้ว':3,'ตีกลับ':2,'ยกเลิก':1};
+  const r=reg(t.regimeId)||{};
+  const idx=order[t.status]; const bad=(t.status==='ตีกลับ'||t.status==='ยกเลิก');
+  const steps=['ร่าง','เสนออนุมัติ','ตรวจสอบ','อนุมัติ / มีผล'];
+  return `<div class="card">
+    <h2>สถานะรายการ <span class="sub">— ${t.id} · ${esc(reg(t.regimeId)?reg(t.regimeId).name:'')}</span></h2>
+    <div class="stepper">${steps.map((s,i)=>{
+      let cls='todo',ic=(i+1);
+      if(t.status==='มีผลแล้ว'){cls='done';ic='<i class=\"ti ti-check\"></i>';}
+      else if(bad&&i===idx){cls='bad';ic='<i class=\"ti ti-x\"></i>';}
+      else if(i<idx){cls='done';ic='<i class=\"ti ti-check\"></i>';}
+      else if(i===idx){cls='curr';ic=(i+1);}
+      const fill=(i<=idx&&!(bad&&i>=idx))||t.status==='มีผลแล้ว';
+      return `<div class="step ${fill?'fill':''}"><div class="dot ${cls}">${ic}</div><div class="lbl">${s}</div><div class="meta">${i===0?t.date:''}${i===idx&&t.status!=='มีผลแล้ว'?'(ปัจจุบัน)':''}${i===3&&t.status==='มีผลแล้ว'?(t.approver||''):''}</div></div>`;
+    }).join('')}</div>
+    <div class="appr2" style="margin-top:14px">
+      <div>
+        <div class="kv"><span>สถานะปัจจุบัน</span><span><span class="badge ${BCLASS[t.status]}">${t.status}</span></span></div>
+        <div class="kv"><span>ประเภทรายการ</span><span>${({create:'สร้างประกาศใหม่',edit:'แก้ไขประกาศ',delete:'ลบประกาศ'})[t.type]||t.type}</span></div>
+        <div class="kv"><span>ผู้เสนอ / วันที่</span><span>${t.maker} · ${t.date}</span></div>
+        <div class="kv"><span>ผู้อนุมัติ</span><span>${t.approver||'— (ยังไม่อนุมัติ)'}</span></div>
+        <div class="kv"><span>เหตุผล</span><span>${esc(t.reason||'-')}</span></div>
+        ${t.comment?`<div class="kv"><span>ความเห็น</span><span>${esc(t.comment)}</span></div>`:''}
+      </div>
+      <div>
+        ${(t.diff&&t.diff.length)?'<div style="font-weight:600;margin-bottom:6px">การเปลี่ยนแปลง (diff)</div>'+t.diff.map(d=>`<div class="diffrow"><div class="lbl">${d[0]}</div><div class="pair"><span class="old">${d[1]}</span><span style="color:var(--muted)">→</span><span class="new">${d[2]}</span></div></div>`).join(''):''}
+        ${r.id?`<div style="font-weight:600;margin:10px 0 6px">ข้อมูลประกาศปัจจุบัน</div>
+        <div class="kv"><span>อัตรา เลิกจ้าง / ลาออก</span><span>${r.layoff||'-'}% / ${r.resign||'-'}%</span></div>
+        <div class="kv"><span>เพดานวัน · เพดานค่าจ้าง</span><span>${r.layoffCap||'-'} วัน · ${(r.ceiling||0).toLocaleString()} บาท</span></div>
+        <div class="kv"><span>วันมีผล</span><span>${fmt(r.from)}${r.to?(' – '+fmt(r.to)):(r.master?' (ค่าตั้งต้น)':'')}</span></div>`:'<div class="note">— ไม่มีประกาศอ้างอิง —</div>'}
+      </div>
+    </div>
+    <div class="formfoot">${r.id?`<button class="btn ghost" onclick="openDetail('${r.id}')"><i class="ti ti-eye"></i> ดูประกาศเต็ม</button>`:''}<div class="spacer"></div>${t.status==='ตีกลับ'?`<button class="btn amber" onclick="resubmit('${t.id}')"><i class="ti ti-send"></i> แก้ไขและส่งใหม่</button>`:''}</div>
+  </div>`;
+}
+function resubmit(id){const t=S.txns.find(x=>x.id===id);t.status='รออนุมัติ';t.comment='';save();renderAll();toast('ส่งใหม่เข้าอนุมัติแล้ว ✓');switchTab('t3');}
+
+// ---------- shell ----------
+function modal(html){document.getElementById('modalRoot').innerHTML=`<div class="modal-ov" onclick="if(event.target===this)closeModal()"><div class="modal"><button class="x" onclick="closeModal()">×</button>${html}</div></div>`;}
+function closeModal(){document.getElementById('modalRoot').innerHTML='';}
+function switchTab(id){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.t===id));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));window.scrollTo({top:0,behavior:'smooth'});}
+function renderAll(){renderT1();renderT2();renderT3();renderT4();}
+function resetData(){if(confirm('รีเซ็ตข้อมูลตัวอย่างทั้งหมด?')){S=seed();save();renderAll();toast('รีเซ็ตข้อมูลแล้ว');}}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.t)));
+renderAll();
+</script>
+</body>
+</html>
