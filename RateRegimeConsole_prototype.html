@@ -316,6 +316,16 @@ function bahtTH(n){return '฿'+n.toLocaleString('en-US',{minimumFractionDigits:
 function applicableRegime(d){if(!d)return reg('R2547');const be=(d.getFullYear()+543)*10000+(d.getMonth()+1)*100+d.getDate();const c=S.regimes.filter(r=>!r.master&&r.status==='มีผลแล้ว'&&r.from<=be&&be<=(r.to||99999999));if(c.length){c.sort((a,b)=>b.from-a.from);return c[0];}return reg('R2547');}
 function dxResolve(typeVal,ent,out){const layoff=typeVal==='layoff';const RG=applicableRegime(ent||out);return {layoff,RG,rate:(layoff?RG.layoff:RG.resign)/100,cap:(layoff?RG.layoffCap:RG.resignCap)||90,ceiling:RG.ceiling||17500};}
 function beToDate(be){return new Date(Math.floor(be/10000)-543,(Math.floor(be/100)%100)-1,be%100);}
+function effectiveCap(startE,layoff){
+  // สิทธิเต็ม (วัน) ตามประกาศ: ปกติ = cap regime ณ วันเกิดสิทธิ (180/90)
+  // ถ้าคร่อมขอบเข้า regime ที่มีเพดานสูงกว่า (เช่นโควิด 200) ส่วนที่เหลือคุมโดย regime ใหม่ → ใช้เพดานนั้น
+  const R1=applicableRegime(startE); const cap1=(layoff?R1.layoffCap:R1.resignCap)||90;
+  if(!startE)return cap1;
+  const cand=[];S.regimes.forEach(r=>{if(r.master||r.status!=='มีผลแล้ว')return;cand.push(beToDate(r.from));if(r.to)cand.push(dAdd(beToDate(r.to),1));});
+  let B=null;cand.forEach(d=>{if(d.getTime()>startE.getTime()&&(!B||d<B))B=d;});
+  if(B){const R2=applicableRegime(B);if(R2.id!==R1.id){const cap2=(layoff?R2.layoffCap:R2.resignCap)||90;const seg1=dDiff(startE,B);if(seg1>0&&seg1<cap2)return cap2;}}
+  return cap1;
+}
 function renderStraddleClaim(c){
   const el=c.node.querySelector('.straddle');if(!el)return;el.innerHTML='';
   const startE=c.startE;if(!startE||!c.dailyWage)return;
@@ -329,13 +339,18 @@ function renderStraddleClaim(c){
   const rate1=c.layoff?R1.layoff:R1.resign,rate2=c.layoff?R2.layoff:R2.resign;
   const d1=r05(c.dailyWage*rate1/100),d2=r05(c.dailyWage*rate2/100),a1=r05(d1*seg1),a2=r05(d2*seg2);
   const e1=dAdd(B,-1),e2=dAdd(B,seg2-1);
-  el.innerHTML=`<div class="banner" style="margin-bottom:8px"><i class="ti ti-arrows-split"></i> ตรวจพบการคร่อม regime: ใช่ — ขอบ ${dThd(B)} → เสนอ ปิดรับแจ้ง #1 / เปิดรับแจ้ง #2 (จนท.ยืนยัน)</div>
+  el.innerHTML=`<div class="banner" style="margin-bottom:8px"><i class="ti ti-arrows-split"></i> คำขอนี้คร่อมขอบประกาศ (${dThd(B)}) → แบ่งเป็น <b>2 ช่วงอัตรา</b> ภายใน <b>รับแจ้งเดียวกัน</b></div>
    <div class="cards2" style="margin-top:0">
-    <div class="rcard"><div class="hd" style="background:var(--amber)">รับแจ้ง #1 (ปิดที่ขอบ)</div><div class="bd"><div style="font-weight:600">${dThd(startE)} – ${dThd(e1)}</div><div class="sub">${esc(R1.name)}${R1.master?' (master)':''} · ${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate1}%</div><div class="row"><span>${seg1} วัน</span><span class="amt">${bahtTH(a1)}</span></div></div></div>
-    <div class="rcard"><div class="hd" style="background:var(--accent)">รับแจ้ง #2 (เปิดต่อเนื่อง)</div><div class="bd"><div style="font-weight:600">${dThd(B)} – ${dThd(e2)}</div><div class="sub">${esc(R2.name)}${R2.master?' (master)':''} · ${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate2}%</div><div class="row"><span>${seg2} วัน</span><span class="amt">${bahtTH(a2)}</span></div></div></div>
+    <div class="rcard"><div class="hd" style="background:var(--amber)">ช่วงที่ 1 (ก่อนขอบประกาศ)</div><div class="bd"><div style="font-weight:600">${dThd(startE)} – ${dThd(e1)}</div><div class="sub">${esc(R1.name)}${R1.master?' (ค่าตั้งต้น)':''} · ${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate1}%</div><div class="row"><span>${seg1} วัน</span><span class="amt">${bahtTH(a1)}</span></div></div></div>
+    <div class="rcard"><div class="hd" style="background:var(--accent)">ช่วงที่ 2 (ตั้งแต่วันขอบ ต่อเนื่อง)</div><div class="bd"><div style="font-weight:600">${dThd(B)} – ${dThd(e2)}</div><div class="sub">${esc(R2.name)}${R2.master?' (ค่าตั้งต้น)':''} · ${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate2}%</div><div class="row"><span>${seg2} วัน</span><span class="amt">${bahtTH(a2)}</span></div></div></div>
    </div>
-   <div class="total" style="margin-top:8px"><span>รวมสิทธิ ${total} วัน (cap ${esc(R2.name)} คุมส่วนที่เหลือ)</span><span class="money">รวม ${bahtTH(r05(a1+a2))}</span></div>
-   <div class="note">หมายเหตุ: #2 ไม่มี waiting ใหม่ · นับวัน/โควตาต่อจาก #1 · คู่ #1↔#2 ไม่ถือเป็นความซ้ำซ้อน</div>`;
+   <div style="background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-top:10px">
+     <div style="font-weight:700;margin-bottom:8px"><i class="ti ti-receipt"></i> สรุปสิทธิคำขอนี้ (รับแจ้งเดียว · 2 ช่วง)</div>
+     <div class="kv"><span>ช่วงที่ 1 · ${dThd(startE)} – ${dThd(e1)} (${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate1}%)</span><span><b>${seg1} วัน</b> · ${bahtTH(a1)}</span></div>
+     <div class="kv"><span>ช่วงที่ 2 · ${dThd(B)} – ${dThd(e2)} (${c.layoff?'เลิกจ้าง':'ลาออก'} ${rate2}%)</span><span><b>${seg2} วัน</b> · ${bahtTH(a2)}</span></div>
+     <div class="kv" style="border-bottom:none;padding-top:8px"><span style="font-weight:700;color:var(--navy);font-size:13.5px">รวมทั้งสิ้น</span><span style="font-weight:700;color:var(--navy);font-size:13.5px">${total} วัน · ${bahtTH(r05(a1+a2))}</span></div>
+   </div>
+   <div class="note">ช่วงที่ 2 ต่อเนื่องทันที (ไม่มี waiting ใหม่) · นับวัน/โควตาต่อเนื่องกัน · ทั้ง 2 ช่วงอยู่ในรับแจ้งเดียวกัน ไม่ถือเป็นความซ้ำซ้อน · เพดานวันรวม ${total} วัน (ตาม ${esc(R2.name)} ที่คุมส่วนที่เหลือ)</div>`;
 }
 function renderT2(){ if(!document.getElementById('dxClaims'))buildDx(); else dxRecalc(); }
 function buildDx(){
@@ -374,7 +389,6 @@ function claimHTML(id,d){
       <label>ประเภทการว่างงาน<select class="inp f-type"><option value="resign"${d.type==='resign'?' selected':''}>ลาออก / สิ้นสุดสัญญา</option><option value="layoff"${d.type==='layoff'?' selected':''}>เลิกจ้าง</option></select></label>
       <label style="grid-column:span 2">ค่าจ้าง 3 เดือนสูงสุด<div style="display:flex;gap:6px"><input class="inp f-w1" type="number" value="${d.w?d.w[0]:17500}"><input class="inp f-w2" type="number" value="${d.w?d.w[1]:17500}"><input class="inp f-w3" type="number" value="${d.w?d.w[2]:17500}"></div></label>
       <label>วันที่ลาออก/ออกจากงาน<input class="inp f-out" type="date" value="${d.out||''}"></label>
-      <label>วันที่กลับเข้าทำงานจริง (ถ้ามี)<input class="inp f-back" type="date" value="${d.back||''}"></label>
       <label>วันที่นายจ้างแจ้งเข้างาน (ถ้ามี)<input class="inp f-notify" type="date" value="${d.notify||''}"></label>
       <label>วันที่ขึ้นทะเบียน (= รายงานตัวครั้งที่ 1)<input class="inp f-reg" type="date" value="${d.reg||''}"></label>
       <label>วันที่เกิดสิทธิ (auto)<input class="inp f-ent" type="date" readonly style="background:var(--soft);color:var(--muted)"></label>
@@ -402,12 +416,13 @@ function addDxClaim(d){d=d||{type:'resign',w:[17500,17500,17500],out:'',back:'',
   dxRecalc();}
 function readClaim(node){
   const typeVal=node.querySelector('.f-type').value;
-  const out=dP(node.querySelector('.f-out').value),back=dP(node.querySelector('.f-back').value),notify=dP(node.querySelector('.f-notify').value);
+  const out=dP(node.querySelector('.f-out').value),notify=dP(node.querySelector('.f-notify').value);
+  const backEl=node.querySelector('.f-back'),back=backEl?dP(backEl.value):null;
   const regEl=node.querySelector('.f-reg'),regd=dP(regEl.value);
   node.querySelectorAll('.rep').forEach((p,idx)=>{const de=p.querySelector('.r-date');if(idx===0){de.readOnly=true;de.style.background='var(--soft)';de.style.color='var(--muted)';if(regEl.value)de.value=regEl.value;}else{de.readOnly=false;de.style.background='';de.style.color='';}});
   const entEl=node.querySelector('.f-ent');let ent=null;if(out){const ed=(regd&&dDiff(out,regd)>30)?regd:dAdd(out,7);entEl.value=dYmd(ed);ent=ed;}
   const R=dxResolve(typeVal,ent,out);
-  const fullEl=node.querySelector('.f-full');fullEl.value=R.cap;const full=R.cap;
+  const full=effectiveCap(ent,R.layoff);const fullEl=node.querySelector('.f-full');fullEl.value=full;
   const w=[node.querySelector('.f-w1'),node.querySelector('.f-w2'),node.querySelector('.f-w3')].map(el=>Math.min(+el.value||0,R.ceiling));
   const dailyWage=r05((w[0]+w[1]+w[2])/90),daily=r05(dailyWage*R.rate);
   const reported=[];node.querySelectorAll('.rep').forEach(p=>{const d=dP(p.querySelector('.r-date').value),rep=p.querySelector('.r-rep').checked,info=p.querySelector('.r-info');if(d&&rep){reported.push(d);info.textContent='('+dThm(d)+')';info.style.color='var(--muted)';}else if(d&&!rep){info.textContent='(ยังไม่รายงานตัว)';info.style.color='var(--amber)';}else info.textContent='';});
@@ -510,7 +525,7 @@ function dxRecalc(){
   for(let i=0;i<allP.length;i++)for(let j=i+1;j<allP.length;j++){if(allP[i].ci===allP[j].ci)continue;const s=Math.max(allP[i].s,allP[j].s),e=Math.min(allP[i].e,allP[j].e);if(e>=s){dupI.push([s,e]);const od=Math.round((e-s)/86400000)+1;const ea=(allP[i].reg&&allP[j].reg)?(allP[i].reg<=allP[j].reg?allP[i]:allP[j]):(allP[i].s<=allP[j].s?allP[i]:allP[j]);recover+=od*ea.daily;}}
   let dt=0;if(dupI.length){dupI.sort((a,b)=>a[0]-b[0]);let c0=dupI[0][0],ce=dupI[0][1];for(let k=1;k<dupI.length;k++){if(dupI[k][0]<=ce+86400000)ce=Math.max(ce,dupI[k][1]);else{dt+=Math.round((ce-c0)/86400000)+1;c0=dupI[k][0];ce=dupI[k][1];}}dt+=Math.round((ce-c0)/86400000)+1;}
   dxRenderSummary(cs.length,dt,r05(recover),q.usedInfo,totDays,totAmt);dxRenderTimeline(cs,dupI);dxSaveState();}
-function dxSnapshot(){const claimsEl=document.getElementById('dxClaims');const claims=[];dxOrder.forEach(id=>{const node=claimsEl.querySelector('.claim[data-id="'+id+'"]');if(!node)return;const reps=Array.prototype.map.call(node.querySelectorAll('.rep'),p=>({date:p.querySelector('.r-date').value,rep:p.querySelector('.r-rep').checked}));claims.push({type:node.querySelector('.f-type').value,w:[node.querySelector('.f-w1').value,node.querySelector('.f-w2').value,node.querySelector('.f-w3').value],out:node.querySelector('.f-out').value,back:node.querySelector('.f-back').value,notify:node.querySelector('.f-notify').value,reg:node.querySelector('.f-reg').value,reps});});return {prior:document.getElementById('dxprior').value,claims};}
+function dxSnapshot(){const claimsEl=document.getElementById('dxClaims');const claims=[];dxOrder.forEach(id=>{const node=claimsEl.querySelector('.claim[data-id="'+id+'"]');if(!node)return;const reps=Array.prototype.map.call(node.querySelectorAll('.rep'),p=>({date:p.querySelector('.r-date').value,rep:p.querySelector('.r-rep').checked}));claims.push({type:node.querySelector('.f-type').value,w:[node.querySelector('.f-w1').value,node.querySelector('.f-w2').value,node.querySelector('.f-w3').value],out:node.querySelector('.f-out').value,notify:node.querySelector('.f-notify').value,reg:node.querySelector('.f-reg').value,reps});});return {prior:document.getElementById('dxprior').value,claims};}
 function dxSaveState(){try{localStorage.setItem(DX_KEY,JSON.stringify(dxSnapshot()));}catch(e){}}
 function dxLoadState(){try{return JSON.parse(localStorage.getItem(DX_KEY));}catch(e){return null;}}
 function clearDxClaims(){const el=document.getElementById('dxClaims');dxOrder.slice().forEach(id=>{const n=el.querySelector('.claim[data-id="'+id+'"]');if(n)n.remove();});dxOrder=[];}
@@ -520,11 +535,10 @@ const DXPRESETS=[
  {name:'2 รับแจ้ง — พบซ้ำซ้อน (ทับช่วง)',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-04-01',reg:'2026-04-06',reps:[{date:'2026-04-28',rep:true},{date:'2026-05-15',rep:true},{date:'2026-06-20',rep:true}]},{type:'resign',w:[17500,17500,17500],out:'2026-05-11',reg:'2026-05-15',reps:[{date:'2026-05-20',rep:true},{date:'2026-06-15',rep:true},{date:'2026-07-15',rep:true}]}]}},
  {name:'1 รับแจ้ง — ลาออก จ่ายต่อเนื่อง',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-07',rep:true}]}]}},
  {name:'1 รับแจ้ง — เลิกจ้าง (180 วัน)',data:{prior:'0',claims:[{type:'layoff',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-12-15',rep:true}]}]}},
- {name:'กลับเข้าทำงาน — ตัดจ่ายกลางเดือน',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',back:'2026-02-20',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-15',rep:true}]}]}},
- {name:'นายจ้างแจ้งล่าช้า — จ่ายเกิน/เรียกคืน',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',back:'2026-02-14',notify:'2026-03-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-18',rep:true}]}]}},
+ {name:'นายจ้างแจ้งเข้างาน — ตัดจ่ายถึงสิ้นเดือนก่อน',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',notify:'2026-03-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-18',rep:true}]}]}},
  {name:'auto-fill เดือนที่ขาด (ข้าม ก.พ.)',data:{prior:'0',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-03-10',rep:true}]}]}},
  {name:'ตัดโควตา — สะสมมาแล้ว 70 วัน',data:{prior:'70',claims:[{type:'resign',w:[17500,17500,17500],out:'2026-01-01',reg:'2026-01-08',reps:[{date:'2026-01-08',rep:true},{date:'2026-02-07',rep:true}]}]}},
- {name:'คร่อมสิทธิ — เลิกจ้าง โควิด 2563 (2 รับแจ้ง #1ปิด/#2เปิด)',data:{prior:'0',claims:[{type:'layoff',w:[15000,15000,15000],out:'2020-02-01',back:'2020-03-01',reg:'2020-02-15',reps:[{date:'2020-02-15',rep:true}]},{type:'layoff',w:[15000,15000,15000],out:'2020-02-22',reg:'2020-03-01',reps:[{date:'2020-03-01',rep:true},{date:'2020-08-25',rep:true}]}]}}
+ {name:'คร่อมสิทธิ — เลิกจ้าง คร่อมโควิด 2563 (2 ช่วงในรับแจ้งเดียว)',data:{prior:'0',claims:[{type:'layoff',w:[15000,15000,15000],out:'2020-02-01',reg:'2020-02-15',reps:[{date:'2020-02-15',rep:true},{date:'2020-08-25',rep:true}]}]}}
 ];
 function dxSavedCases(){try{return JSON.parse(localStorage.getItem(DXCASES_KEY))||{};}catch(e){return {};}}
 function refreshDxCases(){const sel=document.getElementById('dxCase');if(!sel)return;let h='<option value="">— เลือกเทสเคสเพื่อเดโม —</option><optgroup label="ตัวอย่างสำเร็จรูป">';DXPRESETS.forEach((p,i)=>h+=`<option value="P${i}">${p.name}</option>`);h+='</optgroup>';const sv=dxSavedCases(),ks=Object.keys(sv);if(ks.length){h+='<optgroup label="เทสเคสที่บันทึกไว้">';ks.forEach(k=>h+=`<option value="S${encodeURIComponent(k)}">${esc(k)}</option>`);h+='</optgroup>';}sel.innerHTML=h;}
